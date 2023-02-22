@@ -1,8 +1,11 @@
 # User Experience Design
 
-This repository contains instructions and files for two assignments that together comprise the user experience design phase of a web app.
+## App map:
 
-Replace the contents of this file with the completed assignments, as described in:
+![App map](/Driply%20Site%20Map.png)
 
-- [app map & wireframe instructions](instructions-0a-app-map-wireframes.md).
-- [prototype instructions](instructions-0b-prototyping.md)
+## Wireframes:
+
+- [Link to Figma Project](https://www.figma.com/file/K1GxXaFQa89F1rCprwuhIf/Driply?node-id=0%3A1&t=cbvIjR1oTg4otRnz-1)
+
+
