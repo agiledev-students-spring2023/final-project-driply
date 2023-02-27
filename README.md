@@ -16,6 +16,7 @@ Driply is a fashion social networking app  where users can share their outfits a
 
 [Kevin Park](https://github.com/kevincwpark)
 
+[Amaan Khwaja](https://github.com/Amaanmkhwaja)
 
 ## History
 
