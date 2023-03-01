@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 function MainChatPage() {
 
   const [allChats, setAllChats] = useState([]);
-  // const [chatError, setChatError] = useState(null);
+  const [chatError, setChatError] = useState(null);
 
   useEffect(() => {
     async function fetchUsersChat () {
@@ -12,6 +12,10 @@ function MainChatPage() {
       if (response.status === 200) {
         json.sort((a, b) => new Date(a.date_sent) - new Date(b.date_sent)); // sorted based on date
         setAllChats(json);
+        setChatError(null);
+      } else {
+        // console.log(response);
+        setChatError(response.status);
       }
     }
     fetchUsersChat();
@@ -84,7 +88,8 @@ function MainChatPage() {
 
       {/* body */}
       <div className="displayAllChats">
-        {allChats.slice(0).reverse().map((chat) => <Chat key={chat.id} chat={chat}/>)}
+        {allChats?.slice(0).reverse().map((chat) => <Chat key={chat.id} chat={chat}/>)}
+        {chatError && <h1 className="error">Error: {chatError}</h1>}
       </div>
     </div>
   )
