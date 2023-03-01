@@ -65,8 +65,8 @@ Follow the git workflow above.
 
 ---
 ## Setting up the local development environment
-(update with that information once the project reaches that stage)
+(Update with that information once the project reaches that stage.)
 
 ---
 ## Building and Testing the Project
-(update with that information once the project reaches that stage)
+(Update with that information once the project reaches that stage.)
