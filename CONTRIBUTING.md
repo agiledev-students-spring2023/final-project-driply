@@ -10,8 +10,8 @@
 - Sprint 3: 04/10-04/24
 - Sprint 4: 04/24-05/03
 ### Daily Standups
-- Schedule a good time for all group members to meet in the private voice channel in discord to synchronously attend the daily standups as they are due.
-- Start a thread in team_driply_standups text channel with the daily standup date so that each member can write about their portion of the daily standup discusssed.
+- Pre-Scheduled Daily Standups are to be held the evening of the days lecture is held, Monday and Wednesdays. The third Daily Standup of the week is to be scheduled through when2meet.
+- Once all group members are finished with the Daily Standup, paste the written stnadup in team_driply_standups text channel with the daily standup date.
 ### Coding Standards
 - (placeholder)
 - (ide, linter to universally use, etc.)
@@ -19,6 +19,45 @@
 
 ---
 ## The Git Workflow
+1. Pull recent changes <br>
+	`git pull origin master`
+
+2. Create branch. Choose a branch name for what feature you’re doing <br>
+	`git checkout -b <branch-name>`
+
+    example: <br>
+	`git checkout -b user-story/13/task/9/implement-user-login`
+
+3. Update task board TASK to “In Process” 
+
+4. Add and commit <br>
+	`git add .` <br>
+	`git commit -m “<message>”`
+
+5. Merge remote changes <br>
+	`git fetch origin` <br>
+	`git merge origin/master`
+
+
+6. Push branch changes to YOUR BRANCH <br>
+	`git push origin <branch-name>`
+
+7. Go on github, go to your branch and go to PULL REQUESTS. Create a pull request to push your branch into the main branch
+
+8. Update task board TASK to awaiting review 
+
+9. AFTER someone else reviews, approves and merges your code,
+delete your branch <br>
+	`git push origin -d <branch-name>` <br>
+THEN switch back to master <br>
+	`git checkout master`
+THEN delete branch locally <br>
+	`git branch -D <branch-name>`
+
+
+
+    to check the branch you’re currently on: <br>
+	   ` git rev-parse --abbrev-ref HEAD`
 
 ---
 ## Rules of Contributing and Any Considerations or How and What to Contribute
