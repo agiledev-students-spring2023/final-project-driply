@@ -10,7 +10,7 @@ function Header() {
       </div>
       <Menu right={true}>
         <Link to="/">Home</Link>
-        <Link to="/">Messages</Link>
+        <Link to="/chats">Messages</Link>
         <Link to="/">Trending</Link>
         <Link to="/">Bookmarks</Link>
         <Link to="/">Settings</Link>
