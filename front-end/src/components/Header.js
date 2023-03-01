@@ -1,14 +1,20 @@
 import React from 'react';
 import { slide as Menu } from "react-burger-menu";
+import { Link } from 'react-router-dom';
 
 function Header() {
   return (
     <div className="header">
-        {/* <Menu width={"200px"}>
-            <a id="home" className="menu-item" href="/">Home</a>
-            <a id="about" className="menu-item" href="/about">About</a>
-            <a id="contact" className="menu-item" href="/contact">Contact</a>
-        </Menu> */}
+      <div className="logo">
+        Logo
+      </div>
+      <Menu right={true}>
+        <Link to="/">Home</Link>
+        <Link to="/">Messages</Link>
+        <Link to="/">Trending</Link>
+        <Link to="/">Bookmarks</Link>
+        <Link to="/">Settings</Link>
+      </Menu>
     </div>
   )
 }
