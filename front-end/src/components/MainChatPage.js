@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function MainChatPage() {
+  let navigate = useNavigate();
 
   const [allChats, setAllChats] = useState([]);
   const [chatError, setChatError] = useState(null);
@@ -41,7 +43,7 @@ function MainChatPage() {
     }
 
     return (
-      <div className="eachChatDisplay">
+      <div onClick={() => {navigate("/chatroom")}} className="eachChatDisplay">
         
         {/* image */}
         <div className="chatImg">
