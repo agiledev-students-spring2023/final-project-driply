@@ -5,6 +5,7 @@ import ChatRoomPage from "./components/ChatRoomPage";
 import Header from "./components/Header";
 import Home from './components/Home';
 import MainChatPage from "./components/MainChatPage";
+import ProfilePage from "./components/ProfilePage"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/chats" element={<MainChatPage />} />
         <Route path="/bookmarks" element={<Bookmarks />} />
         <Route path="/chatroom" element={<ChatRoomPage />}/>
+        <Route path="/profile" element={<ProfilePage />}/>
       </Routes>
 
       <BottomNavBar />
