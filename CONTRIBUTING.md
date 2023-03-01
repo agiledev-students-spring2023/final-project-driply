@@ -61,10 +61,12 @@ THEN delete branch locally <br>
 
 ---
 ## Rules of Contributing and Any Considerations or How and What to Contribute
+Follow the git workflow above.
 
 ---
 ## Setting up the local development environment
+(Update with that information once the project reaches that stage.)
 
 ---
 ## Building and Testing the Project
-(update with that information once the project reaches that stage)
+(Update with that information once the project reaches that stage.)
