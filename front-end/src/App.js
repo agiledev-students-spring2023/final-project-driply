@@ -5,7 +5,8 @@ import ChatRoomPage from "./components/ChatRoomPage";
 import Header from "./components/Header";
 import Home from './components/Home';
 import MainChatPage from "./components/MainChatPage";
-import ProfilePage from "./components/ProfilePage"
+import ProfileLoggedIn from "./components/ProfileLoggedIn"
+import ProfileNotLoggedIn from "./components/ProfileNotLoggedIn"
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
         <Route path="/chats" element={<MainChatPage />} />
         <Route path="/bookmarks" element={<Bookmarks />} />
         <Route path="/chatroom" element={<ChatRoomPage />}/>
-        <Route path="/profile" element={<ProfilePage />}/>
+        <Route path="/profileloggedin" element={<ProfileLoggedIn />}/>
+        <Route path="/profilenotloggedin" element={<ProfileNotLoggedIn />}/>
       </Routes>
 
       <BottomNavBar />
