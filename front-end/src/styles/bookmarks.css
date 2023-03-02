@@ -1,0 +1,84 @@
+.bookmarkPage {
+    padding-bottom: 90px;
+    overflow: hidden;
+}
+
+.bookmarkPageHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 60px;
+}
+
+.bookmarkPageHeader h1{
+    font-size: xx-large;
+    flex: 1 1 0%;
+    margin: 0;
+    margin-left: 10px;
+}
+
+.displayAllBookmarks {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; /* two columns */
+    grid-auto-rows: minmax(100px, auto);
+    flex-wrap: wrap;
+    padding: 10px;
+    gap: 1rem;
+    padding-bottom: 100px;
+}
+
+.bookmarkItem {
+    position: relative;
+    width: 100%; 
+    height: 170px;
+}
+.bookmarkIcon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 0;
+    right: 0;
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bookmarkImg {
+    width: 100%;
+    height: 80%;
+}
+.bookmarkImg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.bookmarkTitle {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notLoggedInBookmark {
+    width: 300px;
+    height: 300px;
+    padding-left: 10px;
+}
+.notLoggedInBookmark h2 {
+    margin: 0;
+}
+
+.displayLogInBtn {
+    margin-top: 50px;
+    display: inline-block;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: cadetblue;
+    border-radius: 10%;
+}

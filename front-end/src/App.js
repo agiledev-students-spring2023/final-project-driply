@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Bookmarks from "./components/Bookmarks";
+import BookmarksPage from "./components/BookmarksPage";
 import BottomNavBar from "./components/BottomNavBar";
 import ChatRoomPage from "./components/ChatRoomPage";
 import Header from "./components/Header";
@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/chats" element={<MainChatPage />} />
-        <Route path="/bookmarks" element={<Bookmarks />} />
+        <Route path="/bookmarks" element={<BookmarksPage />} />
         <Route path="/chatroom/:chatId" element={<ChatRoomPage />}/>
         <Route path="/profile" element={<ProfilePage />}/>
       </Routes>
