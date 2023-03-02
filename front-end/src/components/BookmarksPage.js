@@ -7,6 +7,8 @@ function Bookmarks() {
   const [bookmarkError, setBookmarkError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const user = false;
+
   useEffect(() => {
     async function fetchBookmarkList() {
       const response = await fetch("https://my.api.mockaroo.com/bookmark_schema.json?key=90e03700");
@@ -67,11 +69,12 @@ function Bookmarks() {
 
       {/* body */}
       <div className="displayAllBookmarks">
-        {/* <div className="bookmarkItem"></div>
-        <div className="bookmarkItem"></div> */}
-
         {loading ? (
           <LoadingBookmarkList />
+        ) : (bookmarkList.length === 0) ? (
+          <div>
+            <h3>You have no bookmarks</h3>
+          </div>
         ) : (
           <DisplayBookmarkList />
         )}
