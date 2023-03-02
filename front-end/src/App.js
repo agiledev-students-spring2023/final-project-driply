@@ -9,6 +9,7 @@ import ProfileLoggedIn from "./components/ProfileLoggedIn"
 import ProfileNotLoggedIn from "./components/ProfileNotLoggedIn"
 
 function App() {
+  
   return (
     <Router>
       <Header />
@@ -17,7 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/chats" element={<MainChatPage />} />
         <Route path="/bookmarks" element={<Bookmarks />} />
-        <Route path="/chatroom" element={<ChatRoomPage />}/>
+        <Route path="/chatroom/:chatId" element={<ChatRoomPage />}/>
         <Route path="/profileloggedin" element={<ProfileLoggedIn />}/>
         <Route path="/profilenotloggedin" element={<ProfileNotLoggedIn />}/>
       </Routes>
