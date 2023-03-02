@@ -1,7 +1,10 @@
-import React from 'react'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function ProfilePage() {
-    const user = true
+    const navigate = useNavigate();
+
+    const user = true;
 
     function FollowButton() {
         return (
@@ -26,7 +29,7 @@ function ProfilePage() {
                 <p>3</p>
                 <p>Followers</p>
             </div>
-            <div className="profileInfoSpecific">
+            <div onClick={() => navigate("/following")} className="profileInfoSpecific">
                 <p>3</p>
                 <p>Following</p>
             </div>
@@ -42,4 +45,4 @@ function ProfilePage() {
   )
 }
 
-export default ProfilePage
+export default ProfilePage;
