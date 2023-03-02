@@ -16,7 +16,7 @@ function BottomNavBar() {
             <Link to="/">Home</Link>
             <Link to="/">Trending</Link>
             <Link to="/">Post</Link>
-            <Link to="/">Profile</Link>
+            <Link to="/profile">Profile</Link>
         </div>
       )}
     </>
