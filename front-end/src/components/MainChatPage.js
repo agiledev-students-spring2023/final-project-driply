@@ -19,8 +19,10 @@ function MainChatPage() {
         setLoading(false);
       } else {
         // console.log(response);
+        // console.log(json.error);
         setLoading(false);
-        setChatError(response.status);
+        // setChatError(response.status);
+        setChatError({error: json.error, status: response.status});
       }
     }
     fetchUsersChat();
@@ -99,7 +101,6 @@ function MainChatPage() {
     return (
       <>
         {allChats?.slice(0).reverse().map((chat) => <Chat key={chat.id} chat={chat}/>)}
-        {chatError && <h1 className="error">Error: {chatError}</h1>}
       </>
     );
   }
@@ -120,6 +121,10 @@ function MainChatPage() {
         ) : (
           <DisplayChats />
         )}
+        {chatError && <div>
+          <h1 className="error">Error Code: {chatError.status}</h1>
+          <h2 className="error">{chatError.error}</h2>
+        </div>}
       </div>
     </div>
   )
