@@ -7,24 +7,27 @@ function Bookmarks() {
   const [bookmarkError, setBookmarkError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const user = false;
+  const user = true;
 
   useEffect(() => {
     async function fetchBookmarkList() {
-      const response = await fetch("https://my.api.mockaroo.com/bookmark_schema.json?key=90e03700");
-      let json = await response.json();
-      if (response.status === 200) {
-        setBookmarkList(json);
-        setBookmarkError(null);
-        setLoading(false);
-      } else {
-        setBookmarkError(response.status);
-        setLoading(false);
+      if (user) {
+        const response = await fetch(`https://my.api.mockaroo.com/bookmark_schema.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`);
+        let json = await response.json();
+        if (response.status === 200) {
+          setBookmarkList(json);
+          setBookmarkError(null);
+          setLoading(false);
+        } else {
+          console.log(response);
+          setBookmarkError(response.status);
+          setLoading(false);
+        }
       }
     }
 
     fetchBookmarkList();
-  }, []);
+  }, [user]);
 
 
   function LoadingBookmarkList() {
@@ -56,7 +59,19 @@ function Bookmarks() {
       <>
         {bookmarkList.map((item) => <BookmarkItem key={item.id} bookmark={item}/>)}
       </>
-    )
+    );
+  }
+
+  function NotLoggedInDisplay() {
+    return (
+      <div className="notLoggedInBookmark">
+        <h2>You are not logged in</h2>
+
+        <div className="displayLogInBtn">
+          Login
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -69,16 +84,16 @@ function Bookmarks() {
 
       {/* body */}
       <div className="displayAllBookmarks">
-        {loading ? (
+        {!user ? (
+          <NotLoggedInDisplay />
+        ) : (loading) ? (
           <LoadingBookmarkList />
-        ) : (bookmarkList.length === 0) ? (
-          <div>
-            <h3>You have no bookmarks</h3>
-          </div>
+        ) : (bookmarkList.length === 0 && !bookmarkError) ? (
+          <h3>No bookmarks</h3>
         ) : (
           <DisplayBookmarkList />
         )}
-        {bookmarkError && <div className="error">{bookmarkError}</div>}
+        {bookmarkError && <h2 className="error">Error: {bookmarkError}</h2>}
       </div>
 
 

@@ -10,7 +10,7 @@ function MainChatPage() {
 
   useEffect(() => {
     async function fetchUsersChat () {
-      const response = await fetch("https://my.api.mockaroo.com/users_chats.json?key=90e03700");
+      const response = await fetch(`https://my.api.mockaroo.com/users_chats.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`);
       let json = await response.json();
       if (response.status === 200) {
         json.sort((a, b) => new Date(a.date_sent) - new Date(b.date_sent)); // sorted based on date

@@ -1,4 +1,4 @@
-.chatPage {
+.bookmarkPage {
     padding-bottom: 90px;
     overflow: hidden;
 }
@@ -61,4 +61,24 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.notLoggedInBookmark {
+    width: 300px;
+    height: 300px;
+    padding-left: 10px;
+}
+.notLoggedInBookmark h2 {
+    margin: 0;
+}
+
+.displayLogInBtn {
+    margin-top: 50px;
+    display: inline-block;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: cadetblue;
+    border-radius: 10%;
 }
