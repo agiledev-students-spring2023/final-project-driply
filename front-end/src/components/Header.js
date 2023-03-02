@@ -23,7 +23,7 @@ function Header() {
             <Link to="/">Home</Link>
             <Link to="/chats">Messages</Link>
             <Link to="/">Trending</Link>
-            <Link to="/">Bookmarks</Link>
+            <Link to="/bookmarks">Bookmarks</Link>
             <Link to="/">Settings</Link>
           </Menu>
         </div>
