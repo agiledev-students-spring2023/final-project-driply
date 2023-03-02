@@ -92,7 +92,7 @@ function Bookmarks() {
         ) : (
           <DisplayBookmarkList />
         )}
-        {bookmarkError && <div>
+        {bookmarkError && user && <div>
           <h1 className="error">Error Code: {bookmarkError.status}</h1>
           <h3 className="error">{bookmarkError.error}</h3>
         </div>}
