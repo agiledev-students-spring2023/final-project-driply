@@ -1,6 +1,9 @@
 import React from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-
+import Input from "@mui/joy/Input";
+import { Button } from '@mui/joy';
+import SendIcon from '@mui/icons-material/Send';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 function ChatRoomPage() {
     const navigate = useNavigate();
     const { chatId } = useParams();
@@ -9,7 +12,6 @@ function ChatRoomPage() {
     const senderImg = location.state.senderImg;
     console.log(senderImg);
     console.log("chatId: ", chatId, firstName);
-    const backArr = "<---";
 
     const messages = [
         {
@@ -67,7 +69,8 @@ function ChatRoomPage() {
 
             {/* header */}
             <div className="chatRoomHeader">
-                <h3 onClick={() => {navigate(`/chats`)}}>{backArr}</h3>
+                <div onClick={() => {navigate(`/chats`)}}><ArrowBackIcon size="lg" /></div>
+                {/* <h3 onClick={() => {navigate(`/chats`)}}>{backArr}</h3> */}
                 <h1>{firstName}</h1>
             </div>
 
@@ -84,6 +87,9 @@ function ChatRoomPage() {
                         )
                     }
                 })}
+            </div>
+            <div className="chatroomInput">
+                <Input placeholder="Type in here…" size="lg" variant="outlined" endDecorator={<Button variant="contained" endIcon={<SendIcon />}>Send</Button>}/>
             </div>
 
         </div>
