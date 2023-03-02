@@ -8,6 +8,7 @@ import MainChatPage from "./components/MainChatPage";
 import ProfilePage from "./components/ProfilePage"
 
 function App() {
+  
   return (
     <Router>
       <Header />
@@ -16,7 +17,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/chats" element={<MainChatPage />} />
         <Route path="/bookmarks" element={<Bookmarks />} />
-        <Route path="/chatroom" element={<ChatRoomPage />}/>
+        <Route path="/chatroom/:chatId" element={<ChatRoomPage />}/>
         <Route path="/profile" element={<ProfilePage />}/>
       </Routes>
 

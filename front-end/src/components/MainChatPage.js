@@ -43,7 +43,7 @@ function MainChatPage() {
     }
 
     return (
-      <div onClick={() => {navigate("/chatroom")}} className="eachChatDisplay">
+      <div onClick={() => {navigate(`/chatroom/${chat.id}`, {state: {name: chat.first_name}})}} className="eachChatDisplay">
         
         {/* image */}
         <div className="chatImg">
