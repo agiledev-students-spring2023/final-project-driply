@@ -133,7 +133,8 @@
     padding-right: 5px;
     padding-left: 5px;
     flex-direction: column;
-    /* overflow: hidden; */
+    overflow: scroll;
+    padding-bottom: 50px;
 }
 
 .receiverMessage {
@@ -158,7 +159,7 @@
 
 .senderMessage {
     display: inline-block;
-    background-color: #6ECCAF;
+    background-color: rgb(37, 99, 235);
     border-radius: 0.5rem;
     border-top-right-radius: 0px;
     padding-left: 15px;
@@ -175,7 +176,21 @@
 .chatroomInput {
     /* border: 1px solid black; */
     height: 10vh;
+    border-top: 1px solid gray;
+    position: sticky;
+    bottom: 0;
+    background-color: white;
     /* display: flex;
     flex-direction: row; */
 }
 
+.sendChatBtn {
+    background-color: rgb(37, 99, 235);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border-radius: 10%;
+    margin-top: 10px;
+}
