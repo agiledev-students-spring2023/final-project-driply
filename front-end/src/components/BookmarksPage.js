@@ -19,8 +19,7 @@ function Bookmarks() {
           setBookmarkError(null);
           setLoading(false);
         } else {
-          console.log(response);
-          setBookmarkError(response.status);
+          setBookmarkError(({error: json.error, status: response.status}));
           setLoading(false);
         }
       }
@@ -93,7 +92,10 @@ function Bookmarks() {
         ) : (
           <DisplayBookmarkList />
         )}
-        {bookmarkError && <h2 className="error">Error: {bookmarkError}</h2>}
+        {bookmarkError && <div>
+          <h1 className="error">Error Code: {bookmarkError.status}</h1>
+          <h3 className="error">{bookmarkError.error}</h3>
+        </div>}
       </div>
 
 

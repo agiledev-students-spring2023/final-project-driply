@@ -18,10 +18,7 @@ function MainChatPage() {
         setChatError(null);
         setLoading(false);
       } else {
-        // console.log(response);
-        // console.log(json.error);
         setLoading(false);
-        // setChatError(response.status);
         setChatError({error: json.error, status: response.status});
       }
     }
@@ -123,7 +120,7 @@ function MainChatPage() {
         )}
         {chatError && <div>
           <h1 className="error">Error Code: {chatError.status}</h1>
-          <h2 className="error">{chatError.error}</h2>
+          <h3 className="error">{chatError.error}</h3>
         </div>}
       </div>
     </div>
