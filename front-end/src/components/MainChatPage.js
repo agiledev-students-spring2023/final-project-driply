@@ -6,6 +6,7 @@ function MainChatPage() {
 
   const [allChats, setAllChats] = useState([]);
   const [chatError, setChatError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUsersChat () {
@@ -15,13 +16,28 @@ function MainChatPage() {
         json.sort((a, b) => new Date(a.date_sent) - new Date(b.date_sent)); // sorted based on date
         setAllChats(json);
         setChatError(null);
+        setLoading(false);
       } else {
         // console.log(response);
+        setLoading(false);
         setChatError(response.status);
       }
     }
     fetchUsersChat();
   }, []);
+
+  function LoadingChat() {
+    return (
+      Array.from({length: 6}).map((_, idx) => {
+        return (
+          <div key={idx} className="eachChatDisplay">
+            <div className="chatImg" style={{ backgroundColor: "#DDDDDD", borderRadius: "50%" }}></div>
+            <div className="chatDetails" style={{ backgroundColor: "#DDDDDD", borderRadius: "2%" }}></div>
+          </div>
+        );
+      })
+    );
+  }
 
   function Chat({ chat }) {
     const ifRead = chat.read;
@@ -79,6 +95,15 @@ function MainChatPage() {
     )
   }
 
+  function DisplayChats() {
+    return (
+      <>
+        {allChats?.slice(0).reverse().map((chat) => <Chat key={chat.id} chat={chat}/>)}
+        {chatError && <h1 className="error">Error: {chatError}</h1>}
+      </>
+    );
+  }
+
   return (
     <div className="chatPage">
       {/* header */}
@@ -90,8 +115,11 @@ function MainChatPage() {
 
       {/* body */}
       <div className="displayAllChats">
-        {allChats?.slice(0).reverse().map((chat) => <Chat key={chat.id} chat={chat}/>)}
-        {chatError && <h1 className="error">Error: {chatError}</h1>}
+        {loading ? (
+          <LoadingChat />
+        ) : (
+          <DisplayChats />
+        )}
       </div>
     </div>
   )
