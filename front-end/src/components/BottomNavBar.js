@@ -1,14 +1,25 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function BottomNavBar() {
+  let location = useLocation();
+  let splitPath = location.pathname.split("/");
+  let ifHide;
+  if (splitPath.includes("chatroom")) {ifHide = true;}
+  else {ifHide = false;}
   return (
-    <div className="bottomNavBar">
-        <Link to="/">Home</Link>
-        <Link to="/">Trending</Link>
-        <Link to="/">Post</Link>
-        <Link to="/">Profile</Link>
-    </div>
+    <>
+      {ifHide ? (
+        <div></div>
+      ) : (
+        <div className="bottomNavBar">
+            <Link to="/">Home</Link>
+            <Link to="/">Trending</Link>
+            <Link to="/">Post</Link>
+            <Link to="/">Profile</Link>
+        </div>
+      )}
+    </>
   )
 }
 
