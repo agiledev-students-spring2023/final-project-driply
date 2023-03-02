@@ -1,0 +1,76 @@
+.profileContainer {
+    width: 100%;
+    height: 100vh;
+}
+
+.pfpContainer {
+    position: relative; 
+    padding-top: 50px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}
+
+.pfp {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    background: grey;
+    border-radius: 100%;
+    width: 200px; 
+    height: 200px;
+}
+
+.followButton {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-weight: 500;
+    border: 1px solid grey;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.profileInfo {
+    margin-top: 1.5rem;
+    padding-left: 15px;
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    border-bottom: 1px solid grey;
+}
+
+.profileInfoSpecific {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.profileInfoSpecific p {
+    font-weight: 500;
+}
+
+.profileInfoSpecific p:nth-child(2){
+    text-decoration-line: underline;
+}
+
+.postsContainer {
+    position: "relative";  
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr; /* three columns */
+    grid-auto-rows: minmax(100px, auto);
+    flex-wrap: wrap;
+}
+
+.posts {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    background: grey;
+    width: 100%; 
+    height: 150px;
+    border: 0.5px solid black;
+}
