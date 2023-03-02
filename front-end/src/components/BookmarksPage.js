@@ -19,7 +19,7 @@ function Bookmarks() {
           setBookmarkError(null);
           setLoading(false);
         } else {
-          setBookmarkError(({error: json.error, status: response.status}));
+          setBookmarkError({error: json.error, status: response.status});
           setLoading(false);
         }
       }
