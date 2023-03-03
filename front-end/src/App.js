@@ -11,8 +11,11 @@ import TrendingPage from "./pages/TrendingPage"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import PostPage from "./pages/PostPage"
+// import { useAuthContext } from "./hooks/useAuthContext";
 
 function App() {
+
+  // const { user } = useAuthContext;
   
   return (  
     <Router>

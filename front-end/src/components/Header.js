@@ -1,12 +1,16 @@
 import React from 'react';
 import { slide as Menu } from "react-burger-menu";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {useAuth} from '../AuthContext';
+// import {useAuth} from '../context/AuthContext';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { useLogout } from '../hooks/useLogout';
 
 function Header(props) {
   const navigate = useNavigate();
-  const {user, setUser} = useAuth();
-  const {auth, setAuth} = useAuth();
+  // const {user, setUser} = useAuth();
+  // const {auth, setAuth} = useAuth();
+  const { user } = useAuthContext();
+  const { logout } = useLogout();
   let location = useLocation();
   let splitPath = location.pathname.split("/");
   let ifHide;
@@ -15,8 +19,9 @@ function Header(props) {
   
   const logOut = (e) => {
     e.preventDefault();
-    setUser('');
-    setAuth(false);
+    // setUser('');
+    // setAuth(false);
+    logout();
     navigate('trending');
   };
 
@@ -26,7 +31,7 @@ function Header(props) {
     <>
       {ifHide ? (
         <div></div>
-      ) : auth ? (
+      ) : user ? (
         <div className="header">
           <div className="logo">
             Logo

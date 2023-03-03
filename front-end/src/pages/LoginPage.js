@@ -1,22 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form from "react-validation/build/form";
-import {useAuth} from '../AuthContext';
+// import { useAuth } from '../context/AuthContext';
+// import { useAuthContext } from '../hooks/useAuthContext';
+import { useLogin } from "../hooks/useLogin";
 
 
 function LoginPage() {
     const navigate = useNavigate();
     const form = useRef();
-    const {user, setUser} = useAuth();
-    const {auth, setAuth} = useAuth();
+    // const {user, setUser} = useAuth();
+    // const {auth, setAuth} = useAuth();
+    // const { user } = useAuthContext();
+    const { login, error: loginError, isLoading: loginIsLoading } = useLogin();
     
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
 
         //form.current.validateAll();
-        setAuth(true);
-        setUser("Chewy the Dog");
-
+        // setAuth(true);
+        // setUser("Chewy the Dog");
+        await login("Chewy the Dog", "password");
         navigate('/');
     };
 
@@ -28,6 +32,8 @@ function LoginPage() {
                     <button className="btn btn-outline-success btn-block mt-3 mb-4">Login</button>
                 </div>
             </Form>
+            {loginIsLoading && <h1>Loading...</h1>}
+            {loginError && <h1 className="error">{loginError}</h1>}
         </div>
     )
 }
