@@ -1,36 +1,39 @@
-import React, { useState , useEffect } from "react";
+import React, { useEffect } from "react";
+//import { Link } from 'react-router-dom';
 
-const required = (value) => {
-    if (!value){
-        return (
-            <div className="alert alert-danger" role="alert">
-                This field is required!
-            </div>
-        );
-    }
-};
+// const required = (value) => {
+//     if (!value){
+//         return (
+//             <div className="alert alert-danger" role="alert">
+//                 This field is required!
+//             </div>
+//         );
+//     }
+// };
 
 const PostPage = () => {
-    const [comment, setComment] = useState("");
-    const [post, setPost] = useState(null);
+    //const [comment, setComment] = useState("");
+    //const [post, setPost] = useState(null);
 
     useEffect(() => {
         // Retrieve post information here and update post using setPost
     }, []);
 
-    const onChangeComment = (e) => {
-        setComment(e.target.value);
-    };
+    // const onChangeComment = (e) => {
+    //     setComment(e.target.value);
+    // };
 
-    const handleComment = (e) => {
-        e.preventDefault();
+    // const handleComment = (e) => {
+    //     e.preventDefault();
 
 
-    };
+    // };
 
     return (
         <div>
-            Hello
+            <div className="container">
+                <img className="center-block img-responsive" src="https://picsum.photos/id/24/131/150" alt="pic"/>
+            </div>
         </div>
     );
 };

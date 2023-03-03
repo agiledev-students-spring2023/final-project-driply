@@ -36,24 +36,24 @@ function ProfilePage() {
         </div>
 
         <div className="postsContainer">
-            <div className="imageContainer">
+            <div className="imagePostsContainer">
                 <Link to ={`/post/0`}>
-                    <img className="profileImage" src="https://picsum.photos/id/22/131/150" alt="pic"/>
+                    <img className="img-responsive" src="https://picsum.photos/id/22/131/150" alt="pic"/>
                 </Link>
             </div>
-            <div className="imageContainer">
+            <div className="imagePostsContainer">
                 <Link to ={`/post/0`}>
-                    <img className="profileImage" src="https://picsum.photos/id/27/131/150" alt="pic"/>
+                    <img className="img-responsive" src="https://picsum.photos/id/27/131/150" alt="pic"/>
                 </Link>
             </div>
-            <div className="imageContainer">
+            <div className="imagePostsContainer">
                 <Link to ={`/post/0`}>
-                    <img className="profileImage" src="https://picsum.photos/id/24/131/150" alt="pic"/>
+                    <img className="img-responsive" src="https://picsum.photos/id/24/131/150" alt="pic"/>
                 </Link>
             </div>
-            <div className="imageContainer">
+            <div className="imagePostsContainer">
                 <Link to ={`/post/0`}>
-                    <img className="profileImage" src="https://picsum.photos/id/25/131/150" alt="pic"/>
+                    <img className="img-responsive" src="https://picsum.photos/id/25/131/150" alt="pic"/>
                 </Link>
             </div>
             
