@@ -9,15 +9,13 @@ import { useLogin } from "../hooks/useLogin";
 function LoginPage() {
     const navigate = useNavigate();
     const form = useRef();
-    // const {user, setUser} = useAuth();
-    // const {auth, setAuth} = useAuth();
-    // const { user } = useAuthContext();
+    
     const { login, error: loginError, isLoading: loginIsLoading } = useLogin();
     
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        //form.current.validateAll();
+        form.current.validateAll();
         // setAuth(true);
         // setUser("Chewy the Dog");
         await login("Chewy the Dog", "password");

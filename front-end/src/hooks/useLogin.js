@@ -9,7 +9,6 @@ export const useLogin = () => {
   const login = async (username, password) => {
     setIsLoading(true)
     setError(null)
-    console.log(username, password);
 
     // save the user to local storage
     localStorage.setItem("user", JSON.stringify({ username: username }))
@@ -25,7 +24,7 @@ export const useLogin = () => {
     // const response = await fetch('/api/accounts/login', {
     //   method: 'POST',
     //   headers: {'Content-Type': 'application/json'},
-    //   body: JSON.stringify({ email, password })
+    //   body: JSON.stringify({ username, password })
     // })
     // const json = await response.json()
 
@@ -36,7 +35,6 @@ export const useLogin = () => {
     // if (response.ok) {
     //   // save the user to local storage
     //   localStorage.setItem('user', JSON.stringify(json))
-    //   localStorage.setItem('sliderValue', JSON.stringify(json.userSliderValue))
 
     //   // update the auth context
     //   dispatch({type: 'LOGIN', payload: json})

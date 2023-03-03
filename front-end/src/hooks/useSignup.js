@@ -26,7 +26,7 @@ export const useSignup = () => {
     // const response = await fetch('/api/accounts/signup', {
     //   method: 'POST',
     //   headers: {'Content-Type': 'application/json'},
-    //   body: JSON.stringify({ email, password })
+    //   body: JSON.stringify({ username, password })
     // })
     // const json = await response.json()
 
@@ -37,7 +37,6 @@ export const useSignup = () => {
     // if (response.ok) {
     //   // save the user to local storage
     //   localStorage.setItem('user', JSON.stringify(json))
-    //   localStorage.setItem('sliderValue', JSON.stringify(json.userSliderValue))
 
     //   // update the auth context
     //   dispatch({type: 'LOGIN', payload: json})
