@@ -6,22 +6,40 @@ function MainChatPage() {
 
   const [allChats, setAllChats] = useState([]);
   const [chatError, setChatError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const user = false;
 
   useEffect(() => {
     async function fetchUsersChat () {
-      const response = await fetch("https://my.api.mockaroo.com/users_chats.json?key=90e03700");
-      let json = await response.json();
-      if (response.status === 200) {
-        json.sort((a, b) => new Date(a.date_sent) - new Date(b.date_sent)); // sorted based on date
-        setAllChats(json);
-        setChatError(null);
-      } else {
-        // console.log(response);
-        setChatError(response.status);
+      if (user) {
+        const response = await fetch(`https://my.api.mockaroo.com/users_chats.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`);
+        let json = await response.json();
+        if (response.status === 200) {
+          json.sort((a, b) => new Date(a.date_sent) - new Date(b.date_sent)); // sorted based on date
+          setAllChats(json);
+          setChatError(null);
+          setLoading(false);
+        } else {
+          setLoading(false);
+          setChatError({error: json.error, status: response.status});
+        }
       }
     }
     fetchUsersChat();
-  }, []);
+  }, [user]);
+
+  function LoadingChat() {
+    return (
+      Array.from({length: 6}).map((_, idx) => {
+        return (
+          <div key={idx} className="eachChatDisplay">
+            <div className="chatImg" style={{ backgroundColor: "#DDDDDD", borderRadius: "50%" }}></div>
+            <div className="chatDetails" style={{ backgroundColor: "#DDDDDD", borderRadius: "2%" }}></div>
+          </div>
+        );
+      })
+    );
+  }
 
   function Chat({ chat }) {
     const ifRead = chat.read;
@@ -79,19 +97,55 @@ function MainChatPage() {
     )
   }
 
+  function DisplayChats() {
+    return (
+      <>
+        {allChats?.slice(0).reverse().map((chat) => <Chat key={chat.id} chat={chat}/>)}
+      </>
+    );
+  }
+
+  function NotLoggedInDisplay() {
+    return (
+      <div className="notLoggedInBookmark">
+        <h2>You are not logged in</h2>
+
+        <div className="displayLogInBtn">
+          Login
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="chatPage">
       {/* header */}
       <div className="chatPageHeader">
         <h1>Messages</h1>
-        <p>New</p>
-        <p>Edit</p>
+        {user && <>
+          <p>New</p>
+          <p>Edit</p>
+        </>}
       </div>
 
       {/* body */}
       <div className="displayAllChats">
-        {allChats?.slice(0).reverse().map((chat) => <Chat key={chat.id} chat={chat}/>)}
-        {chatError && <h1 className="error">Error: {chatError}</h1>}
+
+        {!user ? (
+          <NotLoggedInDisplay />
+        ) : (loading) ? (
+          <LoadingChat />
+        ) : (allChats.length === 0 && !chatError) ? (
+          <h3>No chats</h3>
+        ) : (
+          <DisplayChats />
+        )}
+
+
+        {chatError && user && <div>
+          <h1 className="error">Error Code: {chatError.status}</h1>
+          <h3 className="error">{chatError.error}</h3>
+        </div>}
       </div>
     </div>
   )

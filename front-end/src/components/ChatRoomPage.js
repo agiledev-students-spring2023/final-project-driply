@@ -1,9 +1,9 @@
 import React from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import Input from "@mui/joy/Input";
-import { Button } from '@mui/joy';
-import SendIcon from '@mui/icons-material/Send';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SendIcon from '@mui/icons-material/Send';
+
 function ChatRoomPage() {
     const navigate = useNavigate();
     const { chatId } = useParams();
@@ -47,19 +47,29 @@ function ChatRoomPage() {
     ]
 
 
-    function SenderMessage({ message }) {
+    function SenderMessage({ message, idx }) {
+        const bottomMargin = (idx === (messages.length - 1)) ? "20px" : "0px";
         return (
-            <div className="senderMessage">
+            <div className="senderMessage" style={{ marginBottom: bottomMargin }}>
                 <div style={{ color: "white" }}>{message.message}</div>
             </div>
         );
     }
 
-    function ReceiverMessage({ message }) {
+    function ReceiverMessage({ message, idx }) {
+        const bottomMargin = (idx === (messages.length - 1)) ? "20px" : "0px";
         return (
-            <div style={{ display: "flex", flexDirection: "row", paddingTop: "2px" }}>
+            <div style={{ display: "flex", flexDirection: "row", paddingTop: "2px", marginBottom: bottomMargin }}>
                 <img className="receiverImg" src={senderImg} width="50px" alt="img"/>
                 <div className="receiverMessage">{message.message}</div>
+            </div>
+        );
+    }
+
+    function SendBtn() {
+        return (
+            <div className="sendChatBtn">
+                <SendIcon />
             </div>
         );
     }
@@ -76,20 +86,20 @@ function ChatRoomPage() {
 
             {/* body - display messages */}
             <div className="displayMessages">
-                {messages.map((message) => {
+                {messages.map((message, idx) => {
                     if (message.from === "me") {
                         return (
-                            <ReceiverMessage key={message.id} message={message}/>
+                            <ReceiverMessage key={message.id} message={message} idx={idx}/>
                         )
                     } else  {
                         return (
-                            <SenderMessage key={message.id} message={message}/>   
+                            <SenderMessage key={message.id} message={message} idx={idx}/>   
                         )
                     }
                 })}
             </div>
             <div className="chatroomInput">
-                <Input placeholder="Type in here…" size="lg" variant="outlined" endDecorator={<Button variant="contained" endIcon={<SendIcon />}>Send</Button>}/>
+                <Input placeholder="Type in here…" size="lg" variant="soft" endDecorator={<SendBtn />}/>
             </div>
 
         </div>
