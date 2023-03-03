@@ -36,10 +36,10 @@ function ProfilePage() {
         </div>
 
         <div className="postsContainer">
-            <div className="posts"><img src="https://picsum.photos/id/22/130" alt="pic"/></div>
-            <div className="posts"><img src="https://picsum.photos/id/27/130" alt="pic"/></div>
-            <div className="posts"><img src="https://picsum.photos/id/24/130" alt="pic"/></div>
-            <div className="posts"><img src="https://picsum.photos/id/25/130" alt="pic"/></div>
+            <div className="posts"><img src="https://picsum.photos/id/22/131/150" alt="pic"/></div>
+            <div className="posts"><img src="https://picsum.photos/id/27/131/150" alt="pic"/></div>
+            <div className="posts"><img src="https://picsum.photos/id/24/131/150" alt="pic"/></div>
+            <div className="posts"><img src="https://picsum.photos/id/25/131/150" alt="pic"/></div>
             
         </div>
     </div>

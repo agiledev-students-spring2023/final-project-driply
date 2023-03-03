@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Home from './components/Home';
 import MainChatPage from "./components/MainChatPage";
 import ProfilePage from "./components/ProfilePage"
+import TrendingPage from "./components/TrendingPage"
 
 function App() {
   
@@ -21,6 +22,7 @@ function App() {
         <Route path="/chatroom/:chatId" element={<ChatRoomPage />}/>
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/following" element={<FollowingPage />} />
+        <Route path="/trending" element={<TrendingPage />} />
       </Routes>
 
       <BottomNavBar />
