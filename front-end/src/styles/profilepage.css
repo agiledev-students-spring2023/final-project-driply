@@ -66,7 +66,7 @@
     position: "relative";  
     display: grid; 
     grid-template-columns: 1fr 1fr 1fr; /* three columns */
-    grid-auto-rows: minmax(130px, auto);
+    grid-auto-rows: minmax(150px, auto);
     flex-wrap: wrap;
     grid-gap: 1px;
     background-color: white;
@@ -78,7 +78,7 @@
     align-items: center; 
     width: 100%; 
     height: 150px;
-    border: 0.5px solid black;
+    /* border: 0.5px solid black; */
 }
 
 .eachFollowingDisplay {
