@@ -11,7 +11,7 @@ function TrendingPage() {
     <div>
       TrendingPage
       {user && (
-        <div>Hello {user}!</div>
+        <div>Hello {user.username}!</div>
       )}
     </div>
   )

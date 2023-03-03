@@ -8,7 +8,6 @@ function MainChatPage() {
   const [allChats, setAllChats] = useState([]);
   const [chatError, setChatError] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const user = true;
   const { user } = useAuthContext();
 
   useEffect(() => {
