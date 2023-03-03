@@ -8,7 +8,7 @@ function FollowingPage() {
 
     useEffect(() => {
         async function fetchFollowingList() {
-            const response = await fetch("https://my.api.mockaroo.com/following_schema.json?key=90e03700");
+            const response = await fetch(`https://my.api.mockaroo.com/following_schema.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`);
             let json = await response.json();
             if (response.status === 200) {
                 setFollowingList(json);
@@ -28,7 +28,7 @@ function FollowingPage() {
         return (
             Array.from({length: 6}).map((_, idx) => {
                 return (
-                    <div className="eachFollowingDisplay">
+                    <div key={idx} className="eachFollowingDisplay">
                         <div className="followingImg" style={{ backgroundColor: "#DDDDDD", borderRadius: "50%" }}></div>
                         <div className="followingDetails" style={{ backgroundColor: "#DDDDDD", borderRadius: "2%" }}></div>
                     </div>
@@ -38,7 +38,6 @@ function FollowingPage() {
     }
 
     function Following({ following }) {
-        console.log(following);
         return (
             <div className="eachFollowingDisplay">
                 <div className="followingImg">
@@ -52,7 +51,7 @@ function FollowingPage() {
     function DisplayFollowingList() {
         return (
             <>
-                {followingList.map((following) => <Following following={following}/>)}
+                {followingList.map((following) => <Following key={following.id} following={following}/>)}
             </>
         );
     }

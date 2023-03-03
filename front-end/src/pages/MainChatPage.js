@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function MainChatPage() {
   let navigate = useNavigate();
@@ -7,7 +8,8 @@ function MainChatPage() {
   const [allChats, setAllChats] = useState([]);
   const [chatError, setChatError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const user = false;
+  // const user = true;
+  const { user } = useAuthContext();
 
   useEffect(() => {
     async function fetchUsersChat () {

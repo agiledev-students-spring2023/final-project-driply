@@ -1,15 +1,17 @@
 import React from 'react';
-import {useAuth} from '../AuthContext';
+// import {useAuth} from '../context/AuthContext';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function Home() {
-  const {user, setUser} = useAuth();
-  const {auth} = useAuth();
+  // const {user, setUser} = useAuth();
+  // const {auth} = useAuth();
+  const { user } = useAuthContext();
 
   return (
     <div>
         Home Page
-        {auth && (
-          <div>Hello {user}!</div>
+        {user && (
+          <div>Hello! {user.username}</div>
         )}
     </div>
   )
