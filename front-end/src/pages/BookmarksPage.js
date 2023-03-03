@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function Bookmarks() {
 
@@ -7,7 +8,7 @@ function Bookmarks() {
   const [bookmarkError, setBookmarkError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const user = true;
+  const { user } = useAuthContext();
 
   useEffect(() => {
     async function fetchBookmarkList() {
