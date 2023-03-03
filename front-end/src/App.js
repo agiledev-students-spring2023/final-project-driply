@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import MainChatPage from "./pages/MainChatPage";
 import ProfilePage from "./pages/ProfilePage"
 import TrendingPage from "./pages/TrendingPage"
+import PostPage from "./pages/PostPage"
 
 function App() {
   
@@ -23,6 +24,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/following" element={<FollowingPage />} />
         <Route path="/trending" element={<TrendingPage />} />
+        <Route path="/post/:postId" element={<PostPage/>} />
       </Routes>
 
       <BottomNavBar />
