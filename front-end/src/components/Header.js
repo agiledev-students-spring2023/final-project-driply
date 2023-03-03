@@ -24,7 +24,9 @@ function Header(props) {
   return (
     
     <>
-      {auth ? (
+      {ifHide ? (
+        <div></div>
+      ) : auth ? (
         <div className="header">
           <div className="logo">
             Logo

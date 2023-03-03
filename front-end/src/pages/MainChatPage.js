@@ -7,7 +7,7 @@ function MainChatPage() {
   const [allChats, setAllChats] = useState([]);
   const [chatError, setChatError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const user = false;
+  const user = true;
 
   useEffect(() => {
     async function fetchUsersChat () {
