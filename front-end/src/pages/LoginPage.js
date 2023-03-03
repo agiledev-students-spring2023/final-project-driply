@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Form from "react-validation/build/form";
 import {useAuth} from '../AuthContext';
 
 
 function LoginPage() {
+    const navigate = useNavigate();
     const form = useRef();
     const {user, setUser} = useAuth();
     const {auth, setAuth} = useAuth();
@@ -14,6 +16,8 @@ function LoginPage() {
         //form.current.validateAll();
         setAuth(true);
         setUser("Chewy the Dog");
+
+        navigate('/');
     };
 
     return (
