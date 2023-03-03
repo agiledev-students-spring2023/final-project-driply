@@ -12,7 +12,7 @@ import PostPage from "./pages/PostPage"
 
 function App() {
   
-  return (
+  return (  
     <Router>
       <Header />
 
