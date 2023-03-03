@@ -14,7 +14,7 @@ function BottomNavBar() {
       ) : (
         <div className="bottomNavBar">
             <Link to="/">Home</Link>
-            <Link to="/">Trending</Link>
+            <Link to="/trending">Trending</Link>
             <Link to="/">Post</Link>
             <Link to="/profile">Profile</Link>
         </div>

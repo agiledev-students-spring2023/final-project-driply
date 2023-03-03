@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function ProfilePage() {
     const navigate = useNavigate();
 
-    const user = true;
+    const { user } = useAuthContext();
 
     function FollowButton() {
         return (

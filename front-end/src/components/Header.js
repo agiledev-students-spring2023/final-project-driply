@@ -39,10 +39,10 @@ function Header(props) {
           <Menu right={true}>
             <Link to="/">Home</Link>
             <Link to="/chats">Messages</Link>
-            <Link to="/">Trending</Link>
+            <Link to="/trending">Trending</Link>
             <Link to="/bookmarks">Bookmarks</Link>
             <Link to="/">Settings</Link>
-            <Link to="/trending" onClick={logOut}>Log Out</Link>
+            <Link to="/" onClick={logOut}>Log Out</Link>
           </Menu>
         </div>
       ) : (
