@@ -13,7 +13,7 @@ function ProfilePage() {
   return (
     <div className="profileContainer">
         <div className="pfpContainer">
-            <div className="pfp"><img src="https://picsum.photos/id/64/200" alt='pfp'/></div>
+            <div className="pfp"><img src="https://picsum.photos/id/64/200" alt="pic"/></div>
             {user ? <FollowButton/> : <div></div>}
         </div>
 
@@ -33,10 +33,10 @@ function ProfilePage() {
         </div>
 
         <div className="postsContainer">
-            <div className="posts"><img src="https://picsum.photos/id/22/130" alt='post 1'/></div>
-            <div className="posts"><img src="https://picsum.photos/id/27/130" alt='post 2'/></div>
-            <div className="posts"><img src="https://picsum.photos/id/24/130" alt='post 3'/></div>
-            <div className="posts"><img src="https://picsum.photos/id/25/130" alt='post 4'/></div>
+            <div className="posts"><img src="https://picsum.photos/id/22/130" alt="pic"/></div>
+            <div className="posts"><img src="https://picsum.photos/id/27/130" alt="pic"/></div>
+            <div className="posts"><img src="https://picsum.photos/id/24/130" alt="pic"/></div>
+            <div className="posts"><img src="https://picsum.photos/id/25/130" alt="pic"/></div>
             
         </div>
     </div>
