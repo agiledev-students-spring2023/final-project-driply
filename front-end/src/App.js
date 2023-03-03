@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import BookmarksPage from "./components/BookmarksPage";
+import BookmarksPage from "./pages/BookmarksPage";
 import BottomNavBar from "./components/BottomNavBar";
-import ChatRoomPage from "./components/ChatRoomPage";
-import FollowingPage from "./components/FollowingPage";
+import ChatRoomPage from "./pages/ChatRoomPage";
+import FollowingPage from "./pages/FollowingPage";
 import Header from "./components/Header";
-import Home from './components/Home';
-import MainChatPage from "./components/MainChatPage";
-import ProfilePage from "./components/ProfilePage"
-import TrendingPage from "./components/TrendingPage"
+import Home from './pages/Home';
+import MainChatPage from "./pages/MainChatPage";
+import ProfilePage from "./pages/ProfilePage"
+import TrendingPage from "./pages/TrendingPage"
 
 function App() {
   
