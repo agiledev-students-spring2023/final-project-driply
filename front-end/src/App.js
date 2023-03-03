@@ -8,6 +8,8 @@ import Home from './pages/Home';
 import MainChatPage from "./pages/MainChatPage";
 import ProfilePage from "./pages/ProfilePage"
 import TrendingPage from "./pages/TrendingPage"
+import LoginPage from "./pages/LoginPage"
+import RegisterPage from "./pages/RegisterPage"
 import PostPage from "./pages/PostPage"
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
         <Route path="/following" element={<FollowingPage />} />
         <Route path="/trending" element={<TrendingPage />} />
         <Route path="/post/:postId" element={<PostPage/>} />
+        <Route path="/login" element={<LoginPage/>} />
+        <Route path="/register" element={<RegisterPage/>} />
       </Routes>
 
       <BottomNavBar />

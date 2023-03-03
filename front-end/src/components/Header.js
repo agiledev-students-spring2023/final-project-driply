@@ -1,8 +1,10 @@
 import React from 'react';
 import { slide as Menu } from "react-burger-menu";
 import { Link, useLocation } from 'react-router-dom';
+import {useAuth} from '../AuthContext';
 
-function Header() {
+function Header(props) {
+  const { auth } = useAuth();
   let location = useLocation();
   let splitPath = location.pathname.split("/");
   let ifHide;
@@ -12,9 +14,7 @@ function Header() {
   return (
     
     <>
-      {ifHide ? (
-        <div></div>
-      ) : (
+      {auth ? (
         <div className="header">
           <div className="logo">
             Logo
@@ -27,6 +27,15 @@ function Header() {
             <Link to="/">Settings</Link>
           </Menu>
         </div>
+      ) : (
+        <div className="header">
+        <div className="logo">
+          Logo
+        </div>
+        <Menu right={true}>
+          <Link to="/login">Login</Link>
+        </Menu>
+      </div>
       )}
     </>
   )
