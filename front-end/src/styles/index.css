@@ -113,3 +113,94 @@ Note: Beware of modifying this element as it can break the animations - you shou
 .error {
   color: red;
 }
+.postContainer {
+  padding-bottom: 150px;
+}
+.post {
+  margin-top: 5px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+.postHeader {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  align-items: center;
+}
+
+.postHeaderDetails {
+  height: 100%;
+  flex: 1 1 0%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 6px;
+}
+.postHeaderDetails img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.postHeaderDetails p {
+  font-weight: 500;
+}
+.postCost {
+  font-weight: 500;
+  padding-right: 6px;
+}
+
+.postBody {
+  margin-top: 5px;
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+.postBody img {
+  width: 100%;
+  max-height: 450px;
+}
+.postBookmarkIcon {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.postDetails {
+  display: flex;
+  width: auto;
+  background-color: rgba(0,0,0,0.5);
+  position: absolute;
+  bottom: 5px;
+  height: 70px;
+  align-items: center;
+  gap: 2rem;
+  padding-right: 15px;
+  padding-left: 15px;
+  border-radius: 10px;
+}
+
+.postDetails div{
+  display: flex;
+  gap: 1rem;
+  color: white;
+  font-size: large;
+}
+
+.loadingUserImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #bdc3c7;
+}
+
+.loadingPostBody {
+  margin-top: 5px;
+  width: 100%;
+  height: 350px;
+  background-color: #bdc3c7;
+}

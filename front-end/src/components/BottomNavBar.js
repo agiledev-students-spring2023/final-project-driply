@@ -29,7 +29,7 @@ function BottomNavBar() {
         <div className="bottomNavBar">
           <div onClick={() => navigate("/")}>{(location.pathname === "/") ? <HomeIcon fontSize="large"/> : <HomeOutlinedIcon />}</div>
           <div onClick={() => navigate("/trending")}><TrendingUpOutlinedIcon fontSize={(location.pathname === "/trending") ? "large" : "medium"} /></div>
-          <div onClick={() => navigate("/")}>{(location.pathname === "/post") ? <AddBoxIcon fontSize="large"/> : <AddBoxOutlinedIcon />}</div>
+          <div onClick={() => navigate("/postform")}>{(location.pathname === "/postform") ? <AddBoxIcon fontSize="large"/> : <AddBoxOutlinedIcon />}</div>
           <div onClick={() => navigate("/profile")}>{(location.pathname === "/profile") ? <AccountBoxIcon fontSize="large"/> : <AccountBoxOutlinedIcon />}</div>
         </div>
       )}
