@@ -1,22 +1,15 @@
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuthContext } from '../hooks/useAuthContext';
+import React from "react";
+import { useNavigate, Link } from "react-router-dom";
 
-function ProfilePage() {
+function SelfProfilePage() {
   const navigate = useNavigate();
-  const { user } = useAuthContext();
 
-
-  function FollowButton() {
-    return <div className="followButton">Follow</div>;
-  }
   return (
     <div className="profileContainer">
       <div className="pfpContainer">
         <div className="pfp">
           <img src="https://picsum.photos/id/64/200" alt="pic" />
         </div>
-        {user ? <FollowButton /> : <div></div>}
       </div>
 
       <div className="profileInfo">
@@ -82,4 +75,4 @@ function ProfilePage() {
   );
 }
 
-export default ProfilePage;
+export default SelfProfilePage;
