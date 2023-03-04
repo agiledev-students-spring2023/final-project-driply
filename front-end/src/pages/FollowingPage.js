@@ -64,7 +64,7 @@ function FollowingPage() {
 
             {/* header */}
             <div className="chatPageHeader">
-                <h1>Following</h1>
+                <h1>Following {followingList?.length}</h1>
             </div>
             
             {loading ? (
