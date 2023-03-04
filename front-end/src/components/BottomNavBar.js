@@ -19,6 +19,7 @@ function BottomNavBar() {
   const handleProfileClick = () => {
     if (user) {
       navigate("/selfprofile");
+      setCurr(1);
     } else {
       navigate("/login");
       setCurr(1);
@@ -28,6 +29,7 @@ function BottomNavBar() {
   const handlePostClick = () => {
     if (user) {
       navigate("/postform");
+      setCurr(0);
     } else {
       navigate("/login");
       setCurr(0);
@@ -61,14 +63,18 @@ function BottomNavBar() {
             />
           </div>
           <div onClick={handlePostClick}>
-            {location.pathname === "/login" && curr === 0 ? (
+            {(location.pathname === "/login" ||
+              location.pathname === "/postform") &&
+            curr === 0 ? (
               <AddBoxIcon fontSize="large" />
             ) : (
               <AddBoxOutlinedIcon />
             )}
           </div>
           <div onClick={handleProfileClick}>
-            {location.pathname === "/login" && curr === 1 ? (
+            {(location.pathname === "/login" ||
+              location.pathname === "/selfprofile") &&
+            curr === 1 ? (
               <AccountBoxIcon fontSize="large" />
             ) : (
               <AccountBoxOutlinedIcon />
