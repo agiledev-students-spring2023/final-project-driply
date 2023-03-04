@@ -29,8 +29,8 @@ function FollowingPage() {
             Array.from({length: 6}).map((_, idx) => {
                 return (
                     <div key={idx} className="eachFollowingDisplay">
-                        <div className="followingImg" style={{ backgroundColor: "#DDDDDD", borderRadius: "50%" }}></div>
-                        <div className="followingDetails" style={{ backgroundColor: "#DDDDDD", borderRadius: "2%" }}></div>
+                        <div className="followingImgLoading"></div>
+                        <div className="followingDetailsLoading"></div>
                     </div>
                 );
             })
@@ -43,16 +43,19 @@ function FollowingPage() {
                 <div className="followingImg">
                     <img src={following.user_img} alt="user img"/>
                 </div>
-                <div className="followingDetails"></div>
+                <div className="followingDetails">
+                    <p>{following.username}</p>
+                    <div className="unfollowBtn">Unfollow</div>
+                </div>
             </div>
         );
     }
 
     function DisplayFollowingList() {
         return (
-            <>
+            <div className="followingContainer">
                 {followingList.map((following) => <Following key={following.id} following={following}/>)}
-            </>
+            </div>
         );
     }
 
