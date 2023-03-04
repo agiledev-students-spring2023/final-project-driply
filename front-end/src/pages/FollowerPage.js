@@ -16,7 +16,7 @@ function FollowerPage() {
         setFollowerError(null);
         setLoading(false);
       } else {
-        setFollowerError(response.status);
+        setFollowerError({error: json.error, status: response.status});
         setLoading(false);
       }
     }
@@ -67,7 +67,7 @@ function FollowerPage() {
       </div>
 
       {loading ? <LoadFollowerList /> : <DisplayFollowerList />}
-      {followerError && <h1 className="error">Error: {followerError}</h1>}
+      {followerError && <div><h1 className="error">Error: {followerError.status}</h1><h3 className="error">{followerError.error}</h3></div>}
     </div>
   );
 }

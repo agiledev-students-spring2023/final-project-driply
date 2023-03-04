@@ -16,7 +16,7 @@ function FollowingPage() {
                 setLoading(false);
                 console.log(json);
             } else {
-                setFollowingError(response.status);
+                setFollowingError({error: json.error, status: response.status});
                 setLoading(false);
             }
         }
@@ -72,7 +72,7 @@ function FollowingPage() {
             ) : (
                 <DisplayFollowingList />
             )}
-            {followingError && <h1 className="error">Error: {followingError}</h1>}
+            {followingError && <div><h1 className="error">Error: {followingError.status}</h1><h3 className="error">{followingError.error}</h3></div>}
 
         </div>
     )
