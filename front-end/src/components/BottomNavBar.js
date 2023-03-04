@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
@@ -14,12 +14,23 @@ function BottomNavBar() {
   const navigate = useNavigate();
   let location = useLocation();
   let splitPath = location.pathname.split("/");
+  const [curr, setCurr] = useState(0);
 
   const handleProfileClick = () => {
     if (user) {
       navigate("/selfprofile");
     } else {
       navigate("/login");
+      setCurr(1);
+    }
+  };
+
+  const handlePostClick = () => {
+    if (user) {
+      navigate("/postform");
+    } else {
+      navigate("/login");
+      setCurr(0);
     }
   };
 
@@ -49,15 +60,15 @@ function BottomNavBar() {
               fontSize={location.pathname === "/trending" ? "large" : "medium"}
             />
           </div>
-          <div onClick={() => navigate("/postform")}>
-            {location.pathname === "/postform" ? (
+          <div onClick={handlePostClick}>
+            {location.pathname === "/login" && curr === 0 ? (
               <AddBoxIcon fontSize="large" />
             ) : (
               <AddBoxOutlinedIcon />
             )}
           </div>
           <div onClick={handleProfileClick}>
-            {location.pathname === "/selfprofile" ? (
+            {location.pathname === "/login" && curr === 1 ? (
               <AccountBoxIcon fontSize="large" />
             ) : (
               <AccountBoxOutlinedIcon />
