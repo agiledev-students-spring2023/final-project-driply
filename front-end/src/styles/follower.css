@@ -1,3 +1,7 @@
+.followerContainer {
+  padding-bottom: 100px;
+}
+
 .eachFollowerDisplay {
   padding-top: 5px;
   padding-bottom: 5px;
@@ -38,7 +42,29 @@
 .followerDetails {
   flex: 1 1 0%;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
   height: 60px;
   border-bottom: 1px solid gray;
   padding-bottom: 10px;
+}
+
+.followerDetails p {
+  font-weight: 500;
+  font-size: large;
+}
+
+.unfollowBtn {
+  font-weight: 500;
+  border: 2px solid grey;
+  padding: 10px;
+  border-radius: 10px;
+}
+.followBtn {
+  font-weight: 500;
+  border: 2px solid grey;
+  padding: 10px;
+  border-radius: 10px;
 }
