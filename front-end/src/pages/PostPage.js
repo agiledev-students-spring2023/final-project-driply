@@ -1,20 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
-//import { Link } from 'react-router-dom';
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
 
-// const required = (value) => {
-//     if (!value){
-//         return (
-//             <div className="alert alert-danger" role="alert">
-//                 This field is required!
-//             </div>
-//         );
-//     }
-// };
 
 const PostPage = () => {
     const navigate = useNavigate();
+    const form = useRef();
     const [comment, setComment] = useState("");
     const [post, setPost] = useState(null);
     const [commentList, setCommentList] = useState([]);
@@ -105,6 +98,27 @@ const PostPage = () => {
                     Unlike
                 </button>
             )}
+            <div class="container">
+                <Form onSubmit={handleComment} ref={form} class="row align-items-center">
+                    <div className="col-auto px-0">
+                    <div onClick={() => navigate("/profile")} className="followingImg">
+                        <img src="https://picsum.photos/id/64/200" alt="user img"/>
+                    </div>    
+                    </div>
+                    <div class="col px-0">
+                        <Input
+                            type="text"
+                            className="form-control search-query"
+                            name="comment"
+                            onChange={onChangeComment}
+                            required
+                        />
+                    </div>
+                    <div class="col-auto">
+                    <button className="btn btn-success btn-block">Submit</button>
+                    </div>
+                </Form>
+            </div>
             <div className="pb-5">hello</div>
         </div>
     );
