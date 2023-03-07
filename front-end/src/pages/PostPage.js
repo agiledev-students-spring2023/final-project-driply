@@ -92,7 +92,7 @@ const PostPage = () => {
         <div className="mb-10">
             <div className="row align-items-center mx-auto">
                 <div className="col-8 d-flex align-items-center px-0 mx-auto">
-                    <div onClick={() => navigate("/profile")} className="followingImg">
+                    <div onClick={() => navigate("/profile")} className="postpfp">
                         <img src="https://picsum.photos/id/64/200" alt="user img"/>
                     </div>
                     <span onClick={() => navigate("/profile")}>Username</span>
@@ -126,7 +126,7 @@ const PostPage = () => {
             <div class="container">
                 <Form onSubmit={handleComment} ref={form} class="row align-items-center">
                     <div className="col-auto px-0">
-                    <div onClick={() => navigate("/profile")} className="followingImg">
+                    <div onClick={() => navigate("/profile")} className="postpfp">
                         <img src="https://picsum.photos/id/64/200" alt="user img"/>
                     </div>    
                     </div>
@@ -148,8 +148,8 @@ const PostPage = () => {
             {commentList.map(c => (
                 <div className="row align-items-center mx-auto">
                 <div className="col-12 d-flex align-items-center px-0 mx-0">
-                    <div onClick={() => navigate("/profile")} className="followingImg">
-                        <img src="https://picsum.photos/id/64/200" alt="user img"/>
+                    <div onClick={() => navigate("/profile")}>
+                        <img src="https://picsum.photos/id/64/200" alt="user img" className="postpfp"/>
                     </div>
                     <div className="d-flex flex-column align-items-left mx-2">
                         <span className="username">Username</span>
