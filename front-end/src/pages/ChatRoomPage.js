@@ -48,18 +48,16 @@ function ChatRoomPage() {
 
 
     function SenderMessage({ message, idx }) {
-        const bottomMargin = (idx === (messages.length - 1)) ? "20px" : "0px";
         return (
-            <div className="senderMessage" style={{ marginBottom: bottomMargin }}>
+            <div className="senderMessage">
                 <div style={{ color: "white" }}>{message.message}</div>
             </div>
         );
     }
 
     function ReceiverMessage({ message, idx }) {
-        const bottomMargin = (idx === (messages.length - 1)) ? "20px" : "0px";
         return (
-            <div style={{ display: "flex", flexDirection: "row", paddingTop: "2px", marginBottom: bottomMargin }}>
+            <div className="receiverMessageBubble">
                 <img className="receiverImg" src={senderImg} width="50px" alt="img"/>
                 <div className="receiverMessage">{message.message}</div>
             </div>
@@ -80,7 +78,6 @@ function ChatRoomPage() {
             {/* header */}
             <div className="chatRoomHeader">
                 <div onClick={() => {navigate(`/chats`)}}><ArrowBackIcon size="lg" /></div>
-                {/* <h3 onClick={() => {navigate(`/chats`)}}>{backArr}</h3> */}
                 <h1>{firstName}</h1>
             </div>
 

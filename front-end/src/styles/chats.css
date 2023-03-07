@@ -37,6 +37,11 @@
     width: 60px;
     height: 60px;
 }
+
+.chatImgLoading {
+    background-color: #DDDDDD;
+    border-radius: 50%;
+}
 .chatImg img {
     object-fit: cover;
     width: 100%;
@@ -53,6 +58,10 @@
     margin-left: 10px;
     border-bottom: 1px solid gray;
     padding-bottom: 10px;
+}
+.chatDetailsLoading {
+    background-color: #DDDDDD;
+    border-radius: 2%;
 }
 .chatDetails h4, p {
     margin: 0;
@@ -137,6 +146,11 @@
     padding-bottom: 50px;
 }
 
+.receiverMessageBubble {
+    display: flex;
+    flex-direction: row;
+    padding-top: 2px;
+}
 .receiverMessage {
     background-color: rgb(203 213 225);
     border-radius: 0.5rem;
