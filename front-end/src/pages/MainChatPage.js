@@ -34,8 +34,8 @@ function MainChatPage() {
       Array.from({length: 6}).map((_, idx) => {
         return (
           <div key={idx} className="eachChatDisplay">
-            <div className="chatImg" style={{ backgroundColor: "#DDDDDD", borderRadius: "50%" }}></div>
-            <div className="chatDetails" style={{ backgroundColor: "#DDDDDD", borderRadius: "2%" }}></div>
+            <div className="chatImg chatImgLoading"></div>
+            <div className="chatDetails chatDetailsLoading"></div>
           </div>
         );
       })

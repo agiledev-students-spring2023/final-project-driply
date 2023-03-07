@@ -48,18 +48,17 @@ function ChatRoomPage() {
     const onInput = () => inputRef.current.value;
 
     function SenderMessage({ message, idx }) {
-        const bottomMargin = (idx === (messages.length - 1)) ? "20px" : "0px";
+        const animation = (idx === messages.length-1) ? "newMessage" : "";
         return (
-            <div className="senderMessage" style={{ marginBottom: bottomMargin }}>
-                <div className="senderMessageContent" style={{ color: "white" }}>{message.message}</div>
+            <div className={`senderMessage ${animation}`}>
+                <div style={{ color: "white" }}>{message.message}</div>
             </div>
         );
     }
 
     function ReceiverMessage({ message, idx }) {
-        const bottomMargin = (idx === (messages.length - 1)) ? "20px" : "0px";
         return (
-            <div style={{ display: "flex", flexDirection: "row", paddingTop: "2px", marginBottom: bottomMargin }}>
+            <div className="receiverMessageBubble">
                 <img className="receiverImg" src={senderImg} width="40px" height="40px" alt="img"/>
                 <div className="receiverMessage">{message.message}</div>
             </div>
@@ -73,7 +72,7 @@ function ChatRoomPage() {
             console.log("empty message");
             return;
         }
-        const messageObj = {id: messages.length+1, from: "me", message: typedMessage, new: true};
+        const messageObj = {id: messages.length+1, from: "me", message: typedMessage};
         const copiedMessages = [...messages];
         copiedMessages.push(messageObj);
         setMessages(copiedMessages);

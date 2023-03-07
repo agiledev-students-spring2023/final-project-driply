@@ -38,6 +38,10 @@
     height: 60px;
 }
 
+.chatImgLoading {
+    background-color: #DDDDDD;
+    border-radius: 50%;
+}
 .chatImg img {
     object-fit: cover;
     width: 100%;
@@ -54,6 +58,10 @@
     margin-left: 10px;
     border-bottom: 1px solid gray;
     padding-bottom: 10px;
+}
+.chatDetailsLoading {
+    background-color: #DDDDDD;
+    border-radius: 2%;
 }
 .chatDetails h4, p {
     margin: 0;
@@ -138,6 +146,11 @@
     padding-bottom: 50px;
 }
 
+.receiverMessageBubble {
+    display: flex;
+    flex-direction: row;
+    padding-top: 2px;
+}
 .receiverMessage {
     background-color: rgb(203 213 225);
     border-radius: 0.5rem;
@@ -207,12 +220,12 @@
 }
 
 @keyframes showMessageAnimation {
-    from {opacity: 0;}
-    to {opacity: 1;}
+    from {opacity: 0; transform: translateY(50px);}
+    to {opacity: 1; transform: translateY(0px);}
 }
 
 .newMessage {
     animation-name: showMessageAnimation;
-    animation-duration: 2s;
+    animation-duration: .7s;
     animation-timing-function: ease-out;
 }
