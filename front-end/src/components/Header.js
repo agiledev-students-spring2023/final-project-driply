@@ -4,11 +4,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 // import {useAuth} from '../context/AuthContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useLogout } from '../hooks/useLogout';
+import { useScrollDirection } from '../hooks/useScrollDirection';
 
 function Header(props) {
   const navigate = useNavigate();
   // const {user, setUser} = useAuth();
   // const {auth, setAuth} = useAuth();
+  const direction = useScrollDirection();
   const { user } = useAuthContext();
   const { logout } = useLogout();
   let location = useLocation();
@@ -32,7 +34,7 @@ function Header(props) {
       {ifHide ? (
         <div></div>
       ) : user ? (
-        <div className="header">
+        <div className={`header ${direction === "down" ? "header-hide" : "header-show"}`}>
           <div className="logo">
             Logo
           </div>
