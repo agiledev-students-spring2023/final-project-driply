@@ -33,13 +33,22 @@ code {
   height: 60px;
   border-bottom: 1px solid gray;
   position: sticky;
-  top: 0;
+  top: 0px;
   background-color: white;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 2px solid white;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
+}
+
+.header-show {
+  top: 0px;
+}
+.header-hide {
+  top: -6rem;
 }
 
 .logo {
@@ -119,6 +128,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
   color: red;
 }
 .postContainer {
+  /* border: 2px solid red; */
   padding-bottom: 150px;
 }
 .post {
