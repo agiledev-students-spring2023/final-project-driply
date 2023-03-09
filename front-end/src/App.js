@@ -14,10 +14,25 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import PostPage from "./pages/PostPage";
 import PostForm from "./pages/PostForm";
-// import { useAuthContext } from "./hooks/useAuthContext";
+import SettingsPage from "./pages/SettingsPage";
+import { useAuthContext } from "./hooks/useAuthContext";
+import { useEffect } from "react";
 
 function App() {
-  // const { user } = useAuthContext;
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    function checkDarkTheme() {
+      if (user) { // dark mode is only available to logged in users
+        const ifDarkTheme = JSON.parse(localStorage.getItem("darkTheme"));
+        if (!ifDarkTheme) { // if it exist in local storage set default value
+          localStorage.setItem("darkTheme", JSON.stringify(false)); // light mode as default value
+        }
+      }
+    }
+
+    checkDarkTheme()
+  });
 
   return (
     <Router>
@@ -37,6 +52,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/selfprofile" element={<SelfProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Routes>
 
       <BottomNavBar />

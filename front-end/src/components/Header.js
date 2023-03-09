@@ -43,7 +43,7 @@ function Header(props) {
             <Link to="/chats">Messages</Link>
             <Link to="/trending">Trending</Link>
             <Link to="/bookmarks">Bookmarks</Link>
-            <Link to="/">Settings</Link>
+            <Link to="/settings">Settings</Link>
             <Link to="/" onClick={logOut}>Log Out</Link>
           </Menu>
         </div>
