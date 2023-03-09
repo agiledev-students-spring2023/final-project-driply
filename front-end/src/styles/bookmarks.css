@@ -64,6 +64,7 @@
 }
 
 .notLoggedInBookmark {
+    margin: 20px;
     width: 300px;
     height: 300px;
     padding-left: 10px;
@@ -80,5 +81,6 @@
     padding-left: 30px;
     padding-right: 30px;
     background-color: cadetblue;
-    border-radius: 10%;
+    border-radius: 10px;
+    color: white;
 }

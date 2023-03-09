@@ -91,3 +91,146 @@
     max-height: 100%;
     object-fit: contain;
 }
+
+.editProfilePage {
+    /* border: 1px solid red; */
+    flex: 1 1 0%;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.editProfileHeader {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid gray;
+    background-color: white;
+    width: 100%;
+    height: 70px;
+}
+.editProfileHeader p:nth-child(1) {
+    font-weight: 500;
+}
+.editProfileHeader p:nth-child(2) {
+    font-weight: 500;
+    font-size: 18px;
+}
+.editProfileHeader p:nth-child(3) {
+    color: rgb(37, 99, 235);
+    font-weight: 500;
+}
+
+
+.editProfileImg {
+    position: relative;
+}
+
+.editProfileIcon {
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    background-color: #BDCDD6;
+    font-size: 60px;
+    padding: 10px;
+    z-index: 10;
+    color: white;
+    border-radius: 50%;
+}
+
+.editProfileImg img {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.editProfileBody {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.editProfileBody div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.editProfileModal {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    bottom: 0;
+    z-index: 20;
+}
+
+.editProfileModal-hidden {
+    width: 100%;
+    height: 300px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    position: absolute;
+    bottom: 0;
+    z-index: 20;
+    background-color: white;
+}
+.blackBg {
+    background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+}
+.editPicture {
+    height: 200px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    /* transition-timing-function: linear; */
+    transition-duration: 1s;
+}
+
+@keyframes slideUp {
+    from {transform: translateY(200px);}
+    to {transform: translateY(0px);}
+}
+
+.slideUpAnimation {
+    animation-name: slideUp;
+    animation-duration: 300ms;
+    animation-timing-function: ease-out;
+}
+
+.editPicture div {
+    position: relative;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.editProfileBtns p {
+    color: #222222;
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid gray;
+    padding: 10px;
+    font-size: 17px;
+}
+.editProfileBtns:nth-child(2) {
+    margin-top: 20px;
+}
+
+.hideModal {
+    display: none;
+}
