@@ -17,6 +17,7 @@ import PostForm from "./pages/PostForm";
 import SettingsPage from "./pages/SettingsPage";
 import { useAuthContext } from "./hooks/useAuthContext";
 import { useEffect } from "react";
+import EditProfilePage from "./pages/EditProfilePage";
 
 function App() {
   const { user } = useAuthContext();
@@ -53,6 +54,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/selfprofile" element={<SelfProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/editprofile" element={<EditProfilePage />} />
       </Routes>
 
       <BottomNavBar />

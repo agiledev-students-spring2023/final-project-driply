@@ -45,10 +45,10 @@ function SettingsPage() {
                 <div className="settingsPage">
                     <h1>Profile</h1>
         
-                    <div className="showProfileBtn">
+                    <div onClick={() => navigate("/editprofile")} className="showProfileBtn">
                         <img src="https://picsum.photos/100/100" alt="profile pic"/>
                         <div className="showProfileName">
-                            <p>Username</p>
+                            <p>{user?.username}</p>
                             <p>Show profile</p>
                         </div>
                         <ArrowForwardIosIcon />

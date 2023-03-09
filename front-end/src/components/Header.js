@@ -1,22 +1,19 @@
 import React from 'react';
 import { slide as Menu } from "react-burger-menu";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-// import {useAuth} from '../context/AuthContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useLogout } from '../hooks/useLogout';
 import { useScrollDirection } from '../hooks/useScrollDirection';
 
 function Header(props) {
   const navigate = useNavigate();
-  // const {user, setUser} = useAuth();
-  // const {auth, setAuth} = useAuth();
   const direction = useScrollDirection();
   const { user } = useAuthContext();
   const { logout } = useLogout();
   let location = useLocation();
   let splitPath = location.pathname.split("/");
   let ifHide;
-  if (splitPath.includes("chatroom")) {ifHide = true;}
+  if (splitPath.includes("chatroom") || splitPath.includes("editprofile")) {ifHide = true;}
   else {ifHide = false;}
   
   const logOut = (e) => {
