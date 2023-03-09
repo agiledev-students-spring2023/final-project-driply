@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 // import { useAuthContext } from '../hooks/useAuthContext';
-import Post from '../components/Post';
+import Post from "../components/Post";
 
 function Home() {
   // const { user } = useAuthContext();
@@ -10,13 +10,15 @@ function Home() {
 
   useEffect(() => {
     async function fetchPostList() {
-      const response = await fetch(`https://my.api.mockaroo.com/post_schema.json?key=099dde30`);
+      const response = await fetch(
+        `https://my.api.mockaroo.com/post_schema.json?key=099dde30`
+      );
       let json = await response.json();
       if (response.status === 200) {
         setPostList(json);
         setPostListError(null);
       } else {
-        setPostListError({error: json.error, status: response.status});
+        setPostListError({ error: json.error, status: response.status });
       }
       setLoading(false);
       console.log(json);
@@ -26,48 +28,43 @@ function Home() {
   }, []);
 
   function LoadingPosts() {
-    return (
-      Array.from({length: 4}).map((_, idx) => {
-        return (
-          <div key={idx} className="post">
-    
-            {/* header */}
-            <div className="postHeader">
-                <div className="loadingUserImg">
-                </div>
-            </div>
-    
-            {/* post pictures */}
-            <div className="loadingPostBody"></div>
-    
+    return Array.from({ length: 4 }).map((_, idx) => {
+      return (
+        <div key={idx} className="post">
+          {/* header */}
+          <div className="postHeader">
+            <div className="loadingUserImg"></div>
           </div>
-        );
-      })
-    );
+
+          {/* post pictures */}
+          <div className="loadingPostBody"></div>
+        </div>
+      );
+    });
   }
 
   function DisplayPostLists() {
     return (
       <>
-        {postList?.map((post => <Post key={post.id} post={post}/>))}
+        {postList?.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
       </>
-    )
+    );
   }
 
   return (
     <div className="postContainer">
-      {postListError && <div>
-        <h1 className="error">Error Code: {postListError.status}</h1>
-        <h3 className="error">{postListError.error}</h3>
-      </div>}
-
-      {loading ? (
-        <LoadingPosts />
-      ) : (
-        <DisplayPostLists />
+      {postListError && (
+        <div>
+          <h1 className="error">Error Code: {postListError.status}</h1>
+          <h3 className="error">{postListError.error}</h3>
+        </div>
       )}
+
+      {loading ? <LoadingPosts /> : <DisplayPostLists />}
     </div>
-  )
+  );
 }
 
 export default Home;
