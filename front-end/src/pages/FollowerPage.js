@@ -45,7 +45,7 @@ function FollowerPage() {
         </div>
         <div className="followerDetails">
           <p>{follower.username}</p>
-          {follower.if_following ? (<div className="followBtn">Unfollow</div>) : (<div className="unfollowBtn">Follow</div>)}
+          {follower.if_following ? (<div className={`followBtn ${ifDarkMode && "followBtn-dark"}`}>Unfollow</div>) : (<div className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}>Follow</div>)}
         </div>
       </div>
     );

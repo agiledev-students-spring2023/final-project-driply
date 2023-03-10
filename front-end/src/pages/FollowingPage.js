@@ -47,7 +47,7 @@ function FollowingPage() {
                 </div>
                 <div className="followingDetails">
                     <p>{following.username}</p>
-                    <div className="unfollowBtn">Unfollow</div>
+                    <div className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}>Unfollow</div>
                 </div>
             </div>
         );

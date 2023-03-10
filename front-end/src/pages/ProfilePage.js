@@ -10,7 +10,7 @@ function ProfilePage() {
 
 
   function FollowButton() {
-    return <div className="followButton">Follow</div>;
+    return <div className={`followButton ${ifDarkMode && "followButton-dark"}`}>Follow</div>;
   }
   return (
     <div className={`profileContainer ${ifDarkMode && "darkTheme"}`}>
