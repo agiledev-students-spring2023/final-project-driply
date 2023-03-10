@@ -28,6 +28,10 @@ function Post({ post }) {
     }
   };
 
+  // this is just temp. to get different imgs and sizes
+  const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
+  const randomIndex = Math.floor(Math.random() * randomSize.length);
+
   return (
     <div className="post">
       {/* header */}
@@ -45,7 +49,7 @@ function Post({ post }) {
       {/* post pictures */}
       <div className="postBody">
         {/* <img src={post.post_picture} alt="post img"/> */}
-        <img src="https://picsum.photos/300/300" alt="postpic" />
+        <img src={`https://picsum.photos/${randomSize[randomIndex]}/300`} alt="postpic" />
         <div className="postBookmarkIcon">
           {ifBookmarked ? (
             <BookmarkIcon

@@ -68,3 +68,10 @@
   padding: 10px;
   border-radius: 10px;
 }
+
+.unfollowBtn-dark {
+  background-color: #262626;
+}
+.followBtn-dark {
+  background-color: #262626;
+}

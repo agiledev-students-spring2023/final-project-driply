@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 
 const PostPage = () => {
+    const { ifDarkMode } = useContext(DarkModeContext);
     const navigate = useNavigate();
     const form = useRef();
     const [comment, setComment] = useState("");
@@ -89,7 +91,7 @@ const PostPage = () => {
     };
 
     return (
-        <div className="mb-10">
+        <div className={`mb-10 ${ifDarkMode && "darkTheme"}`}>
             <div className="row align-items-center mx-auto">
                 <div className="col-8 d-flex align-items-center px-0 mx-auto">
                     <div onClick={() => navigate("/profile")} className="postpfp">

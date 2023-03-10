@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { useNavigate } from 'react-router-dom';
+import { DarkModeContext } from "../context/DarkModeContext";
 
 function EditProfilePage() {
 
@@ -13,6 +14,7 @@ function EditProfilePage() {
     const [modalOpen, setModalOpen] = useState(false);
     const [savedChanges, setSavedChanges] = useState(false);
     const [errorSaving, setErrorSaving] = useState(null);
+    const { ifDarkMode } = useContext(DarkModeContext);
 
     const handleSubmit = () => {
         setSavedChanges(false);
@@ -45,16 +47,16 @@ function EditProfilePage() {
 
     return (
         <>
-            <div className="editProfilePage">
+            <div className={`editProfilePage ${ifDarkMode && "darkTheme"}`}>
 
                 {/* header */}
-                <div className="editProfileHeader">
+                <div className={`${ifDarkMode ? "editProfileHeader-dark" : "editProfileHeader"}`}>
                     <p onClick={() => navigate("/settings")}>Cancel</p>
                     <p>Edit Profile</p>
                     <p onClick={handleSubmit}>Save</p>
                 </div>
                 
-                <div className="editProfileBody">
+                <div className={`editProfileBody`}>
                     {/* users image */}
                     <div onClick={() => setModalOpen(true)} className="editProfileImg">
                         <img src="https://picsum.photos/150/150" alt="profile pic"/>

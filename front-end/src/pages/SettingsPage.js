@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Switch from '@mui/material/Switch';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -9,29 +9,18 @@ import CreateIcon from '@mui/icons-material/Create';
 import { useLogout } from '../hooks/useLogout';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { DarkModeContext } from '../context/DarkModeContext';
 
 function SettingsPage() {
 
     const { logout } = useLogout();
     const { user } = useAuthContext();
     const navigate = useNavigate();
+    const { ifDarkMode, toggleDarkMode } = useContext(DarkModeContext);
 
-    const handleDarkThemeChange = (event) => {
-        console.log(event.target.checked);
-        console.log("switched themes");
-        setDarkTheme(event.target.checked);
-        localStorage.setItem("darkTheme", JSON.stringify(event.target.checked));
+    const handleDarkThemeChange = () => {
+        toggleDarkMode();
     }
-
-    const [ifDarkTheme, setDarkTheme] = useState(false);
-
-    useEffect(() => {
-        function getDarkThemeValue() {
-            const darkMode = JSON.parse(localStorage.getItem("darkTheme"));
-            setDarkTheme(darkMode);
-        }
-        getDarkThemeValue();
-    }, []);
 
     const logOut = (e) => {
         e.preventDefault();
@@ -42,7 +31,7 @@ function SettingsPage() {
     return (
         <>
             {user ? (
-                <div className="settingsPage">
+                <div className={ifDarkMode ? "settingsPage settingsPage-Dark" : "settingsPage"}>
                     <h1>Profile</h1>
         
                     <div onClick={() => navigate("/editprofile")} className="showProfileBtn">
@@ -60,7 +49,7 @@ function SettingsPage() {
                         <div>
                             <DarkModeIcon sx={{ fontSize: "25px" }} />
                             <p>Dark Mode</p>
-                            <Switch checked={ifDarkTheme} onChange={(event) => handleDarkThemeChange(event)} />
+                            <Switch checked={ifDarkMode} onChange={handleDarkThemeChange} />
                         </div>
         
                         <div>

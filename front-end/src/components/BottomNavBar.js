@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
@@ -8,8 +8,11 @@ import HomeIcon from "@mui/icons-material/Home";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 function BottomNavBar() {
+
+  const { ifDarkMode } = useContext(DarkModeContext);
   const { user } = useAuthContext();
   const navigate = useNavigate();
   let location = useLocation();
@@ -49,7 +52,7 @@ function BottomNavBar() {
       {ifHide ? (
         <div></div>
       ) : (
-        <div className="bottomNavBar">
+        <div className={ifDarkMode ? "bottomNavBar bottomNavBar-Dark" : "bottomNavBar"}>
           <div onClick={() => navigate("/")}>
             {location.pathname === "/" ? (
               <HomeIcon fontSize="large" />

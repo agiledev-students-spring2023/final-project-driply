@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 function PostForm() {
   const [image, setImage] = useState(null);
   const [price, setPrice] = useState(null);
   const [description, setDescription] = useState("");
+  const { ifDarkMode } = useContext(DarkModeContext);
 
   function handleImageSelect(e) {
     setImage(e.target.files[0]);
@@ -57,7 +59,7 @@ function PostForm() {
   }
 
   return (
-    <div className="form-contain">
+    <div className={`form-contain ${ifDarkMode && "darkTheme"}`}>
       <div className="chatPageHeader">
         <h1>Create Post</h1>
       </div>

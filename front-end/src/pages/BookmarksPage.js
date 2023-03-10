@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { DarkModeContext } from '../context/DarkModeContext';
 
 function Bookmarks() {
 
+  const { ifDarkMode } = useContext(DarkModeContext);
   const [bookmarkList, setBookmarkList] = useState([]);
   const [bookmarkError, setBookmarkError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -75,7 +77,7 @@ function Bookmarks() {
   }
 
   return (
-    <div className="bookmarkPage">
+    <div className={`bookmarkPage ${ifDarkMode && "darkTheme"}`}>
 
       {/* header */}
       <div className="bookmarkPageHeader">

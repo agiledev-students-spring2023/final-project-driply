@@ -31,6 +31,11 @@ code {
   border-top: 2px solid gray;
   background-color: white;
 }
+.bottomNavBar-Dark {
+  /* background-color: #000000; */
+  background-color:#121212;
+  color: white;
+}
 
 .header {
   width: 100%;
@@ -46,6 +51,11 @@ code {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 500ms;
+}
+.header-Dark {
+  /* background-color: #000000; */
+  background-color:#121212;
+  color: white;
 }
 
 .header-show {
@@ -73,6 +83,9 @@ code {
 /* Color/shape of burger icon bars */
 .bm-burger-bars {
   background: #373a47;
+}
+.bm-burger-bars-dark {
+  background-color: white;
 }
 
 /* Color/shape of burger icon bars on hover*/
@@ -138,8 +151,15 @@ Note: Beware of modifying this element as it can break the animations - you shou
   /* border: 2px solid red; */
   padding-bottom: 150px;
 }
+
+.darkTheme {
+  /* background-color: #000000; */
+  background-color:#121212;
+  color: white;
+}
+
 .post {
-  margin-top: 5px;
+  padding-top: 5px;
   width: 100%;
   height: auto;
   margin-bottom: 20px;

@@ -1,11 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SendIcon from '@mui/icons-material/Send';
+import { DarkModeContext } from '../context/DarkModeContext';
 
 function ChatRoomPage() {
     const navigate = useNavigate();
     // const { chatId } = useParams();
+    const { ifDarkMode } = useContext(DarkModeContext);
     const location = useLocation();
     const firstName = location.state.name;
     const senderImg = location.state.senderImg;
@@ -89,10 +91,10 @@ function ChatRoomPage() {
     }
 
     return (
-        <div className="chatRoomPage">
+        <div className={`${ifDarkMode ? "chatRoomPage-dark" : "chatRoomPage"}`}>
 
             {/* header */}
-            <div className="chatRoomHeader">
+            <div className={`chatRoomHeader ${ifDarkMode && "darkTheme"}`}>
                 <div onClick={() => {navigate(`/chats`)}}><ArrowBackIcon size="lg" /></div>
                 <h1>{firstName}</h1>
             </div>
