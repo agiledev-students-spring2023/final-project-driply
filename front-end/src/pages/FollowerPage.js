@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 function FollowerPage() {
   const [followerList, setFollowerList] = useState([]);
   const [followerError, setFollowerError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { ifDarkMode } = useContext(DarkModeContext);
 
   useEffect(() => {
     async function fetchFollowerList() {
@@ -60,7 +62,7 @@ function FollowerPage() {
   }
 
   return (
-    <div>
+    <div className={ifDarkMode && "darkTheme"}>
       {/* header */}
       <div className="chatPageHeader">
         <h1>Followers {followerList?.length}</h1>

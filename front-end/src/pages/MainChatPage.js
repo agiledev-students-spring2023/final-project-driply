@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DarkModeContext } from '../context/DarkModeContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 function MainChatPage() {
@@ -9,6 +10,7 @@ function MainChatPage() {
   const [chatError, setChatError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { user } = useAuthContext();
+  const { ifDarkMode } = useContext(DarkModeContext);
 
   useEffect(() => {
     async function fetchUsersChat () {
@@ -119,9 +121,9 @@ function MainChatPage() {
   }
 
   return (
-    <div className="chatPage">
+    <div className={`chatPage ${ifDarkMode && "darkTheme"}`}>
       {/* header */}
-      <div className="chatPageHeader">
+      <div className={`chatPageHeader ${ifDarkMode && "darkTheme"}`}>
         <h1>Messages</h1>
         {user && <>
           <p>New</p>
@@ -130,7 +132,7 @@ function MainChatPage() {
       </div>
 
       {/* body */}
-      <div className="displayAllChats">
+      <div className={`displayAllChats ${ifDarkMode && "darkTheme"}`}>
 
         {!user ? (
           <NotLoggedInDisplay />

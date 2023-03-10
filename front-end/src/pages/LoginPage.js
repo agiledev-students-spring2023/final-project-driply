@@ -1,8 +1,6 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form from "react-validation/build/form";
-// import { useAuth } from '../context/AuthContext';
-// import { useAuthContext } from '../hooks/useAuthContext';
 import { useLogin } from "../hooks/useLogin";
 
 

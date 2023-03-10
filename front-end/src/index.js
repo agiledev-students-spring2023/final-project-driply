@@ -11,6 +11,7 @@ import "./styles/postform.css";
 import "./styles/bookmarks.css";
 import './styles/post.css';
 import "./styles/settings.css";
+import "./styles/trending.css";
 import { AuthContextProvider } from "./context/AuthContext";
 import App from "./App";
 import { DarkModeSwitchProvider } from "./context/DarkModeContext";

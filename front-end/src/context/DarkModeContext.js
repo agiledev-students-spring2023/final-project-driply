@@ -13,9 +13,13 @@ const DarkModeSwitchProvider = ({ children }) => {
         localStorage.setItem("darkTheme", JSON.stringify(!ifDarkMode));
         setIfDarkMode(!ifDarkMode);
     }
+    const clearDarkMode = () => {
+        localStorage.setItem("darkTheme", JSON.stringify(false));
+        setIfDarkMode(false);
+    }
    
     return (
-        <DarkModeContext.Provider value={{ ifDarkMode, toggleDarkMode }} >
+        <DarkModeContext.Provider value={{ ifDarkMode, toggleDarkMode, clearDarkMode }} >
             {children}
         </DarkModeContext.Provider>
     );

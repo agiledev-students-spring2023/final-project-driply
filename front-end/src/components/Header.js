@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { slide as Menu } from "react-burger-menu";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { DarkModeContext } from '../context/DarkModeContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useLogout } from '../hooks/useLogout';
 import { useScrollDirection } from '../hooks/useScrollDirection';
 
 function Header(props) {
+
+  const { ifDarkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
   const direction = useScrollDirection();
   const { user } = useAuthContext();
@@ -31,11 +34,11 @@ function Header(props) {
       {ifHide ? (
         <div></div>
       ) : user ? (
-        <div className={`header ${direction === "down" ? "header-hide" : "header-show"}`}>
+        <div className={`header ${direction === "down" ? "header-hide" : "header-show"} ${ifDarkMode && "header-Dark"}`}>
           <div className="logo">
             Logo
           </div>
-          <Menu right={true}>
+          <Menu right={true} burgerBarClassName={`${ifDarkMode && "bm-burger-bars-dark"}`}>
             <Link to="/">Home</Link>
             <Link to="/chats">Messages</Link>
             <Link to="/trending">Trending</Link>

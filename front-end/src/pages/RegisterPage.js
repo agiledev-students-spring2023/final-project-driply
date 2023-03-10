@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { DarkModeContext } from '../context/DarkModeContext';
 
 function RegisterPage() {
+  const { ifDarkMode } = useContext(DarkModeContext);
   return (
-    <div>
+    <div className={ifDarkMode && "darkTheme"}>
         Login Page
     </div>
   )

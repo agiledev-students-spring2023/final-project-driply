@@ -31,7 +31,7 @@ function SettingsPage() {
     return (
         <>
             {user ? (
-                <div className="settingsPage">
+                <div className={ifDarkMode ? "settingsPage settingsPage-Dark" : "settingsPage"}>
                     <h1>Profile</h1>
         
                     <div onClick={() => navigate("/editprofile")} className="showProfileBtn">

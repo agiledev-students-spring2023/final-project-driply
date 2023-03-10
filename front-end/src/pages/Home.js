@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-// import { useAuthContext } from '../hooks/useAuthContext';
+import React, { useContext, useEffect, useState } from "react";
 import Post from "../components/Post";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 function Home() {
-  // const { user } = useAuthContext();
   const [postList, setPostList] = useState([]);
   const [postListError, setPostListError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { ifDarkMode } = useContext(DarkModeContext);
 
   useEffect(() => {
     async function fetchPostList() {
@@ -54,7 +54,7 @@ function Home() {
   }
 
   return (
-    <div className="postContainer">
+    <div className={`postContainer ${ifDarkMode && "darkTheme"}`}>
       {postListError && (
         <div>
           <h1 className="error">Error Code: {postListError.status}</h1>
