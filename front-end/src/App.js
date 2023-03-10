@@ -24,15 +24,17 @@ function App() {
 
   useEffect(() => {
     function checkDarkTheme() {
-      if (user) { // dark mode is only available to logged in users
+      if (user) {
+        // dark mode is only available to logged in users
         const ifDarkTheme = JSON.parse(localStorage.getItem("darkTheme"));
-        if (!ifDarkTheme) { // if it exist in local storage set default value
+        if (!ifDarkTheme) {
+          // if it exist in local storage set default value
           localStorage.setItem("darkTheme", JSON.stringify(false)); // light mode as default value
         }
       }
     }
 
-    checkDarkTheme()
+    checkDarkTheme();
   });
 
   return (
