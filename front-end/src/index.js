@@ -13,13 +13,16 @@ import './styles/post.css';
 import "./styles/settings.css";
 import { AuthContextProvider } from "./context/AuthContext";
 import App from "./App";
+import { DarkModeSwitchProvider } from "./context/DarkModeContext";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
   <AuthContextProvider>
-    <App />
+    <DarkModeSwitchProvider>
+      <App />
+    </DarkModeSwitchProvider>
   </AuthContextProvider>
   // </React.StrictMode>
 );

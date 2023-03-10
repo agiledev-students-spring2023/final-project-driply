@@ -15,25 +15,21 @@ import RegisterPage from "./pages/RegisterPage";
 import PostPage from "./pages/PostPage";
 import PostForm from "./pages/PostForm";
 import SettingsPage from "./pages/SettingsPage";
-import { useAuthContext } from "./hooks/useAuthContext";
 import { useEffect } from "react";
 import EditProfilePage from "./pages/EditProfilePage";
 
 function App() {
-  const { user } = useAuthContext();
 
   useEffect(() => {
     function checkDarkTheme() {
-      if (user) { // dark mode is only available to logged in users
-        const ifDarkTheme = JSON.parse(localStorage.getItem("darkTheme"));
-        if (!ifDarkTheme) { // if it exist in local storage set default value
-          localStorage.setItem("darkTheme", JSON.stringify(false)); // light mode as default value
-        }
+      const ifDarkTheme = JSON.parse(localStorage.getItem("darkTheme"));
+      if (!ifDarkTheme) { // if it exist in local storage set default value
+        localStorage.setItem("darkTheme", JSON.stringify(false)); // light mode as default value
       }
     }
 
     checkDarkTheme()
-  });
+  }, []);
 
   return (
     <Router>
