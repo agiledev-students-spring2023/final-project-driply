@@ -15,6 +15,8 @@ const PostPage = () => {
     const [commentList, setCommentList] = useState([]);
     const [likes, setLikes] = useState([]);
     const [likeChanged, setLikeChanged] = useState(false);
+    const [description, setDescription] = useState("");
+    const [price, setPrice] = useState(0);
     const [postError, setPostError] = useState(null);
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
@@ -23,18 +25,23 @@ const PostPage = () => {
     useEffect(() => {
         setLikeChanged(false);
         async function fetchPostInfo() {
-            const response = await fetch(`url`, {
-                method: "POST",
+            const response = await fetch(`https://my.api.mockaroo.com/post.json?key=997e9440`, {
+                method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "postId": id
-                })
+                }
+                // body: JSON.stringify({
+                //     "postId": id
+                // })
             });
             let json = await response.json();
             if (response.status === 200) {
                 console.log(json);
+                const p = json[0];
+                setCommentList(p.comments);
+                setLikes(p.likes);
+                setDescription(p.description);
+                setPrice(p.price);
                 setPostError(null);
                 setLoading(false);
             } else {
@@ -100,11 +107,11 @@ const PostPage = () => {
                     <span onClick={() => navigate("/profile")}>Username</span>
                 </div>
                 <div className="col-4 d-flex justify-content-end px-0 mx-auto">
-                    <span className="mr-3">Cost</span>
+                    <span className="mr-3">{price}</span>
                 </div>
             </div>
             <img className="center-block img-responsive" src="https://picsum.photos/id/24/131/150" alt="pic"/>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum scelerisque egestas hendrerit. Nam in ornare metus. Sed gravida vel orci vitae gravida. Nulla hendrerit, quam et varius posuere, orci lacus condimentum ipsum, at maximus nisi arcu sit amet erat. Nulla gravida malesuada orci, eget vestibulum dolor suscipit et. Donec sit amet nisi ac lacus finibus sollicitudin. Donec aliquet malesuada iaculis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris placerat mi tincidunt libero mollis, vitae tempor arcu consectetur. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vivamus tempus est lacus, sit amet vehicula enim dapibus dictum. Nam ultricies congue urna, non finibus odio placerat rhoncus. Sed dui dui, blandit et luctus vitae, lobortis a nulla. Mauris vel rhoncus odio, tempus pharetra odio. Aenean purus justo, dignissim in pellentesque lobortis, viverra nec erat. Nunc accumsan interdum eros a volutpat.
+            {description}
             <br/>
             <div style={{ textAlign: "right" }}>
                 {likes.length}

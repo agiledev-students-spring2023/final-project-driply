@@ -12,11 +12,13 @@ function Post({ post }) {
   const [ifLiked, setIfLiked] = useState(post.liked);
   const navigate = useNavigate();
 
-  const handleBookmarkClick = () => {
+  const handleBookmarkClick = (e) => {
+    e.stopPropagation();
     post.bookmarked = !ifBookmarked;
     setIfBookmarked(!ifBookmarked);
   };
-  const handlePostLike = () => {
+  const handlePostLike = (e) => {
+    e.stopPropagation();
     post.liked = !ifLiked;
     setIfLiked(!ifLiked);
 
@@ -49,7 +51,9 @@ function Post({ post }) {
       {/* post pictures */}
       <div className="postBody">
         {/* <img src={post.post_picture} alt="post img"/> */}
-        <img src={`https://picsum.photos/${randomSize[randomIndex]}/300`} alt="postpic" />
+        <Link to={`/post/0`}>
+          <img src={`https://picsum.photos/${randomSize[randomIndex]}/300`} alt="postpic" />
+        </Link>
         <div className="postBookmarkIcon">
           {ifBookmarked ? (
             <BookmarkIcon
