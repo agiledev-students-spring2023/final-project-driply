@@ -7,6 +7,7 @@ import { DarkModeContext } from "../context/DarkModeContext";
 
 
 const PostPage = () => {
+    const { user } = useAuthContext();
     const { ifDarkMode } = useContext(DarkModeContext);
     const navigate = useNavigate();
     const form = useRef();
@@ -20,7 +21,6 @@ const PostPage = () => {
     const [postError, setPostError] = useState(null);
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
-    const { user } = useAuthContext();
 
     useEffect(() => {
         setLikeChanged(false);
@@ -98,7 +98,7 @@ const PostPage = () => {
     };
 
     return (
-        <div className={`mb-10 ${ifDarkMode && "darkTheme"}`}>
+        <div className={`mb-100 postContainer overflow-auto ${ifDarkMode && "darkTheme"}`}>
             <div className="row align-items-center mx-auto">
                 <div className="col-8 d-flex align-items-center px-0 mx-auto">
                     <div onClick={() => navigate("/profile")} className="postpfp">
@@ -113,61 +113,64 @@ const PostPage = () => {
             <img className="center-block img-responsive" src="https://picsum.photos/id/24/131/150" alt="pic"/>
             {description}
             <br/>
-            <div style={{ textAlign: "right" }}>
-                {likes.length}
-                {likes.filter(e => (e.localeCompare(user.username) === 0)).length === 0 && (
-                    <button
-                        onClick={() => handleLike()}
-                        className='btn btn-secondary mx-2'
-                    >
-                        Like
-                    </button>
-                )}
-                {likes.filter(e => (e.localeCompare(user.username) === 0)).length > 0 && (
-                    <button
-                        onClick={() => handleLike()}
-                        className='btn btn-primary mx-2'
-                    >
-                        Liked
-                    </button>
-                )}
-            </div>
-            <div class="container">
-                <Form onSubmit={handleComment} ref={form} class="row align-items-center">
-                    <div className="col-auto px-0">
-                    <div onClick={() => navigate("/profile")} className="postpfp">
-                        <img src="https://picsum.photos/id/64/200" alt="user img"/>
-                    </div>    
+            {user && (
+                <div>
+                    <div style={{ textAlign: "right" }}>
+                        {likes.length}
+                        {likes.filter(e => (e.localeCompare(user.username) === 0)).length === 0 && (
+                            <button
+                                onClick={() => handleLike()}
+                                className='btn btn-secondary mx-2'
+                            >
+                                Like
+                            </button>
+                        )}
+                        {likes.filter(e => (e.localeCompare(user.username) === 0)).length > 0 && (
+                            <button
+                                onClick={() => handleLike()}
+                                className='btn btn-primary mx-2'
+                            >
+                                Liked
+                            </button>
+                        )}
                     </div>
-                    <div class="col px-0">
-                        <Input
-                            type="text"
-                            value={comment}
-                            className="form-control search-query"
-                            name="comment"
-                            onChange={onChangeComment}
-                            required
-                        />
-                    </div>
-                    <div class="col-auto">
-                    <button className="btn btn-success btn-block">Submit</button>
-                    </div>
-                </Form>
-            </div>
-            {commentList.map(c => (
-                <div className="row align-items-center mx-auto">
-                <div className="col-12 d-flex align-items-center px-0 mx-0">
-                    <div onClick={() => navigate("/profile")}>
-                        <img src="https://picsum.photos/id/64/200" alt="user img" className="postpfp"/>
-                    </div>
-                    <div className="d-flex flex-column align-items-left mx-2">
-                        <span className="username">Username</span>
-                        <span>{c}</span>
+                    <div class="container">
+                        <Form onSubmit={handleComment} ref={form} class="row align-items-center">
+                            <div className="col-auto px-0">
+                            <div onClick={() => navigate("/profile")} className="postpfp">
+                                <img src="https://picsum.photos/id/64/200" alt="user img"/>
+                            </div>    
+                            </div>
+                            <div class="col px-0">
+                                <Input
+                                    type="text"
+                                    value={comment}
+                                    className="form-control search-query"
+                                    name="comment"
+                                    onChange={onChangeComment}
+                                    required
+                                />
+                            </div>
+                            <div class="col-auto">
+                            <button className="btn btn-success btn-block">Submit</button>
+                            </div>
+                        </Form>
                     </div>
                 </div>
-            </div>
+            )}
+            {commentList.map(c => (
+                <div className="row align-items-center mx-auto">
+                    <div className="col-12 d-flex align-items-center px-0 mx-0">
+                        <div onClick={() => navigate("/profile")}>
+                            <img src="https://picsum.photos/id/64/200" alt="user img" className="postpfp"/>
+                        </div>
+                        <div className="d-flex flex-column align-items-left mx-2">
+                            <span className="username">Username</span>
+                            <span>{c}</span>
+                        </div>
+                    </div>
+                </div>
             ))}
-            <div className="pb-5">hello</div>
         </div>
     );
 };
