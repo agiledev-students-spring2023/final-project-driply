@@ -10,3 +10,9 @@
     height: 100%;
     border-radius: 50%;
 }
+
+#root {
+    overflow-y: auto; 
+    max-height: calc(100vh - 80px);
+}
+

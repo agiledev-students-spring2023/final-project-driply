@@ -149,7 +149,7 @@ Note: Beware of modifying this element as it can break the animations - you shou
 }
 .postContainer {
   /* border: 2px solid red; */
-  padding-bottom: 150px;
+  padding-bottom: 100px;
 }
 
 .darkTheme {

@@ -12,6 +12,10 @@
 ### Daily Standups
 - Pre-Scheduled Daily Standups are to be held the evening of the days lecture is held, Monday and Wednesdays. The third Daily Standup of the week is to be scheduled through when2meet.
 - Once all group members are finished with the Daily Standup, paste the written stnadup in team_driply_standups text channel with the daily standup date.
+### Planning Poker
+Work estiminations for users stories are decided using planning pokers with the created cards here:
+ 
+[Part 1](https://docs.google.com/drawings/d/14-hLOWZkmxGu3JMO_Y3raz-O4OfDSxh1C6yRuGgld0Q/edit?usp=sharing) [Part 2](https://docs.google.com/drawings/d/1gqDCBqP189jqCQjhEp1CHdnBSOKUufvdRqq94aBiC-E/edit?usp=sharing) [Part 3](https://docs.google.com/drawings/d/1K5De_d6yqVGIhSOuChqhQ65jc2Fl5kMRcT8xGg17s18/edit?usp=sharing)
 ### Coding Standards
 - (placeholder)
 - (ide, linter to universally use, etc.)
