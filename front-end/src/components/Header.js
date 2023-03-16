@@ -38,6 +38,14 @@ function Header(props) {
     navigate("trending");
   };
 
+  const handleLogoClick = () => {
+    if (user) {
+      navigate("/");
+    } else {
+      navigate("/trending");
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -63,7 +71,9 @@ function Header(props) {
             direction === "down" ? "header-hide" : "header-show"
           } ${ifDarkMode && "header-Dark"}`}
         >
-          <div className="logo">Logo</div>
+          <div className="logo" onClick={handleLogoClick}>
+            Logo
+          </div>
           <Menu
             noOverlay
             right={true}
@@ -97,7 +107,9 @@ function Header(props) {
         </div>
       ) : (
         <div className="header">
-          <div className="logo">Logo</div>
+          <div className="logo" onClick={handleLogoClick}>
+            Logo
+          </div>
           <Menu
             noOverlay
             right={true}
