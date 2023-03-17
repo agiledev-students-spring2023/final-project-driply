@@ -54,13 +54,10 @@ Work estiminations for users stories are decided using planning pokers with the 
 delete your branch <br>
 	`git push origin -d <branch-name>` <br>
 THEN switch back to master <br>
-	`git checkout master`
+	`git checkout master` <br>
 THEN delete branch locally <br>
-	`git branch -D <branch-name>`
-
-
-
-    to check the branch you’re currently on: <br>
+	`git branch -D <branch-name>` <br>
+    to check the branch you’re currently on <br>
 	   ` git rev-parse --abbrev-ref HEAD`
 
 ---
