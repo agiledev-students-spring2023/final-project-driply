@@ -2,7 +2,11 @@
 
 ## The Team Norms
 ### Team Values
-- (placeholder)
+1. Collaboration - Value teamwork and cooperation.
+2. Communication - Value clear, transparent, and open communication.
+3. Adaptability - Value flexibility and adjustability.
+4. User focus - Value user satisfaction and delivering value.
+5. Continuous improvement - Value reflection, learning, and improving processes.
 ### Sprint Cadence
 - Sprint 0: 02/15-02/27
 - Sprint 1: 02/27-03/22
@@ -17,9 +21,9 @@ Work estiminations for users stories are decided using planning pokers with the 
  
 [Part 1](https://docs.google.com/drawings/d/14-hLOWZkmxGu3JMO_Y3raz-O4OfDSxh1C6yRuGgld0Q/edit?usp=sharing) [Part 2](https://docs.google.com/drawings/d/1gqDCBqP189jqCQjhEp1CHdnBSOKUufvdRqq94aBiC-E/edit?usp=sharing) [Part 3](https://docs.google.com/drawings/d/1K5De_d6yqVGIhSOuChqhQ65jc2Fl5kMRcT8xGg17s18/edit?usp=sharing)
 ### Coding Standards
-- (placeholder)
-- (ide, linter to universally use, etc.)
-- (small commits, commenting code, etc.)
+- Visual Studio Code as IDE
+- Make small commits and stick to the workflow below 
+- (linter and comment standards may be added in future as needed)
 
 ---
 ## The Git Workflow
@@ -54,13 +58,10 @@ Work estiminations for users stories are decided using planning pokers with the 
 delete your branch <br>
 	`git push origin -d <branch-name>` <br>
 THEN switch back to master <br>
-	`git checkout master`
+	`git checkout master` <br>
 THEN delete branch locally <br>
-	`git branch -D <branch-name>`
-
-
-
-    to check the branch you’re currently on: <br>
+	`git branch -D <branch-name>` <br>
+    to check the branch you’re currently on <br>
 	   ` git rev-parse --abbrev-ref HEAD`
 
 ---
