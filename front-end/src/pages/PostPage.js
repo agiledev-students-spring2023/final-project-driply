@@ -39,7 +39,7 @@ const PostPage = () => {
                 console.log(json);
                 const p = json[0];
                 setCommentList(p.comments);
-                setLikes(p.likes);
+                //setLikes(p.likes);
                 setDescription(p.description);
                 setPrice(p.price);
                 setPostError(null);
