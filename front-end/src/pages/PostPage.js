@@ -98,7 +98,7 @@ const PostPage = () => {
     };
 
     return (
-        <div className={`mb-100 postContainer overflow-auto ${ifDarkMode && "darkTheme"}`}>
+        <div className={`mb-100 postContainer overflow-auto ${ifDarkMode && "darkTheme"} postPage`}>
             <div className="row align-items-center mx-auto">
                 <div className="col-8 d-flex align-items-center px-0 mx-auto">
                     <div onClick={() => navigate("/profile")} className="postpfp">
