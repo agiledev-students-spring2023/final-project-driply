@@ -5,16 +5,17 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { DarkModeContext } from "../context/DarkModeContext";
 import Like from "../components/Like";
+import Comment from "../components/Comment";
 
 
 const PostPage = () => {
-    const { user } = useAuthContext();
+    //const { user } = useAuthContext();
     const { ifDarkMode } = useContext(DarkModeContext);
     const navigate = useNavigate();
     const form = useRef();
-    const [comment, setComment] = useState("");
+    //const [comment, setComment] = useState("");
     const [post, setPost] = useState(null);
-    const [commentList, setCommentList] = useState([]);
+    //const [commentList, setCommentList] = useState([]);
     //const [likes, setLikes] = useState([]);
     //const [likeChanged, setLikeChanged] = useState(false);
     const [description, setDescription] = useState("");
@@ -47,7 +48,6 @@ const PostPage = () => {
             if (response.status === 200) {
                 console.log(json);
                 const p = json[0];
-                setCommentList(p.comments);
                 // Commented out fetching likes from mockaroo as clicking like would trigger the useEffect and refetch from mockaroo resulting in inaccurate like count and update.
                 // setLikes(p.likes);
                 setFakeName(p.username);
@@ -64,37 +64,6 @@ const PostPage = () => {
         fetchPostInfo();
     }, []);
 
-    const onChangeComment = (e) => {
-        setComment(e.target.value);
-    };
-
-    const handleComment = (e) => {
-        e.preventDefault();
-        async function addComment() {
-            const response = await fetch(`url`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "postId": id,
-                    "comment": comment
-                })
-            });
-            let json = await response.json();
-            if (response.status === 200) {
-                console.log(json);
-            } else {
-                setPostError(response.status);
-                setLoading(false);
-            }
-        }
-
-        addComment();
-        setCommentList([comment, ...commentList]);
-        setComment('');
-        console.log(commentList);
-    };
 
     return (
         <div className={`mb-100 postContainer overflow-auto ${ifDarkMode && "darkTheme"} postPage`}>
@@ -112,46 +81,7 @@ const PostPage = () => {
             <img className="center-block img-responsive" src={`https://picsum.photos/${randomPostSize[randomPostIndex]}/300`} alt="pic"/>
             {description}
             <br/>
-            {user && (
-                <div>
-                    <Like/>
-                    <div class="container">
-                        <Form onSubmit={handleComment} ref={form} class="row align-items-center">
-                            <div className="col-auto px-0">
-                            <div onClick={() => navigate("/profile")} className="postpfp">
-                                <img src={`https://picsum.photos/${randomProfileSize[randomProfileIndex]}/300`} alt="user img"/>
-                            </div>    
-                            </div>
-                            <div class="col px-0">
-                                <Input
-                                    type="text"
-                                    value={comment}
-                                    className="form-control search-query"
-                                    name="comment"
-                                    onChange={onChangeComment}
-                                    required
-                                />
-                            </div>
-                            <div class="col-auto">
-                            <button className="btn btn-success btn-block">Submit</button>
-                            </div>
-                        </Form>
-                    </div>
-                </div>
-            )}
-            {commentList.map(c => (
-                <div className="row align-items-center mx-auto">
-                    <div className="col-12 d-flex align-items-center px-0 mx-0">
-                        <div onClick={() => navigate("/profile")}>
-                            <img src={`https://picsum.photos/${randomProfileSize[randomProfileIndex]}/300`} alt="user img" className="postpfp"/>
-                        </div>
-                        <div className="d-flex flex-column align-items-left mx-2">
-                            <span className="username">{fakeName}</span>
-                            <span>{c}</span>
-                        </div>
-                    </div>
-                </div>
-            ))}
+            <Comment/>
         </div>
     );
 };
