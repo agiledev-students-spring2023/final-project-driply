@@ -11,7 +11,7 @@ function Home() {
   useEffect(() => {
     async function fetchPostList() {
       const response = await fetch(
-        `https://my.api.mockaroo.com/post_schema.json?key=099dde30`
+        `https://my.api.mockaroo.com/post_schema.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`
       );
       let json = await response.json();
       if (response.status === 200) {

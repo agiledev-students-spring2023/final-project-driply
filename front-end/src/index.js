@@ -11,7 +11,7 @@ import "./styles/postform.css";
 import "./styles/bookmarks.css";
 import "./styles/post.css";
 import "./styles/settings.css";
-import "./styles/trending.css";
+import "./styles/trendingpage.css";
 import "./styles/header.css";
 import "./styles/navbar.css";
 import "./styles/sidemenu.css";

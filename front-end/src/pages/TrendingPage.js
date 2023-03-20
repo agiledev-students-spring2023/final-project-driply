@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Post from "../components/Post";
+import TrendingCard from "../components/TrendingCard";
 import { DarkModeContext } from '../context/DarkModeContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 
@@ -13,7 +13,7 @@ function TrendingPage() {
   useEffect(() => {
     async function fetchPostList() {
       const response = await fetch(
-        `https://my.api.mockaroo.com/post_schema.json?key=099dde30`
+        `https://my.api.mockaroo.com/post_schema.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`
       );
       let json = await response.json();
       if (response.status === 200) {
@@ -47,17 +47,17 @@ function TrendingPage() {
 
   function DisplayPostLists() {
     return (
-      <>
+      <div className='galleryContainer'>
         {postList?.map((post) => (
-          <Post key={post.id} post={post} />
+          <TrendingCard key={post.id} post={post} />
         ))}
-      </>
+      </div>
     );
   }
 
 
   return (
-    <div className={`postContainer ${ifDarkMode && "darkTheme"}`}>
+    <div className={`trendingPage ${ifDarkMode && "darkTheme"}`}>
       {postListError && (
         <div>
           <h1 className="error">Error Code: {postListError.status}</h1>

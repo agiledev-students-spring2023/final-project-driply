@@ -1,0 +1,49 @@
+.trendingPage {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.galleryContainer {
+    margin: 0;
+    padding-top: 10px;
+    margin-bottom: 50px;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 110px);
+    grid-auto-rows: 10px;
+    justify-content: center;
+}
+
+.galleryCard {
+    box-shadow: 0px 8px 10px rgba(33, 33, 33, .5);
+    position: relative;
+}
+
+.card {
+    margin: 5px 3px;
+    padding: 0;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.small {
+    grid-row-end: span 11;
+}
+
+.medium {
+    grid-row-end: span 14;
+}
+
+.large {
+    grid-row-end: span 16;
+}
+
+.imgStyle {
+    border-radius: 16px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
