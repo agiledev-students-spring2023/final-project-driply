@@ -33,7 +33,7 @@ const PostPage = () => {
     useEffect(() => {
         setLikeChanged(false);
         async function fetchPostInfo() {
-            const response = await fetch(`https://my.api.mockaroo.com/post.json?key=997e9440`, {
+            const response = await fetch(`https://my.api.mockaroo.com/post.json?key=9e339cc0`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
@@ -120,14 +120,12 @@ const PostPage = () => {
                     <span className="mr-3">${price}</span>
                 </div>
             </div>
-            
-                <img className="center-block img-responsive" src={`https://picsum.photos/${randomPostSize[randomPostIndex]}/300`} alt="pic"/>
-            
+            <img className="center-block img-responsive" src={`https://picsum.photos/${randomPostSize[randomPostIndex]}/300`} alt="pic"/>
             {description}
             <br/>
             {user && (
                 <div>
-                    <div style={{ textAlign: "right" }}>
+                    <div className="right">
                         {likes.length}
                         {likes.filter(e => (e.localeCompare(user.username) === 0)).length === 0 && (
                             <button

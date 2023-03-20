@@ -11,6 +11,10 @@
     border-radius: 50%;
 }
 
+.right {
+    text-align: right;
+}
+
 #root {
     overflow-y: auto; 
     max-height: calc(100vh - 0px);

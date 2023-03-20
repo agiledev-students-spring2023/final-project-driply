@@ -10,6 +10,8 @@ function ProfilePage() {
   const [description, setDescription] = useState("");
   const [postError, setPostError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [followed, setFollowed] = useState(false);
+  const [followedChanged, setFollowedChanged] = useState(false);
   const { ifDarkMode } = useContext(DarkModeContext);
 
   const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
@@ -20,8 +22,9 @@ function ProfilePage() {
   const randomIndex5 = Math.floor(Math.random() * randomSize.length);
 
   useEffect(() => {
+    setFollowedChanged(false);
     async function fetchProfileInfo() {
-        const response = await fetch(`https://my.api.mockaroo.com/post.json?key=997e9440`, {
+        const response = await fetch(`https://my.api.mockaroo.com/post.json?key=9e339cc0`, {
             method: "GET",
             headers: {
               'Content-Type': 'application/json'
@@ -43,24 +46,45 @@ function ProfilePage() {
             setLoading(false);
         }
     }
-
+    console.log(user);
     fetchProfileInfo();
-}, []);
+  }, [followedChanged]);
+
+  const handleFollow = () => {
+    setFollowed(!followed);
+    setFollowedChanged(true);
+  };
 
   function FollowButton() {
-    return (
-      <div className={`followButton ${ifDarkMode && "followButton-dark"}`}>
-        Follow
-      </div>
-    );
+    if (!followed){
+      return (
+        <button
+          onClick={() => handleFollow()}
+          className='btn btn-secondary'
+        >
+            Follow
+        </button>
+      )
+    }
+    else{
+      return (
+        <button
+            onClick={() => handleFollow()}
+            className='btn btn-primary'
+        >
+            Followed
+        </button>
+      )
+    }
   }
+  
   return (
     <div className={`profileContainer ${ifDarkMode && "darkTheme"}`}>
+      <div className="right">{user ? <FollowButton /> : <div></div>}</div>
       <div className="pfpContainer">
         <div className="pfp">
           <img src={`https://picsum.photos/${randomSize[randomIndex5]}/300`} alt="pic" />
         </div>
-        {user ? <FollowButton /> : <div></div>}
       </div>
       <div className="pf-name">
         <p>{fakeName}</p>
