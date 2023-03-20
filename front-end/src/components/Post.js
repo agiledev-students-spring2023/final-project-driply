@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useAuthContext } from "../hooks/useAuthContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"; // not bookmarked
 import BookmarkIcon from "@mui/icons-material/Bookmark"; // bookmarked
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"; // unliked post
@@ -11,24 +11,41 @@ function Post({ post }) {
   const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
   const [ifLiked, setIfLiked] = useState(post.liked);
   const navigate = useNavigate();
+  const { user } = useAuthContext();
 
   const handleBookmarkClick = (e) => {
-    e.stopPropagation();
-    post.bookmarked = !ifBookmarked;
-    setIfBookmarked(!ifBookmarked);
-  };
-  const handlePostLike = (e) => {
-    e.stopPropagation();
-    post.liked = !ifLiked;
-    setIfLiked(!ifLiked);
-
-    // update like count
-    if (post.liked) {
-      post.likes += 1;
-    } else {
-      post.likes -= 1;
+    if (user) { // only bookmark post if logged in
+      e.stopPropagation();
+      post.bookmarked = !ifBookmarked;
+      setIfBookmarked(!ifBookmarked);
+    } else { // navigate user to login page
+      navigate("/login");
     }
   };
+  const handlePostLike = (e) => {
+    if (user) { // only like post if logged in
+      e.stopPropagation();
+      post.liked = !ifLiked;
+      setIfLiked(!ifLiked);
+
+      // update like count
+      if (post.liked) {
+        post.likes += 1;
+      } else {
+        post.likes -= 1;
+      }
+    } else { // navigate user to login page
+      navigate("/login");
+    }
+  };
+
+  const handleCommentClick = () => {
+    if (user) {
+      navigate("/post/0");
+    } else {
+      navigate("/login");
+    }
+  }
 
   // this is just temp. to get different imgs and sizes
   const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
@@ -78,7 +95,7 @@ function Post({ post }) {
             <p>{post.likes}</p>
           </div>
           <div>
-            <ChatBubbleIcon />
+            <ChatBubbleIcon onClick={handleCommentClick}/>
             <p>{post.comments}</p>
           </div>
         </div>
