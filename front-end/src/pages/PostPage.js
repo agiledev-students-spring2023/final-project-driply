@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
 import { DarkModeContext } from "../context/DarkModeContext";
-import Like from "../components/Like";
 import Comment from "../components/Comment";
 
 
@@ -12,9 +9,7 @@ const PostPage = () => {
     //const { user } = useAuthContext();
     const { ifDarkMode } = useContext(DarkModeContext);
     const navigate = useNavigate();
-    const form = useRef();
     //const [comment, setComment] = useState("");
-    const [post, setPost] = useState(null);
     //const [commentList, setCommentList] = useState([]);
     //const [likes, setLikes] = useState([]);
     //const [likeChanged, setLikeChanged] = useState(false);
