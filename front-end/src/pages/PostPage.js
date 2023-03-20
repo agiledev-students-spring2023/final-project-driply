@@ -120,7 +120,9 @@ const PostPage = () => {
                     <span className="mr-3">${price}</span>
                 </div>
             </div>
-            <img className="center-block img-responsive" src={`https://picsum.photos/${randomPostSize[randomPostIndex]}/300`} alt="pic"/>
+            
+                <img className="center-block img-responsive" src={`https://picsum.photos/${randomPostSize[randomPostIndex]}/300`} alt="pic"/>
+            
             {description}
             <br/>
             {user && (
