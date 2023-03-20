@@ -32,7 +32,22 @@ Driply is a fashion social networking app  where users can share their outfits a
 
 ## Instructions for Building and Testing
 
-(update with that information once the project reaches that stage)
+### Acquire the source code
+
+1. Clone the repository into your local machine
+2. Navigate into the local directory
+
+### Build and launch the back end
+
+1. Navigate into the back-end directory
+2. Run ```npm install``` to install all dependencies listed in the package.json file.
+3. Run ```npm start``` to launch the back-end server
+
+### Build and launch the front end
+
+1. Navigate into the front-end directory
+2. Run ```npm install``` to install all dependencies listed in the package.json file.
+3. Run ```npm start``` to launch the React.js server
 
 ## Additional Documents
 
