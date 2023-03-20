@@ -7,6 +7,11 @@
 3. Adaptability - Value flexibility and adjustability.
 4. User focus - Value user satisfaction and delivering value.
 5. Continuous improvement - Value reflection, learning, and improving processes.
+6. 
+7. 
+8. 
+9. 
+10. 
 ### Sprint Cadence
 - Sprint 0: 02/15-02/27
 - Sprint 1: 02/27-03/22
@@ -54,15 +59,14 @@ Work estiminations for users stories are decided using planning pokers with the 
 
 8. Update task board TASK to awaiting review 
 
-9. AFTER someone else reviews, approves and merges your code,
-delete your branch <br>
+9. AFTER someone else reviews, approves and merges your code, delete your branch <br>
 	`git push origin -d <branch-name>` <br>
-THEN switch back to master <br>
+	THEN switch back to master <br>
 	`git checkout master` <br>
-THEN delete branch locally <br>
+	THEN delete branch locally <br>
 	`git branch -D <branch-name>` <br>
     to check the branch you’re currently on <br>
-	   ` git rev-parse --abbrev-ref HEAD`
+	`git rev-parse --abbrev-ref HEAD`
 
 ---
 ## Rules of Contributing and Any Considerations or How and What to Contribute
