@@ -236,3 +236,11 @@
     animation-duration: .7s;
     animation-timing-function: ease-out;
 }
+
+.white {
+    color: white;
+}
+
+.gray {
+    color: gray;
+}

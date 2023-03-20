@@ -78,7 +78,7 @@ function MainChatPage() {
             <h4>{chat.first_name}</h4>
 
             {ifRead ? (
-                <p style={{ color: "gray" }}>{dateDisplay}</p>
+                <p className="gray">{dateDisplay}</p>
               ) : (
                 <p>{dateDisplay}</p>
               )

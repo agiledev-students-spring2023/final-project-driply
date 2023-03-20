@@ -1,6 +1,6 @@
 .profileContainer {
     width: 100%;
-    height: 100vh;
+    height: 100%;
 }
 
 .pfpContainer {
@@ -111,7 +111,9 @@
     flex-wrap: wrap;
     grid-gap: 1px;
     background-color: white;
+    margin-bottom: 80px;
 }
+
 .postsContainer-dark {
     position: "relative";  
     display: grid; 
@@ -121,6 +123,7 @@
     grid-gap: 1px;
     /* background-color: #000000; */
     background-color:#121212;
+    margin-bottom: 80px;
 }
 
 
@@ -130,6 +133,7 @@
     align-items: center; 
     width: 100%; 
     height: 150px;
+    position: relative;
 }
 
 .center-block {
@@ -142,6 +146,14 @@
     width: 100%;
     max-height: 100%;
     object-fit: contain;
+}
+
+.img-responsive-post {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .editProfilePage {

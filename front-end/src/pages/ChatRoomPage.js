@@ -53,7 +53,7 @@ function ChatRoomPage() {
         const animation = (idx === messages.length-1) ? "newMessage" : "";
         return (
             <div className={`senderMessage ${animation}`}>
-                <div style={{ color: "white" }}>{message.message}</div>
+                <div className="white">{message.message}</div>
             </div>
         );
     }

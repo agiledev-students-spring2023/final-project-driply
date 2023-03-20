@@ -1,37 +1,65 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { DarkModeContext } from "../context/DarkModeContext";
-import { useAuthContext } from "../hooks/useAuthContext";
+import Follow from "../components/Follow";
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const { user } = useAuthContext();
+  const [fakeName, setFakeName] = useState(""); // remove after sprint 1, only used to randomize displayed username using mockaroo
+  const [description, setDescription] = useState("");
+  const [postError, setPostError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { ifDarkMode } = useContext(DarkModeContext);
 
-  function FollowButton() {
-    return (
-      <div className={`followButton ${ifDarkMode && "followButton-dark"}`}>
-        Follow
-      </div>
-    );
-  }
+  const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
+  const randomIndex1 = Math.floor(Math.random() * randomSize.length);
+  const randomIndex2 = Math.floor(Math.random() * randomSize.length);
+  const randomIndex3 = Math.floor(Math.random() * randomSize.length);
+  const randomIndex4 = Math.floor(Math.random() * randomSize.length);
+  const randomIndex5 = Math.floor(Math.random() * randomSize.length);
+
+  useEffect(() => {
+    async function fetchProfileInfo() {
+        const response = await fetch(`https://my.api.mockaroo.com/post.json?key=9e339cc0`, {
+            method: "GET",
+            headers: {
+              'Content-Type': 'application/json'
+            }
+            // body: JSON.stringify({
+            //     "postId": id
+            // })
+        });
+        let json = await response.json();
+        if (response.status === 200) {
+            console.log(json);
+            const p = json[0];
+            setFakeName(p.username);
+            setDescription(p.description);
+            setPostError(null);
+            setLoading(false);
+        } else {
+            setPostError(response.status);
+            setLoading(false);
+        }
+    }
+    fetchProfileInfo();
+  }, []);
+
+  
   return (
     <div className={`profileContainer ${ifDarkMode && "darkTheme"}`}>
+      <Follow/>
       <div className="pfpContainer">
         <div className="pfp">
-          <img src="https://picsum.photos/id/64/200" alt="pic" />
+          <img src={`https://picsum.photos/${randomSize[randomIndex5]}/300`} alt="pic" />
         </div>
-        {user ? <FollowButton /> : <div></div>}
       </div>
       <div className="pf-name">
-        <p>Username</p>
+        <p>{fakeName}</p>
       </div>
       <div className="pf-bio">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla feugiat
-          iaculis arcu, vel maximus dolor molestie eu. Morbi rutrum accumsan
-          quam, vitae dapibus libero pharetra eu. Vivamus a ex at orci sodales
-          sagittis id non elit.
+          {description}
         </p>
       </div>
       <div className="profileInfo">
@@ -69,8 +97,8 @@ function ProfilePage() {
         <div className="imagePostsContainer">
           <Link to={`/post/0`}>
             <img
-              className="img-responsive"
-              src="https://picsum.photos/id/22/131/150"
+              className="img-responsive-post"
+              src={`https://picsum.photos/${randomSize[randomIndex1]}/300`}
               alt="pic"
             />
           </Link>
@@ -78,8 +106,8 @@ function ProfilePage() {
         <div className="imagePostsContainer">
           <Link to={`/post/0`}>
             <img
-              className="img-responsive"
-              src="https://picsum.photos/id/27/131/150"
+              className="img-responsive-post"
+              src={`https://picsum.photos/${randomSize[randomIndex2]}/300`}
               alt="pic"
             />
           </Link>
@@ -87,8 +115,8 @@ function ProfilePage() {
         <div className="imagePostsContainer">
           <Link to={`/post/0`}>
             <img
-              className="img-responsive"
-              src="https://picsum.photos/id/24/131/150"
+              className="img-responsive-post"
+              src={`https://picsum.photos/${randomSize[randomIndex3]}/300`}
               alt="pic"
             />
           </Link>
@@ -96,8 +124,8 @@ function ProfilePage() {
         <div className="imagePostsContainer">
           <Link to={`/post/0`}>
             <img
-              className="img-responsive"
-              src="https://picsum.photos/id/25/131/150"
+              className="img-responsive-post"
+              src={`https://picsum.photos/${randomSize[randomIndex4]}/300`}
               alt="pic"
             />
           </Link>

@@ -36,7 +36,7 @@ function Bookmarks() {
     return (
       Array.from({length: 4}).map((_, idx) => {
         return (
-          <div key={idx} className="bookmarkItem" style={{ backgroundColor: "#DDDDDD", borderRadius: "2%" }}></div>
+          <div key={idx} className="bookmarkItem bookmarkBgColor"></div>
         );
       })
     );
