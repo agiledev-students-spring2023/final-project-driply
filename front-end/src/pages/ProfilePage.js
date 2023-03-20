@@ -1,16 +1,19 @@
-import React, { useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { DarkModeContext } from '../context/DarkModeContext';
-import { useAuthContext } from '../hooks/useAuthContext';
+import React, { useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { DarkModeContext } from "../context/DarkModeContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 function ProfilePage() {
   const navigate = useNavigate();
   const { user } = useAuthContext();
   const { ifDarkMode } = useContext(DarkModeContext);
 
-
   function FollowButton() {
-    return <div className={`followButton ${ifDarkMode && "followButton-dark"}`}>Follow</div>;
+    return (
+      <div className={`followButton ${ifDarkMode && "followButton-dark"}`}>
+        Follow
+      </div>
+    );
   }
   return (
     <div className={`profileContainer ${ifDarkMode && "darkTheme"}`}>
@@ -20,29 +23,49 @@ function ProfilePage() {
         </div>
         {user ? <FollowButton /> : <div></div>}
       </div>
-
+      <div className="pf-name">
+        <p>Username</p>
+      </div>
+      <div className="pf-bio">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla feugiat
+          iaculis arcu, vel maximus dolor molestie eu. Morbi rutrum accumsan
+          quam, vitae dapibus libero pharetra eu. Vivamus a ex at orci sodales
+          sagittis id non elit.
+        </p>
+      </div>
       <div className="profileInfo">
-        <div className={ifDarkMode ? "profileInfoSpecific-dark" : "profileInfoSpecific"}>
+        <div
+          className={
+            ifDarkMode ? "profileInfoSpecific-dark" : "profileInfoSpecific"
+          }
+        >
           <p>3</p>
           <p>Posts</p>
         </div>
         <div
           onClick={() => navigate("/followers")}
-          className={ifDarkMode ? "profileInfoSpecific-dark" : "profileInfoSpecific"}
+          className={
+            ifDarkMode ? "profileInfoSpecific-dark" : "profileInfoSpecific"
+          }
         >
           <p>3</p>
           <p>Followers</p>
         </div>
         <div
           onClick={() => navigate("/following")}
-          className={ifDarkMode ? "profileInfoSpecific-dark" : "profileInfoSpecific"}
+          className={
+            ifDarkMode ? "profileInfoSpecific-dark" : "profileInfoSpecific"
+          }
         >
           <p>3</p>
           <p>Following</p>
         </div>
       </div>
 
-      <div className={`${ifDarkMode ? "postsContainer-dark" : "postsContainer"}`}>
+      <div
+        className={`${ifDarkMode ? "postsContainer-dark" : "postsContainer"}`}
+      >
         <div className="imagePostsContainer">
           <Link to={`/post/0`}>
             <img
