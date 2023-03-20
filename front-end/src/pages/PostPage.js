@@ -4,6 +4,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import { DarkModeContext } from "../context/DarkModeContext";
+import Like from "../components/Like";
 
 
 const PostPage = () => {
@@ -14,8 +15,8 @@ const PostPage = () => {
     const [comment, setComment] = useState("");
     const [post, setPost] = useState(null);
     const [commentList, setCommentList] = useState([]);
-    const [likes, setLikes] = useState([]);
-    const [likeChanged, setLikeChanged] = useState(false);
+    //const [likes, setLikes] = useState([]);
+    //const [likeChanged, setLikeChanged] = useState(false);
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
     const [postError, setPostError] = useState(null);
@@ -31,7 +32,7 @@ const PostPage = () => {
     const randomPostIndex = Math.floor(Math.random() * randomPostSize.length);
 
     useEffect(() => {
-        setLikeChanged(false);
+        //setLikeChanged(false);
         async function fetchPostInfo() {
             const response = await fetch(`https://my.api.mockaroo.com/post.json?key=9e339cc0`, {
                 method: "GET",
@@ -61,7 +62,7 @@ const PostPage = () => {
         }
 
         fetchPostInfo();
-    }, [likeChanged]);
+    }, []);
 
     const onChangeComment = (e) => {
         setComment(e.target.value);
@@ -95,18 +96,6 @@ const PostPage = () => {
         console.log(commentList);
     };
 
-    const handleLike = () => {
-        if (likes.filter(e => (e.localeCompare(user.username) === 0)).length === 0){
-            likes.push(user.username);
-        }
-        else{
-            const index = likes.indexOf(user.username);
-            likes.splice(index, 1);
-        }
-        setLikeChanged(true);
-        console.log(likes);
-    };
-
     return (
         <div className={`mb-100 postContainer overflow-auto ${ifDarkMode && "darkTheme"} postPage`}>
             <div className="row align-items-center mx-auto">
@@ -125,25 +114,7 @@ const PostPage = () => {
             <br/>
             {user && (
                 <div>
-                    <div className="right">
-                        {likes.length}
-                        {likes.filter(e => (e.localeCompare(user.username) === 0)).length === 0 && (
-                            <button
-                                onClick={() => handleLike()}
-                                className='btn btn-secondary mx-2'
-                            >
-                                Like
-                            </button>
-                        )}
-                        {likes.filter(e => (e.localeCompare(user.username) === 0)).length > 0 && (
-                            <button
-                                onClick={() => handleLike()}
-                                className='btn btn-primary mx-2'
-                            >
-                                Liked
-                            </button>
-                        )}
-                    </div>
+                    <Like/>
                     <div class="container">
                         <Form onSubmit={handleComment} ref={form} class="row align-items-center">
                             <div className="col-auto px-0">
