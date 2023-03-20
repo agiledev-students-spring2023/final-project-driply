@@ -22,6 +22,14 @@ const PostPage = () => {
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
 
+    const [fakeName, setFakeName] = useState(""); // remove after sprint 1, only used to randomize displayed username using mockaroo
+
+    // this is just temp to get different imgs and sizes
+    const randomProfileSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
+    const randomProfileIndex = Math.floor(Math.random() * randomProfileSize.length);
+    const randomPostSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
+    const randomPostIndex = Math.floor(Math.random() * randomPostSize.length);
+
     useEffect(() => {
         setLikeChanged(false);
         async function fetchPostInfo() {
@@ -39,7 +47,9 @@ const PostPage = () => {
                 console.log(json);
                 const p = json[0];
                 setCommentList(p.comments);
-                //setLikes(p.likes);
+                // Commented out fetching likes from mockaroo as clicking like would trigger the useEffect and refetch from mockaroo resulting in inaccurate like count and update.
+                // setLikes(p.likes);
+                setFakeName(p.username);
                 setDescription(p.description);
                 setPrice(p.price);
                 setPostError(null);
@@ -102,15 +112,15 @@ const PostPage = () => {
             <div className="row align-items-center mx-auto">
                 <div className="col-8 d-flex align-items-center px-0 mx-auto">
                     <div onClick={() => navigate("/profile")} className="postpfp">
-                        <img src="https://picsum.photos/id/64/200" alt="user img"/>
+                        <img src={`https://picsum.photos/${randomProfileSize[randomProfileIndex]}/300`} alt="user img"/>
                     </div>
-                    <span onClick={() => navigate("/profile")}>Username</span>
+                    <span onClick={() => navigate("/profile")}>{fakeName}</span>
                 </div>
                 <div className="col-4 d-flex justify-content-end px-0 mx-auto">
-                    <span className="mr-3">{price}</span>
+                    <span className="mr-3">${price}</span>
                 </div>
             </div>
-            <img className="center-block img-responsive" src="https://picsum.photos/id/24/131/150" alt="pic"/>
+            <img className="center-block img-responsive" src={`https://picsum.photos/${randomPostSize[randomPostIndex]}/300`} alt="pic"/>
             {description}
             <br/>
             {user && (
@@ -138,7 +148,7 @@ const PostPage = () => {
                         <Form onSubmit={handleComment} ref={form} class="row align-items-center">
                             <div className="col-auto px-0">
                             <div onClick={() => navigate("/profile")} className="postpfp">
-                                <img src="https://picsum.photos/id/64/200" alt="user img"/>
+                                <img src={`https://picsum.photos/${randomProfileSize[randomProfileIndex]}/300`} alt="user img"/>
                             </div>    
                             </div>
                             <div class="col px-0">
@@ -162,10 +172,10 @@ const PostPage = () => {
                 <div className="row align-items-center mx-auto">
                     <div className="col-12 d-flex align-items-center px-0 mx-0">
                         <div onClick={() => navigate("/profile")}>
-                            <img src="https://picsum.photos/id/64/200" alt="user img" className="postpfp"/>
+                            <img src={`https://picsum.photos/${randomProfileSize[randomProfileIndex]}/300`} alt="user img" className="postpfp"/>
                         </div>
                         <div className="d-flex flex-column align-items-left mx-2">
-                            <span className="username">Username</span>
+                            <span className="username">{fakeName}</span>
                             <span>{c}</span>
                         </div>
                     </div>
