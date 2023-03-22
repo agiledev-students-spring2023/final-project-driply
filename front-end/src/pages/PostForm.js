@@ -75,6 +75,7 @@ function PostForm() {
             className="input-field"
             type="file"
             onChange={handleImageSelect}
+            name="image"
           />
         </label>
         {image && (
