@@ -63,13 +63,19 @@ function PostForm() {
       <div className="chatPageHeader">
         <h1>Create Post</h1>
       </div>
-      <form className="post-form" onSubmit={handleSubmit}>
+      <form
+        className="post-form"
+        onSubmit={handleSubmit}
+        method="POST"
+        action="post-form"
+      >
         <label className="input-label">
           Upload your photos
           <input
             className="input-field"
             type="file"
             onChange={handleImageSelect}
+            name="image"
           />
         </label>
         {image && (
