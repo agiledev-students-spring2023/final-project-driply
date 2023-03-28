@@ -85,5 +85,17 @@ app.post('/createComment', (req, res, next) =>{
   res.json(body);
 })
 
+app.get('/bookmarks', async (req, res) => {
+  axios
+    .get("https://my.api.mockaroo.com/bookmark_schema.json?key=90e03700")
+    .then(apiResponse => {
+      const { data, status } = apiResponse;
+      res.json({ data, status});
+    })
+    .catch(err => {
+      res.json({ error: err.message });
+    });
+});
+
 
 module.exports = app;
