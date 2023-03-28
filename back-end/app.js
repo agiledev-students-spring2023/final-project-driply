@@ -39,4 +39,41 @@ app.post("/post-form", upload.single("image"), (req, res) => {
   } else throw "error";
 });
 
+app.get("/getPost", (req, res) => {
+  console.log("get post with id " + req.body.postId);
+  const body = {
+    message: "success"
+  }
+
+  res.json(body);
+})
+
+app.post("/like", (req, res) => {
+  console.log("like post with id " + req.body.postId);
+  const body = {
+    message: "success"
+  }
+
+  res.json(body);
+})
+
+app.post("/unlike", (req, res) => {
+  console.log("unlike post with id " + req.body.postId);
+  const body = {
+    message: "success"
+  }
+
+  res.json(body);
+})
+
+app.post('/createComment', (req, res) =>{
+  console.log("commenting on post with id " + req.body.postId + " by user " + req.body.user);
+  const body = {
+    message: "success"
+  }
+
+  res.json(body);
+})
+
+
 module.exports = app;
