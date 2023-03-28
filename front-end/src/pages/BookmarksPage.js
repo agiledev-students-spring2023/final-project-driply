@@ -15,14 +15,23 @@ function Bookmarks() {
   useEffect(() => {
     async function fetchBookmarkList() {
       if (user) {
-        const response = await fetch(`https://my.api.mockaroo.com/bookmark_schema.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`);
+        const response = await fetch(`http://localhost:4000/bookmarks`, {
+          method: "GET",
+          headers: {
+              'Content-Type': 'application/json'
+          }
+          // body: JSON.stringify({
+          //     "userId": id
+          // })
+        });
         let json = await response.json();
-        if (response.status === 200) {
-          setBookmarkList(json);
+        console.log(json);
+        if (json.status === 200) {
+          setBookmarkList(json.data);
           setBookmarkError(null);
           setLoading(false);
         } else {
-          setBookmarkError({error: json.error, status: response.status});
+          setBookmarkError({error: json.error});
           setLoading(false);
         }
       }
@@ -59,7 +68,7 @@ function Bookmarks() {
   function DisplayBookmarkList() {
     return (
       <>
-        {bookmarkList.map((item) => <BookmarkItem key={item.id} bookmark={item}/>)}
+        {bookmarkList?.map((item) => <BookmarkItem key={item.id} bookmark={item}/>)}
       </>
     );
   }
@@ -77,33 +86,31 @@ function Bookmarks() {
   }
 
   return (
-    <div className={`bookmarkPage ${ifDarkMode && "darkTheme"}`}>
+      <div className={`bookmarkPage ${ifDarkMode && "darkTheme"}`}>
 
-      {/* header */}
-      <div className="bookmarkPageHeader">
-        <h1>Bookmarks</h1>
+        {/* header */}
+        <div className="bookmarkPageHeader">
+          <h1>Bookmarks</h1>
+        </div>
+
+        {/* body */}
+        <div className="displayAllBookmarks">
+          {!user ? (
+            <NotLoggedInDisplay />
+          ) : (loading) ? (
+            <LoadingBookmarkList />
+          ) : (bookmarkList.length === 0 && !bookmarkError) ? (
+            <h3>No bookmarks</h3>
+          ) : (
+            <DisplayBookmarkList />
+          )}
+          {bookmarkError && user && <div>
+            <h3 className="error">{bookmarkError.error}</h3>
+          </div>}
+        </div>
+      
       </div>
-
-      {/* body */}
-      <div className="displayAllBookmarks">
-        {!user ? (
-          <NotLoggedInDisplay />
-        ) : (loading) ? (
-          <LoadingBookmarkList />
-        ) : (bookmarkList.length === 0 && !bookmarkError) ? (
-          <h3>No bookmarks</h3>
-        ) : (
-          <DisplayBookmarkList />
-        )}
-        {bookmarkError && user && <div>
-          <h1 className="error">Error Code: {bookmarkError.status}</h1>
-          <h3 className="error">{bookmarkError.error}</h3>
-        </div>}
-      </div>
-
-
-    </div>
-  )
+    );
 }
 
 export default Bookmarks;
