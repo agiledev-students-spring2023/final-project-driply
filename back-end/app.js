@@ -40,24 +40,25 @@ app.post("/post-form", upload.single("image"), (req, res) => {
   } else throw "error";
 });
 
-app.get("/getPost", (req, res) => {
+app.get("/getPost", (req, res, next) => {
   console.log("get post with id " + req.body.postId);
 
   axios
     .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
     .then(apiResponse => {
+      firstRandomPost = apiResponse.data[0];
       const body = {
         message: "success",
-        username: apiResponse.username,
-        description: apiResponse.description,
-        price: apiResponse.price
+        username: firstRandomPost.username,
+        description: firstRandomPost.description,
+        price: firstRandomPost.price
       }
       res.json(body);
     })
     .catch(err => next(err))
 })
 
-app.post("/like", (req, res) => {
+app.post("/like", (req, res, next) => {
   console.log("like post with id " + req.body.postId);
   const body = {
     message: "success"
@@ -66,7 +67,7 @@ app.post("/like", (req, res) => {
   res.json(body);
 })
 
-app.post("/unlike", (req, res) => {
+app.post("/unlike", (req, res, next) => {
   console.log("unlike post with id " + req.body.postId);
   const body = {
     message: "success"
@@ -75,7 +76,7 @@ app.post("/unlike", (req, res) => {
   res.json(body);
 })
 
-app.post('/createComment', (req, res) =>{
+app.post('/createComment', (req, res, next) =>{
   console.log("commenting on post with id " + req.body.postId + " by user " + req.body.user);
   const body = {
     message: "success"
