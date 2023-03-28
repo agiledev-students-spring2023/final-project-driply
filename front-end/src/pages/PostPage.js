@@ -30,7 +30,7 @@ const PostPage = () => {
     useEffect(() => {
         //setLikeChanged(false);
         async function fetchPostInfo() {
-            const response = await fetch(`https://my.api.mockaroo.com/post.json?key=9e339cc0`, {
+            const response = await fetch(`http://localhost:3000/getPost`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
@@ -41,13 +41,11 @@ const PostPage = () => {
             });
             let json = await response.json();
             if (response.status === 200) {
-                console.log(json);
-                const p = json[0];
                 // Commented out fetching likes from mockaroo as clicking like would trigger the useEffect and refetch from mockaroo resulting in inaccurate like count and update.
                 // setLikes(p.likes);
-                setFakeName(p.username);
-                setDescription(p.description);
-                setPrice(p.price);
+                setFakeName(json.username);
+                setDescription(json.description);
+                setPrice(json.price);
                 setPostError(null);
                 setLoading(false);
             } else {
