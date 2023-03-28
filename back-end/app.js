@@ -1,5 +1,6 @@
 require("dotenv").config({ silent: true });
 const express = require("express");
+const axios = require("axios")
 const morgan = require("morgan");
 const cors = require("cors");
 const multer = require("multer");
@@ -41,11 +42,19 @@ app.post("/post-form", upload.single("image"), (req, res) => {
 
 app.get("/getPost", (req, res) => {
   console.log("get post with id " + req.body.postId);
-  const body = {
-    message: "success"
-  }
 
-  res.json(body);
+  axios
+    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .then(apiResponse => {
+      const body = {
+        message: "success",
+        username: apiResponse.username,
+        description: apiResponse.description,
+        price: apiResponse.price
+      }
+      res.json(body);
+    })
+    .catch(err => next(err))
 })
 
 app.post("/like", (req, res) => {
