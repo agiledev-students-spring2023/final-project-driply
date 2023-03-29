@@ -33,7 +33,7 @@ function MainChatPage() {
           setLoading(false);
         } else {
           setLoading(false);
-          setChatError({error: json.error });
+          setChatError({error: json.error, status: json.status });
         }
       }
     }
@@ -160,9 +160,16 @@ function MainChatPage() {
         )}
 
 
-        {chatError && user && <div>
-          <h3 className="error">{chatError.error}</h3>
-        </div>}
+        {chatError && user && 
+          <div>
+            <h1 className='error'>
+              {chatError.status}
+            </h1>
+            <h3 className="error">
+              {chatError.error}
+            </h3>
+          </div>
+        }
       </div>
     </div>
   );

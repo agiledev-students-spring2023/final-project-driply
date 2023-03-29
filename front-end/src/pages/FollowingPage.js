@@ -8,23 +8,34 @@ function FollowingPage() {
     const [loading, setLoading] = useState(true);
     const { ifDarkMode } = useContext(DarkModeContext);
 
+
     useEffect(() => {
         async function fetchFollowingList() {
-            const response = await fetch(`https://my.api.mockaroo.com/following_schema.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`);
+            const response = await fetch(`http://localhost:4000/following`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+                // body: JSON.stringify({
+                //     "userId": id
+                // })
+            });
             let json = await response.json();
-            if (response.status === 200) {
-                setFollowingList(json);
+            if (json.status === 200) {
+                setFollowingList(json.data);
                 setFollowingError(null);
                 setLoading(false);
                 console.log(json);
             } else {
-                setFollowingError({error: json.error, status: response.status});
+                console.log(json.error);
+                setFollowingError({error: json.error, status: json.status });
                 setLoading(false);
             }
         }
 
         fetchFollowingList();
     }, []);
+
 
     function LoadingFollowingList() {
         return (
@@ -38,6 +49,7 @@ function FollowingPage() {
             })
         );
     }
+
 
     function Following({ following }) {
         return (
@@ -53,13 +65,15 @@ function FollowingPage() {
         );
     }
 
+
     function DisplayFollowingList() {
         return (
             <div className="followingContainer">
-                {followingList.map((following) => <Following key={following.id} following={following}/>)}
+                {followingList?.map((following) => <Following key={following.id} following={following}/>)}
             </div>
         );
     }
+
 
     return (
         <div className={ifDarkMode && "darkTheme"}>
@@ -74,10 +88,22 @@ function FollowingPage() {
             ) : (
                 <DisplayFollowingList />
             )}
-            {followingError && <div><h1 className="error">Error: {followingError.status}</h1><h3 className="error">{followingError.error}</h3></div>}
+            {followingError && 
+                <div>
+                    <h1 className='error'>
+                        {followingError.status}
+                    </h1>
+                    <h3 className="error">
+                        {followingError.error}
+                    </h3>
+                </div>
+            }
 
         </div>
-    )
+    );
 }
 
 export default FollowingPage;
+
+
+
