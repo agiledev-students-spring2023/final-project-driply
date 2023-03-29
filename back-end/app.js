@@ -93,7 +93,7 @@ app.get('/bookmarks', async (req, res) => {
       res.json({ data, status});
     })
     .catch(err => {
-      res.json({ error: err.message });
+      res.json({ error: err.message, status: err.response.status });
     });
 });
 
@@ -105,7 +105,19 @@ app.get('/chats', async (req, res) => {
       res.json({ data, status});
     })
     .catch(err => {
-      res.json({ error: err.message });
+      res.json({ error: err.message, status: err.response.status });
+    });
+});
+
+app.get('/following', async (req, res) => {
+  axios
+    .get("https://my.api.mockaroo.com/following_schema.json?key=90e03700")
+    .then(apiResponse => {
+      const { data, status } = apiResponse;
+      res.json({ data, status});
+    })
+    .catch(err => {
+      res.json({ error: err.message, status: err.response.status });
     });
 });
 
