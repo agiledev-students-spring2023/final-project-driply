@@ -31,7 +31,7 @@ function Bookmarks() {
           setBookmarkError(null);
           setLoading(false);
         } else {
-          setBookmarkError({error: json.error});
+          setBookmarkError({ error: json.error, status: json.status });
           setLoading(false);
         }
       }
@@ -104,9 +104,16 @@ function Bookmarks() {
           ) : (
             <DisplayBookmarkList />
           )}
-          {bookmarkError && user && <div>
-            <h3 className="error">{bookmarkError.error}</h3>
-          </div>}
+          {bookmarkError && user && 
+            <div>
+              <h1 className='error'>
+                {bookmarkError.status}
+              </h1>
+              <h3 className="error">
+                {bookmarkError.error}
+              </h3>
+            </div>
+          }
         </div>
       
       </div>
