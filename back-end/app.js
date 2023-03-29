@@ -74,15 +74,6 @@ app.post("/like", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-app.post("/unlike", (req, res, next) => {
-  console.log("unlike post with id " + req.body.postId);
-  const body = {
-    message: "success",
-  };
-
-  res.json(body);
-});
-
 app.post("/createComment", (req, res, next) => {
   console.log(
     "commenting on post with id " +
