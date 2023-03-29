@@ -14,16 +14,19 @@ function Post({ post }) {
   const { user } = useAuthContext();
 
   const handleBookmarkClick = (e) => {
-    if (user) { // only bookmark post if logged in
+    if (user) {
+      // only bookmark post if logged in
       e.stopPropagation();
       post.bookmarked = !ifBookmarked;
       setIfBookmarked(!ifBookmarked);
-    } else { // navigate user to login page
+    } else {
+      // navigate user to login page
       navigate("/login");
     }
   };
   const handlePostLike = (e) => {
-    if (user) { // only like post if logged in
+    if (user) {
+      // only like post if logged in
       e.stopPropagation();
       post.liked = !ifLiked;
       setIfLiked(!ifLiked);
@@ -34,7 +37,35 @@ function Post({ post }) {
       } else {
         post.likes -= 1;
       }
-    } else { // navigate user to login page
+      // backend call to update like count
+      fetch(`http://localhost:4000/posts/${post.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postID: post.id,
+          likes: post.likes,
+          liked: post.liked,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to like post");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          // revert like count on error
+          if (post.liked) {
+            post.likes -= 1;
+          } else {
+            post.likes += 1;
+          }
+          setIfLiked(!ifLiked);
+        });
+    } else {
+      // navigate user to login page
       navigate("/login");
     }
   };
@@ -45,7 +76,7 @@ function Post({ post }) {
     } else {
       navigate("/login");
     }
-  }
+  };
 
   // this is just temp. to get different imgs and sizes
   const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
@@ -69,7 +100,10 @@ function Post({ post }) {
       <div className="postBody">
         {/* <img src={post.post_picture} alt="post img"/> */}
         <Link to={`/post/0`}>
-          <img src={`https://picsum.photos/${randomSize[randomIndex]}/300`} alt="postpic" />
+          <img
+            src={`https://picsum.photos/${randomSize[randomIndex]}/300`}
+            alt="postpic"
+          />
         </Link>
         <div className="postBookmarkIcon">
           {ifBookmarked ? (
@@ -95,7 +129,7 @@ function Post({ post }) {
             <p>{post.likes}</p>
           </div>
           <div>
-            <ChatBubbleIcon onClick={handleCommentClick}/>
+            <ChatBubbleIcon onClick={handleCommentClick} />
             <p>{post.comments}</p>
           </div>
         </div>

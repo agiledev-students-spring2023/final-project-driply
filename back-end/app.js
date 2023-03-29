@@ -1,6 +1,6 @@
 require("dotenv").config({ silent: true });
 const express = require("express");
-const axios = require("axios")
+const axios = require("axios");
 const morgan = require("morgan");
 const cors = require("cors");
 const multer = require("multer");
@@ -45,81 +45,92 @@ app.get("/getPost", (req, res, next) => {
 
   axios
     .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
-    .then(apiResponse => {
+    .then((apiResponse) => {
       firstRandomPost = apiResponse.data[0];
       const body = {
         message: "success",
         username: firstRandomPost.username,
         description: firstRandomPost.description,
-        price: firstRandomPost.price
-      }
+        price: firstRandomPost.price,
+      };
       res.json(body);
     })
-    .catch(err => next(err));
+    .catch((err) => next(err));
 });
 
 app.post("/like", (req, res, next) => {
   console.log("like post with id " + req.body.postId);
-  const body = {
-    message: "success"
-  };
 
-  res.json(body);
+  axios
+    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .then((apiResponse) => {
+      firstRandomPost = apiResponse.data[0];
+      const body = {
+        likes: firstRandomPost.likes + 1,
+        message: "success",
+      };
+      res.json(body);
+    })
+    .catch((err) => next(err));
 });
 
 app.post("/unlike", (req, res, next) => {
   console.log("unlike post with id " + req.body.postId);
   const body = {
-    message: "success"
-  }
+    message: "success",
+  };
 
   res.json(body);
 });
 
-app.post('/createComment', (req, res, next) =>{
-  console.log("commenting on post with id " + req.body.postId + " by user " + req.body.user);
+app.post("/createComment", (req, res, next) => {
+  console.log(
+    "commenting on post with id " +
+      req.body.postId +
+      " by user " +
+      req.body.user
+  );
   const body = {
-    message: "success"
-  }
+    message: "success",
+  };
 
   res.json(body);
 });
 
-app.get('/bookmarks', async (req, res) => {
+app.get("/bookmarks", async (req, res) => {
   axios
     .get("https://my.api.mockaroo.com/bookmark_schema.json?key=90e03700")
-    .then(apiResponse => {
+    .then((apiResponse) => {
       const { data, status } = apiResponse;
-      res.json({ data, status});
+      res.json({ data, status });
     })
-    .catch(err => {
+    .catch((err) => {
       res.json({ error: err.message, status: err.response.status });
     });
 });
 
-app.get('/chats', async (req, res) => {
+app.get("/chats", async (req, res) => {
   axios
     .get("https://my.api.mockaroo.com/users_chats.json?key=90e03700")
-    .then(apiResponse => {
+    .then((apiResponse) => {
       const { data, status } = apiResponse;
-      res.json({ data, status});
+      res.json({ data, status });
     })
-    .catch(err => {
+    .catch((err) => {
       res.json({ error: err.message, status: err.response.status });
     });
 });
 
-app.get('/following', async (req, res) => {
+app.get("/following", async (req, res) => {
   axios
     .get("https://my.api.mockaroo.com/following_schema.json?key=90e03700")
-    .then(apiResponse => {
+    .then((apiResponse) => {
       const { data, status } = apiResponse;
-      res.json({ data, status});
+      res.json({ data, status });
     })
-    .catch(err => {
+    .catch((err) => {
       res.json({ error: err.message, status: err.response.status });
     });
 });
-
 
 module.exports = app;

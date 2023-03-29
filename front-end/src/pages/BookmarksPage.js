@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { useAuthContext } from '../hooks/useAuthContext';
-import { DarkModeContext } from '../context/DarkModeContext';
+import React, { useContext, useEffect, useState } from "react";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 function Bookmarks() {
-
   const { ifDarkMode } = useContext(DarkModeContext);
   const [bookmarkList, setBookmarkList] = useState([]);
   const [bookmarkError, setBookmarkError] = useState(null);
@@ -18,8 +17,8 @@ function Bookmarks() {
         const response = await fetch(`http://localhost:4000/bookmarks`, {
           method: "GET",
           headers: {
-              'Content-Type': 'application/json'
-          }
+            "Content-Type": "application/json",
+          },
           // body: JSON.stringify({
           //     "userId": id
           // })
@@ -40,15 +39,10 @@ function Bookmarks() {
     fetchBookmarkList();
   }, [user]);
 
-
   function LoadingBookmarkList() {
-    return (
-      Array.from({length: 4}).map((_, idx) => {
-        return (
-          <div key={idx} className="bookmarkItem bookmarkBgColor"></div>
-        );
-      })
-    );
+    return Array.from({ length: 4 }).map((_, idx) => {
+      return <div key={idx} className="bookmarkItem bookmarkBgColor"></div>;
+    });
   }
 
   function BookmarkItem({ bookmark }) {
@@ -58,7 +52,7 @@ function Bookmarks() {
           <BookmarkIcon sx={{ height: "40px", width: "40px" }} />
         </div>
         <div className="bookmarkImg">
-          <img src={bookmark.image} alt="bookmark img"/>
+          <img src={bookmark.image} alt="bookmark img" />
         </div>
         <div className="bookmarkTitle">{bookmark.title}</div>
       </div>
@@ -68,7 +62,9 @@ function Bookmarks() {
   function DisplayBookmarkList() {
     return (
       <>
-        {bookmarkList?.map((item) => <BookmarkItem key={item.id} bookmark={item}/>)}
+        {bookmarkList?.map((item) => (
+          <BookmarkItem key={item.id} bookmark={item} />
+        ))}
       </>
     );
   }
@@ -78,46 +74,38 @@ function Bookmarks() {
       <div className="notLoggedInBookmark">
         <h2>You are not logged in</h2>
 
-        <div className="displayLogInBtn">
-          Login
-        </div>
+        <div className="displayLogInBtn">Login</div>
       </div>
     );
   }
 
   return (
-      <div className={`bookmarkPage ${ifDarkMode && "darkTheme"}`}>
-
-        {/* header */}
-        <div className="bookmarkPageHeader">
-          <h1>Bookmarks</h1>
-        </div>
-
-        {/* body */}
-        <div className="displayAllBookmarks">
-          {!user ? (
-            <NotLoggedInDisplay />
-          ) : (loading) ? (
-            <LoadingBookmarkList />
-          ) : (bookmarkList.length === 0 && !bookmarkError) ? (
-            <h3>No bookmarks</h3>
-          ) : (
-            <DisplayBookmarkList />
-          )}
-          {bookmarkError && user && 
-            <div>
-              <h1 className='error'>
-                {bookmarkError.status}
-              </h1>
-              <h3 className="error">
-                {bookmarkError.error}
-              </h3>
-            </div>
-          }
-        </div>
-      
+    <div className={`bookmarkPage ${ifDarkMode && "darkTheme"}`}>
+      {/* header */}
+      <div className="bookmarkPageHeader">
+        <h1>Bookmarks</h1>
       </div>
-    );
+
+      {/* body */}
+      <div className="displayAllBookmarks">
+        {!user ? (
+          <NotLoggedInDisplay />
+        ) : loading ? (
+          <LoadingBookmarkList />
+        ) : bookmarkList.length === 0 && !bookmarkError ? (
+          <h3>No bookmarks</h3>
+        ) : (
+          <DisplayBookmarkList />
+        )}
+        {bookmarkError && user && (
+          <div>
+            <h1 className="error">{bookmarkError.status}</h1>
+            <h3 className="error">{bookmarkError.error}</h3>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default Bookmarks;
