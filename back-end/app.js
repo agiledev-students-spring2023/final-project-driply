@@ -55,17 +55,17 @@ app.get("/getPost", (req, res, next) => {
       }
       res.json(body);
     })
-    .catch(err => next(err))
-})
+    .catch(err => next(err));
+});
 
 app.post("/like", (req, res, next) => {
   console.log("like post with id " + req.body.postId);
   const body = {
     message: "success"
-  }
+  };
 
   res.json(body);
-})
+});
 
 app.post("/unlike", (req, res, next) => {
   console.log("unlike post with id " + req.body.postId);
@@ -74,7 +74,7 @@ app.post("/unlike", (req, res, next) => {
   }
 
   res.json(body);
-})
+});
 
 app.post('/createComment', (req, res, next) =>{
   console.log("commenting on post with id " + req.body.postId + " by user " + req.body.user);
@@ -83,7 +83,7 @@ app.post('/createComment', (req, res, next) =>{
   }
 
   res.json(body);
-})
+});
 
 app.get('/bookmarks', async (req, res) => {
   axios
@@ -93,7 +93,31 @@ app.get('/bookmarks', async (req, res) => {
       res.json({ data, status});
     })
     .catch(err => {
-      res.json({ error: err.message });
+      res.json({ error: err.message, status: err.response.status });
+    });
+});
+
+app.get('/chats', async (req, res) => {
+  axios
+    .get("https://my.api.mockaroo.com/users_chats.json?key=90e03700")
+    .then(apiResponse => {
+      const { data, status } = apiResponse;
+      res.json({ data, status});
+    })
+    .catch(err => {
+      res.json({ error: err.message, status: err.response.status });
+    });
+});
+
+app.get('/following', async (req, res) => {
+  axios
+    .get("https://my.api.mockaroo.com/following_schema.json?key=90e03700")
+    .then(apiResponse => {
+      const { data, status } = apiResponse;
+      res.json({ data, status});
+    })
+    .catch(err => {
+      res.json({ error: err.message, status: err.response.status });
     });
 });
 

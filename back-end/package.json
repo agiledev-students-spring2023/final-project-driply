@@ -4,7 +4,8 @@
   "description": "Express back-end.",
   "main": "server.js",
   "scripts": {
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "passport-local-mongoose": "^8.0.0"
   },
   "devDependencies": {
+    "nodemon": "^2.0.22",
     "nyc": "^15.1.0"
   }
 }

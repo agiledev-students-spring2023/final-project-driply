@@ -15,21 +15,31 @@ function MainChatPage() {
   useEffect(() => {
     async function fetchUsersChat () {
       if (user) {
-        const response = await fetch(`https://my.api.mockaroo.com/users_chats.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`);
+        const response = await fetch(`http://localhost:4000/chats`, {
+          method: "GET",
+          headers: {
+              'Content-Type': 'application/json'
+          }
+          // body: JSON.stringify({
+          //     "userId": id
+          // })
+        });
         let json = await response.json();
-        if (response.status === 200) {
-          json.sort((a, b) => new Date(a.date_sent) - new Date(b.date_sent)); // sorted based on date
-          setAllChats(json);
+        if (json.status === 200) {
+          const { data } = json;
+          data.sort((a, b) => new Date(a.date_sent) - new Date(b.date_sent)); // sorted based on date
+          setAllChats(data);
           setChatError(null);
           setLoading(false);
         } else {
           setLoading(false);
-          setChatError({error: json.error, status: response.status});
+          setChatError({error: json.error });
         }
       }
     }
     fetchUsersChat();
   }, [user]);
+
 
   function LoadingChat() {
     return (
@@ -43,6 +53,7 @@ function MainChatPage() {
       })
     );
   }
+
 
   function Chat({ chat }) {
     const ifRead = chat.read;
@@ -62,6 +73,7 @@ function MainChatPage() {
     } else {
       dateDisplay = `${daySent.getMonth() + 1}/${daySent.getDate()}/${daySent.getFullYear()}`;
     }
+
 
     return (
       <div onClick={() => {navigate(`/chatroom/${chat.id}`, {state: {name: chat.first_name, senderImg: chat.user_image}})}} className="eachChatDisplay">
@@ -97,8 +109,9 @@ function MainChatPage() {
 
         </div>
       </div>
-    )
+    );
   }
+
 
   function DisplayChats() {
     return (
@@ -107,6 +120,7 @@ function MainChatPage() {
       </>
     );
   }
+
 
   function NotLoggedInDisplay() {
     return (
@@ -119,6 +133,7 @@ function MainChatPage() {
       </div>
     );
   }
+
 
   return (
     <div className={`chatPage ${ifDarkMode && "darkTheme"}`}>
@@ -146,12 +161,14 @@ function MainChatPage() {
 
 
         {chatError && user && <div>
-          <h1 className="error">Error Code: {chatError.status}</h1>
           <h3 className="error">{chatError.error}</h3>
         </div>}
       </div>
     </div>
-  )
+  );
 }
 
+
 export default MainChatPage;
+
+
