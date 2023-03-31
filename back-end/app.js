@@ -76,13 +76,34 @@ app.post("/unlike", (req, res, next) => {
   res.json(body);
 });
 
-app.post('/createComment', (req, res, next) =>{
-  console.log("commenting on post with id " + req.body.postId + " by user " + req.body.user);
-  const body = {
-    message: "success"
-  }
+app.get("/fetchComment", (req, res, next) => {
+  console.log("creating new comment " + req.body.comment);
+  axios
+    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .then(apiResponse => {
+      firstRandomPost = apiResponse.data[0];
+      const body = {
+        message: "success",
+        username: firstRandomPost.username,
+        comments: firstRandomPost.comments
+      }
+      res.json(body);
+    })
+    .catch(err => next(err));
+});
 
-  res.json(body);
+app.post("/createComment", (req, res, next) => {
+  console.log("commenting on post with id " + req.body.postId + " by user " + req.body.user);
+  axios
+    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .then(apiResponse => {
+      firstRandomPost = apiResponse.data[0];
+      const body = {
+        message: "success"
+      }
+      res.json(body);
+    })
+    .catch(err => next(err));
 });
 
 app.get('/bookmarks', async (req, res) => {

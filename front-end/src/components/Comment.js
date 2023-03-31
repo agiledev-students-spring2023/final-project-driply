@@ -24,7 +24,7 @@ function Comment() {
 
     useEffect(() => {
         async function fetchComment() {
-            const response = await fetch(`https://my.api.mockaroo.com/post.json?key=9e339cc0`, {
+            const response = await fetch(`http://localhost:4000/fetchComment`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'
@@ -35,9 +35,9 @@ function Comment() {
             });
             let json = await response.json();
             if (response.status === 200) {
-                const p = json[0];
-                setFakeName(p.username);
-                setCommentList(p.comments);
+                console.log(json);
+                setFakeName(json.username);
+                setCommentList(json.comments);
             } else {
 
             }
@@ -53,7 +53,7 @@ function Comment() {
     const handleComment = (e) => {
         e.preventDefault();
         async function addComment() {
-            const response = await fetch(`url`, {
+            const response = await fetch(`http://localhost:4000/createComment`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -66,6 +66,10 @@ function Comment() {
             let json = await response.json();
             if (response.status === 200) {
                 console.log(json);
+                if (json.message === "success"){
+                    setCommentList([comment, ...commentList]);
+                    setComment('');
+                }
             } else {
                 setPostError(response.status);
                 setLoading(false);
@@ -73,8 +77,6 @@ function Comment() {
         }
 
         addComment();
-        setCommentList([comment, ...commentList]);
-        setComment('');
     };
     
     return (
