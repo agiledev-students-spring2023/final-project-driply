@@ -140,10 +140,6 @@ function MainChatPage() {
       {/* header */}
       <div className={`chatPageHeader ${ifDarkMode && "darkTheme"}`}>
         <h1>Messages</h1>
-        {user && <>
-          <p>New</p>
-          <p>Edit</p>
-        </>}
       </div>
 
       {/* body */}
