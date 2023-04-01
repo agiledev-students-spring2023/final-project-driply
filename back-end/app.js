@@ -179,7 +179,7 @@ app.get("/follower", async (req, res) => {
     });
 });
 
-app.get("/getAllPosts", async (req, res) => {
+app.get("/getHomePosts", async (req, res) => {
   axios
     .get("https://my.api.mockaroo.com/post.json?key=e833d640")
     .then((apiResponse) => {
