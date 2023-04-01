@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const multer = require("multer");
 const mongoose = require("mongoose");
+const path = require("path");
 
 // Set up Express app
 const app = express();

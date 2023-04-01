@@ -25,22 +25,6 @@ function Post({ post }) {
     }
   };
   const handlePostLike = (e) => {
-    // if (user) {
-    //   // only like post if logged in
-    //   e.stopPropagation();
-    //   post.liked = !ifLiked;
-    //   setIfLiked(!ifLiked);
-    //   // update like count
-    //   if (post.liked) {
-    //     post.likes.length += 1;
-    //   } else {
-    //     post.likes.length -= 1;
-    //   }
-    //   setIfLiked(!ifLiked);
-    // } else {
-    //   // navigate user to login page
-    //   navigate("/login");
-    // }
     e.stopPropagation();
     if (!user) {
       navigate("/login");
