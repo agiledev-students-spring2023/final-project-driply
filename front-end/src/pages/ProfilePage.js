@@ -9,6 +9,7 @@ function ProfilePage() {
   const [description, setDescription] = useState("");
   const [postError, setPostError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [ownProfile, setOwnProfile] = useState(false);
   const { ifDarkMode } = useContext(DarkModeContext);
 
   const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
@@ -34,6 +35,7 @@ function ProfilePage() {
             console.log(json);
             setFakeName(json.username);
             setDescription(json.description);
+            setOwnProfile(json.ownProfile);
             setPostError(null);
             setLoading(false);
         } else {
@@ -47,7 +49,7 @@ function ProfilePage() {
   
   return (
     <div className={`profileContainer ${ifDarkMode && "darkTheme"}`}>
-      <Follow/>
+      <Follow ownProfile={ownProfile}/>
       <div className="pfpContainer">
         <div className="pfp">
           <img src={`https://picsum.photos/${randomSize[randomIndex5]}/300`} alt="pic" />
