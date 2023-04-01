@@ -8,7 +8,6 @@ import Header from "./components/Header";
 import Home from "./pages/Home";
 import MainChatPage from "./pages/MainChatPage";
 import ProfilePage from "./pages/ProfilePage";
-import SelfProfilePage from "./pages/SelfProfilePage";
 import TrendingPage from "./pages/TrendingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -48,7 +47,6 @@ function App() {
         <Route path="/post/:postId" element={<PostPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/selfprofile" element={<SelfProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/editprofile" element={<EditProfilePage />} />
       </Routes>
