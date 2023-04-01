@@ -25,22 +25,70 @@ function Post({ post }) {
     }
   };
   const handlePostLike = (e) => {
-    if (user) {
-      // only like post if logged in
-      e.stopPropagation();
-      post.liked = !ifLiked;
-      setIfLiked(!ifLiked);
-
-      // update like count
-      if (post.liked) {
-        post.likes.length += 1;
-      } else {
-        post.likes.length -= 1;
-      }
-      setIfLiked(!ifLiked);
-    } else {
-      // navigate user to login page
+    // if (user) {
+    //   // only like post if logged in
+    //   e.stopPropagation();
+    //   post.liked = !ifLiked;
+    //   setIfLiked(!ifLiked);
+    //   // update like count
+    //   if (post.liked) {
+    //     post.likes.length += 1;
+    //   } else {
+    //     post.likes.length -= 1;
+    //   }
+    //   setIfLiked(!ifLiked);
+    // } else {
+    //   // navigate user to login page
+    //   navigate("/login");
+    // }
+    e.stopPropagation();
+    if (!user) {
       navigate("/login");
+      return;
+    }
+
+    const postId = post.id;
+    const likeUrl = `http://localhost:4000/like/${postId}`;
+    const unlikeUrl = `http://localhost:4000/unlike/${postId}`;
+
+    if (ifLiked) {
+      fetch(unlikeUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setIfLiked(false);
+            post.likes.length -= 1;
+          } else {
+            console.log(data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      fetch(likeUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setIfLiked(true);
+            post.likes.length += 1;
+          } else {
+            console.log(data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 

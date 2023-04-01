@@ -58,20 +58,27 @@ app.get("/getPost", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-app.post("/like", (req, res, next) => {
-  console.log("like post with id " + req.body.postId);
-
-  axios
-    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
-    .then((apiResponse) => {
-      // find post with id
-      const post = apiResponse.data.find((post) => post.id === req.body.postId);
-      post.likes += 1;
-    })
-    .catch((err) => next(err));
+app.post("/like/:postID", (req, res) => {
+  const id = req.params.postID;
+  // TODO: Find post in database based on postId
+  // TODO: update post in database to mark it as liked by the user
+  const data = {
+    success: true,
+  };
+  res.json(data);
 });
 
-app.post("/createComment", (req, res, next) => {
+app.post("/unlike/:postId", (req, res) => {
+  const postId = req.params.postId;
+  // TODO: Find post in database based on postId
+  // TODO: update post in database to mark it as unliked by the user
+  const data = {
+    success: true,
+  };
+  res.json(data);
+});
+
+app.post("/createComment", (req, res) => {
   console.log(
     "commenting on post with id " +
       req.body.postId +
