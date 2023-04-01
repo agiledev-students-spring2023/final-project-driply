@@ -16,6 +16,7 @@ import PostForm from "./pages/PostForm";
 import SettingsPage from "./pages/SettingsPage";
 import { useEffect } from "react";
 import EditProfilePage from "./pages/EditProfilePage";
+import AboutUs from "./pages/AboutUs";
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/editprofile" element={<EditProfilePage />} />
+        <Route path="aboutus" element={<AboutUs />} />
       </Routes>
 
       <BottomNavBar />

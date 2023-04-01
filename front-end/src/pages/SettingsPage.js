@@ -52,7 +52,7 @@ function SettingsPage() {
                             <Switch checked={ifDarkMode} onChange={handleDarkThemeChange} />
                         </div>
         
-                        <div>
+                        {/* <div>
                             <FavoriteIcon sx={{ fontSize: "25px" }} />
                             <p>Your likes</p>
                             <ArrowForwardIosIcon />
@@ -62,23 +62,23 @@ function SettingsPage() {
                             <ChatBubbleIcon sx={{ fontSize: "25px" }} />
                             <p>Your comments</p>
                             <ArrowForwardIosIcon />
-                        </div>
+                        </div> */}
                     </div>
         
                     <h2>Support</h2>
         
                     <div className="supportBtns">
-                        <div>
+                        <div onClick={() => navigate("/aboutus")}>
                             <InfoIcon sx={{ fontSize: "25px" }} />
                             <p>About us</p>
                             <ArrowForwardIosIcon />
                         </div>
         
-                        <div>
+                        {/* <div>
                             <CreateIcon sx={{ fontSize: "25px" }} />
                             <p>Give us feedback</p>
                             <ArrowForwardIosIcon />
-                        </div>
+                        </div> */}
                     </div>
         
                     <div onClick={logOut} id="logoutBtn">
