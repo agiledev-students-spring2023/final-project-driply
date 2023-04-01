@@ -14,28 +14,81 @@ function Post({ post }) {
   const { user } = useAuthContext();
 
   const handleBookmarkClick = (e) => {
-    if (user) { // only bookmark post if logged in
+    if (user) {
+      // only bookmark post if logged in
       e.stopPropagation();
       post.bookmarked = !ifBookmarked;
       setIfBookmarked(!ifBookmarked);
-    } else { // navigate user to login page
+    } else {
+      // navigate user to login page
       navigate("/login");
     }
   };
   const handlePostLike = (e) => {
-    if (user) { // only like post if logged in
-      e.stopPropagation();
-      post.liked = !ifLiked;
-      setIfLiked(!ifLiked);
-
-      // update like count
-      if (post.liked) {
-        post.likes += 1;
-      } else {
-        post.likes -= 1;
-      }
-    } else { // navigate user to login page
+    // if (user) {
+    //   // only like post if logged in
+    //   e.stopPropagation();
+    //   post.liked = !ifLiked;
+    //   setIfLiked(!ifLiked);
+    //   // update like count
+    //   if (post.liked) {
+    //     post.likes.length += 1;
+    //   } else {
+    //     post.likes.length -= 1;
+    //   }
+    //   setIfLiked(!ifLiked);
+    // } else {
+    //   // navigate user to login page
+    //   navigate("/login");
+    // }
+    e.stopPropagation();
+    if (!user) {
       navigate("/login");
+      return;
+    }
+
+    const postId = post.id;
+    const likeUrl = `http://localhost:4000/like/${postId}`;
+    const unlikeUrl = `http://localhost:4000/unlike/${postId}`;
+
+    if (ifLiked) {
+      fetch(unlikeUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setIfLiked(false);
+            post.likes.length -= 1;
+          } else {
+            console.log(data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      fetch(likeUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setIfLiked(true);
+            post.likes.length += 1;
+          } else {
+            console.log(data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -45,7 +98,7 @@ function Post({ post }) {
     } else {
       navigate("/login");
     }
-  }
+  };
 
   // this is just temp. to get different imgs and sizes
   const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
@@ -69,7 +122,10 @@ function Post({ post }) {
       <div className="postBody">
         {/* <img src={post.post_picture} alt="post img"/> */}
         <Link to={`/post/0`}>
-          <img src={`https://picsum.photos/${randomSize[randomIndex]}/300`} alt="postpic" />
+          <img
+            src={`https://picsum.photos/${randomSize[randomIndex]}/300`}
+            alt="postpic"
+          />
         </Link>
         <div className="postBookmarkIcon">
           {ifBookmarked ? (
@@ -92,11 +148,11 @@ function Post({ post }) {
             ) : (
               <FavoriteBorderIcon onClick={handlePostLike} />
             )}
-            <p>{post.likes}</p>
+            <p>{post.likes.length}</p>
           </div>
           <div>
-            <ChatBubbleIcon onClick={handleCommentClick}/>
-            <p>{post.comments}</p>
+            <ChatBubbleIcon onClick={handleCommentClick} />
+            <p>{post.comments.length}</p>
           </div>
         </div>
       </div>

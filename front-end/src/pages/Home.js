@@ -10,18 +10,22 @@ function Home() {
 
   useEffect(() => {
     async function fetchPostList() {
-      const response = await fetch(
-        `https://my.api.mockaroo.com/post_schema.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`
-      );
+      const response = await fetch(`http://localhost:4000/getAllPosts`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       let json = await response.json();
+      console.log(json);
       if (response.status === 200) {
-        setPostList(json);
+        setPostList(json.data);
         setPostListError(null);
+        setLoading(false);
       } else {
         setPostListError({ error: json.error, status: response.status });
+        setLoading(false);
       }
-      setLoading(false);
-      console.log(json);
     }
 
     fetchPostList();
