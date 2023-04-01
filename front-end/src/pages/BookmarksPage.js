@@ -2,12 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { DarkModeContext } from "../context/DarkModeContext";
+import { useNavigate } from "react-router-dom";
 
 function Bookmarks() {
   const { ifDarkMode } = useContext(DarkModeContext);
   const [bookmarkList, setBookmarkList] = useState([]);
   const [bookmarkError, setBookmarkError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const handlePostClick = () => navigate("/post/0");
 
   const { user } = useAuthContext();
 
@@ -47,7 +51,7 @@ function Bookmarks() {
 
   function BookmarkItem({ bookmark }) {
     return (
-      <div className="bookmarkItem">
+      <div onClick={handlePostClick} className="bookmarkItem">
         <div className="bookmarkIcon">
           <BookmarkIcon sx={{ height: "40px", width: "40px" }} />
         </div>

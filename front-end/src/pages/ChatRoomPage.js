@@ -80,6 +80,13 @@ function ChatRoomPage() {
         setMessages(copiedMessages);
         inputRef.current.value = "";
     }
+
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            handleSubmit(event);
+        }
+    }
+
     function SendBtn() {
         return (
             <div className="sendChatBtnDiv">
@@ -115,7 +122,7 @@ function ChatRoomPage() {
             </div>
             <div className="chatroomInput">
                 <form>
-                    <input type="text" ref={inputRef} id="chatInput" placeholder="Type in here…" onInput={onInput}/>
+                    <input onKeyDown={event => handleKeyDown(event)} type="text" ref={inputRef} id="chatInput" placeholder="Type in here…" onInput={onInput}/>
                     <SendBtn className="submitChat" />
                 </form>
             </div>

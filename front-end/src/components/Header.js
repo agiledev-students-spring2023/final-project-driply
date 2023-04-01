@@ -15,7 +15,7 @@ function Header(props) {
   let location = useLocation();
   let splitPath = location.pathname.split("/");
   let ifHide;
-  if (splitPath.includes("chatroom") || splitPath.includes("editprofile")) {
+  if (splitPath.includes("chatroom") || splitPath.includes("editprofile") || splitPath.includes("aboutus")) {
     ifHide = true;
   } else {
     ifHide = false;
