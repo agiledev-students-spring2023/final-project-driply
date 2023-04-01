@@ -33,37 +33,11 @@ function Post({ post }) {
 
       // update like count
       if (post.liked) {
-        post.likes += 1;
+        post.likes.length += 1;
       } else {
-        post.likes -= 1;
+        post.likes.length -= 1;
       }
-      // backend call to update like count
-      fetch(`http://localhost:4000/posts/${post.id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          postID: post.id,
-          likes: post.likes,
-          liked: post.liked,
-        }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to like post");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          // revert like count on error
-          if (post.liked) {
-            post.likes -= 1;
-          } else {
-            post.likes += 1;
-          }
-          setIfLiked(!ifLiked);
-        });
+      setIfLiked(!ifLiked);
     } else {
       // navigate user to login page
       navigate("/login");
@@ -126,11 +100,11 @@ function Post({ post }) {
             ) : (
               <FavoriteBorderIcon onClick={handlePostLike} />
             )}
-            <p>{post.likes}</p>
+            <p>{post.likes.length}</p>
           </div>
           <div>
             <ChatBubbleIcon onClick={handleCommentClick} />
-            <p>{post.comments}</p>
+            <p>{post.comments.length}</p>
           </div>
         </div>
       </div>

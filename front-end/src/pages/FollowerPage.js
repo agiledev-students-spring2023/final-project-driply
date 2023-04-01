@@ -9,16 +9,24 @@ function FollowerPage() {
 
   useEffect(() => {
     async function fetchFollowerList() {
-      const response = await fetch(
-        `https://my.api.mockaroo.com/follower_schema.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`
-      );
+      const response = await fetch(`http://localhost:4000/follower`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify({
+        //     "userId": id
+        // })
+      });
       let json = await response.json();
-      if (response.status === 200) {
-        setFollowerList(json);
+      if (json.status === 200) {
+        setFollowerList(json.data);
         setFollowerError(null);
         setLoading(false);
+        console.log(json);
       } else {
-        setFollowerError({error: json.error, status: response.status});
+        console.log(json.error);
+        setFollowerError({ error: json.error, status: json.status });
         setLoading(false);
       }
     }
@@ -45,7 +53,15 @@ function FollowerPage() {
         </div>
         <div className="followerDetails">
           <p>{follower.username}</p>
-          {follower.if_following ? (<div className={`followBtn ${ifDarkMode && "followBtn-dark"}`}>Unfollow</div>) : (<div className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}>Follow</div>)}
+          {follower.if_following ? (
+            <div className={`followBtn ${ifDarkMode && "followBtn-dark"}`}>
+              Unfollow
+            </div>
+          ) : (
+            <div className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}>
+              Follow
+            </div>
+          )}
         </div>
       </div>
     );
@@ -69,7 +85,12 @@ function FollowerPage() {
       </div>
 
       {loading ? <LoadFollowerList /> : <DisplayFollowerList />}
-      {followerError && <div><h1 className="error">Error: {followerError.status}</h1><h3 className="error">{followerError.error}</h3></div>}
+      {followerError && (
+        <div>
+          <h1 className="error">Error: {followerError.status}</h1>
+          <h3 className="error">{followerError.error}</h3>
+        </div>
+      )}
     </div>
   );
 }

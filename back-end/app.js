@@ -64,12 +64,9 @@ app.post("/like", (req, res, next) => {
   axios
     .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
     .then((apiResponse) => {
-      firstRandomPost = apiResponse.data[0];
-      const body = {
-        likes: firstRandomPost.likes + 1,
-        message: "success",
-      };
-      res.json(body);
+      // find post with id
+      const post = apiResponse.data.find((post) => post.id === req.body.postId);
+      post.likes += 1;
     })
     .catch((err) => next(err));
 });
@@ -118,6 +115,30 @@ app.get("/following", async (req, res) => {
     .then((apiResponse) => {
       const { data, status } = apiResponse;
       res.json({ data, status });
+    })
+    .catch((err) => {
+      res.json({ error: err.message, status: err.response.status });
+    });
+});
+
+app.get("/follower", async (req, res) => {
+  axios
+    .get("https://my.api.mockaroo.com/follower_schema.json?key=90e03700}")
+    .then((apiResponse) => {
+      const { data, status } = apiResponse;
+      res.json({ data, status });
+    })
+    .catch((err) => {
+      res.json({ error: err.message, status: err.response.status });
+    });
+});
+
+app.get("/getAllPosts", async (req, res) => {
+  axios
+    .get("https://my.api.mockaroo.com/post.json?key=e833d640")
+    .then((apiResponse) => {
+      const { data } = apiResponse;
+      res.json({ data });
     })
     .catch((err) => {
       res.json({ error: err.message, status: err.response.status });
