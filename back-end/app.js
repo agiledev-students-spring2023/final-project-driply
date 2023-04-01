@@ -120,6 +120,7 @@ app.post("/createComment", (req, res) => {
   const body = {
     message: "success",
   };
+});
 
 app.get("/bookmarks", async (req, res) => {
   axios
