@@ -7,20 +7,18 @@
 3. Adaptability - Value flexibility and adjustability.
 4. User focus - Value user satisfaction and delivering value.
 5. Continuous improvement - Value reflection, learning, and improving processes.
-6. 
-7. 
-8. 
-9. 
-10. 
+
 ### Sprint Cadence
 - Sprint 0: 02/15-02/27
 - Sprint 1: 02/27-03/22
 - Sprint 2: 03/22-04/10
 - Sprint 3: 04/10-04/24
 - Sprint 4: 04/24-05/03
+
 ### Daily Standups
 - Pre-Scheduled Daily Standups are to be held the evening of the days lecture is held, Monday and Wednesdays. The third Daily Standup of the week is to be scheduled through when2meet.
 - Once all group members are finished with the Daily Standup, paste the written stnadup in team_driply_standups text channel with the daily standup date.
+
 ### Planning Poker
 Work estiminations for users stories are decided using planning pokers with the created cards here:
  
