@@ -40,6 +40,22 @@ app.post("/post-form", upload.single("image"), (req, res) => {
   } else throw "error";
 });
 
+app.post("/profile", (req, res, next) => {
+  console.log("fetching profile of user with id " + req.body.userId);
+  axios
+    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .then(apiResponse => {
+      firstRandomPost = apiResponse.data[0];
+      const body = {
+        message: "success",
+        username: firstRandomPost.username,
+        description: firstRandomPost.description
+      }
+      res.json(body);
+    })
+    .catch(err => next(err));
+});
+
 app.get("/getPost", (req, res, next) => {
   console.log("get post with id " + req.body.postId);
 
