@@ -20,21 +20,20 @@ function ProfilePage() {
 
   useEffect(() => {
     async function fetchProfileInfo() {
-        const response = await fetch(`https://my.api.mockaroo.com/post.json?key=9e339cc0`, {
-            method: "GET",
+        const response = await fetch(`http://localhost:4000/profile`, {
+            method: "POST",
             headers: {
               'Content-Type': 'application/json'
-            }
-            // body: JSON.stringify({
-            //     "postId": id
-            // })
+            },
+            body: JSON.stringify({
+                "userId": 1
+            })
         });
         let json = await response.json();
         if (response.status === 200) {
             console.log(json);
-            const p = json[0];
-            setFakeName(p.username);
-            setDescription(p.description);
+            setFakeName(json.username);
+            setDescription(json.description);
             setPostError(null);
             setLoading(false);
         } else {

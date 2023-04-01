@@ -30,7 +30,7 @@ const PostPage = () => {
     useEffect(() => {
         //setLikeChanged(false);
         async function fetchPostInfo() {
-            const response = await fetch(`http://localhost:3000/getPost`, {
+            const response = await fetch(`http://localhost:4000/getPost`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json'

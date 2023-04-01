@@ -40,6 +40,22 @@ app.post("/post-form", upload.single("image"), (req, res) => {
   } else throw "error";
 });
 
+app.post("/profile", (req, res, next) => {
+  console.log("fetching profile of user with id " + req.body.userId);
+  axios
+    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .then(apiResponse => {
+      firstRandomPost = apiResponse.data[0];
+      const body = {
+        message: "success",
+        username: firstRandomPost.username,
+        description: firstRandomPost.description
+      }
+      res.json(body);
+    })
+    .catch(err => next(err));
+});
+
 app.get("/getPost", (req, res, next) => {
   console.log("get post with id " + req.body.postId);
 
@@ -78,6 +94,22 @@ app.post("/unlike/:postId", (req, res) => {
   res.json(data);
 });
 
+app.get("/fetchComment", (req, res, next) => {
+  console.log("creating new comment " + req.body.comment);
+  axios
+    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .then(apiResponse => {
+      firstRandomPost = apiResponse.data[0];
+      const body = {
+        message: "success",
+        username: firstRandomPost.username,
+        comments: firstRandomPost.comments
+      }
+      res.json(body);
+    })
+    .catch(err => next(err));
+});
+
 app.post("/createComment", (req, res) => {
   console.log(
     "commenting on post with id " +
@@ -88,9 +120,6 @@ app.post("/createComment", (req, res) => {
   const body = {
     message: "success",
   };
-
-  res.json(body);
-});
 
 app.get("/bookmarks", async (req, res) => {
   axios
