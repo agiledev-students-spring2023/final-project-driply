@@ -39,11 +39,7 @@ function Header(props) {
   };
 
   const handleLogoClick = () => {
-    if (user) {
-      navigate("/");
-    } else {
-      navigate("/trending");
-    }
+    navigate("/");
   };
 
   useEffect(() => {
