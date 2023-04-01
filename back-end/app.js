@@ -44,16 +44,16 @@ app.post("/profile", (req, res, next) => {
   console.log("fetching profile of user with id " + req.body.userId);
   axios
     .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
-    .then(apiResponse => {
+    .then((apiResponse) => {
       firstRandomPost = apiResponse.data[0];
       const body = {
         message: "success",
         username: firstRandomPost.username,
-        description: firstRandomPost.description
-      }
+        description: firstRandomPost.description,
+      };
       res.json(body);
     })
-    .catch(err => next(err));
+    .catch((err) => next(err));
 });
 
 app.get("/getPost", (req, res, next) => {
@@ -98,16 +98,16 @@ app.get("/fetchComment", (req, res, next) => {
   console.log("creating new comment " + req.body.comment);
   axios
     .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
-    .then(apiResponse => {
+    .then((apiResponse) => {
       firstRandomPost = apiResponse.data[0];
       const body = {
         message: "success",
         username: firstRandomPost.username,
-        comments: firstRandomPost.comments
-      }
+        comments: firstRandomPost.comments,
+      };
       res.json(body);
     })
-    .catch(err => next(err));
+    .catch((err) => next(err));
 });
 
 app.post("/createComment", (req, res) => {
@@ -120,6 +120,7 @@ app.post("/createComment", (req, res) => {
   const body = {
     message: "success",
   };
+  res.json(body);
 });
 
 app.get("/bookmarks", async (req, res) => {
@@ -160,7 +161,7 @@ app.get("/following", async (req, res) => {
 
 app.get("/follower", async (req, res) => {
   axios
-    .get("https://my.api.mockaroo.com/follower_schema.json?key=90e03700}")
+    .get("https://my.api.mockaroo.com/follower_schema.json?key=90e03700")
     .then((apiResponse) => {
       const { data, status } = apiResponse;
       res.json({ data, status });
