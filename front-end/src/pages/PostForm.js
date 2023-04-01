@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
+import axios from "axios";
 
 function PostForm() {
   const [image, setImage] = useState(null);
@@ -15,9 +16,22 @@ function PostForm() {
     setPrice(e.target.value);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    // upload image, price, description to backend
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("name", "name");
+    formData.append("price", price);
+    formData.append("description", description);
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/post-form",
+        formData
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   function handleDescriptionChange(e) {
