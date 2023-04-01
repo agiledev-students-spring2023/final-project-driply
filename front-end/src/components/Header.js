@@ -123,6 +123,9 @@ function Header(props) {
             <Link to="/login" onClick={handleMenuClose}>
               Login
             </Link>
+            <Link to="/register" onClick={handleMenuClose}>
+              Register
+            </Link>
           </Menu>
         </div>
       )}
