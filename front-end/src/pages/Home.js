@@ -11,7 +11,7 @@ function Home() {
   useEffect(() => {
     async function fetchPostList() {
       const response = await fetch(`http://localhost:4000/getHomePosts`, {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },

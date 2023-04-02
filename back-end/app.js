@@ -191,4 +191,16 @@ app.get("/getHomePosts", async (req, res) => {
     });
 });
 
+app.get("/getTrendingPosts", async (req, res) => {
+  axios
+    .get("https://my.api.mockaroo.com/post_schema.json?key=90e03700")
+    .then((apiResponse) => {
+      const { data } = apiResponse;
+      res.json({ data });
+    })
+    .catch((err) => {
+      res.json({ error: err.message, status: err.response.status });
+    });
+});
+
 module.exports = app;

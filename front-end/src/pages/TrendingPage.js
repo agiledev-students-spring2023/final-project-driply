@@ -13,11 +13,11 @@ function TrendingPage() {
   useEffect(() => {
     async function fetchPostList() {
       const response = await fetch(
-        `https://my.api.mockaroo.com/post_schema.json?key=${process.env.REACT_APP_MOCKAROO_API_KEY}`
+        `http://localhost:4000/getTrendingPosts`
       );
       let json = await response.json();
       if (response.status === 200) {
-        setPostList(json);
+        setPostList(json.data);
         setPostListError(null);
       } else {
         setPostListError({ error: json.error, status: response.status });
