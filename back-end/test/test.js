@@ -24,6 +24,29 @@ describe("GET request to /getHomePosts route", () => {
     })
 })
 
+describe("POST request to /profile route", () => {
+  it("it should respond with an HTTP 200 status code and an object in the response body", done => {
+    var body = {
+      profileId: 0
+    }
+    chai
+      .request(server)
+      .post("/profile")
+      .send(body)
+      .end((err, res) => {
+        res.should.have.status(200)
+        res.body.should.be.a("object")
+        res.body.should.have.property("username")
+        res.body.username.should.be.an("string")
+        res.body.should.have.property("description")
+        res.body.description.should.be.an("string")
+        res.body.should.have.property("ownProfile")
+        res.body.ownProfile.should.be.an("boolean")
+        done()
+      })
+  })
+})
+
 describe("GET request to /fetchComment route", () => {
   it("it should respond with an HTTP 200 status code and an object in the response body", done => {
     chai
@@ -59,3 +82,4 @@ describe("POST request to /createComment route", () => {
       })
   })
 })
+
