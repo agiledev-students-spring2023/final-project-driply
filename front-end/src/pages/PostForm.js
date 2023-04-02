@@ -1,12 +1,14 @@
 import React, { useContext, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function PostForm() {
   const [image, setImage] = useState(null);
   const [price, setPrice] = useState(null);
   const [description, setDescription] = useState("");
   const { ifDarkMode } = useContext(DarkModeContext);
+  const navigate = useNavigate();
 
   function handleImageSelect(e) {
     setImage(e.target.files[0]);
@@ -103,7 +105,9 @@ function PostForm() {
         {image ? promptPriceInput() : null}
         {price ? promptDescriptionInput() : null}
 
-        <button className="submit-button">Submit</button>
+        <button className="submit-button" onClick={() => navigate("/")}>
+          Submit
+        </button>
       </form>
     </div>
   );
