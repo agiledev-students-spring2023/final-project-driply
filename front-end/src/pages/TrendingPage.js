@@ -23,11 +23,11 @@ function TrendingPage() {
         setPostListError({ error: json.error, status: response.status });
       }
       setLoading(false);
-      console.log(json);
     }
 
     fetchPostList();
   }, []);
+
 
   function LoadingPosts() {
     return Array.from({ length: 4 }).map((_, idx) => {
@@ -45,10 +45,33 @@ function TrendingPage() {
     });
   }
 
+  
+
+  function quickSort(arr) {
+    if (arr.length <= 1) {
+      return arr;
+    }
+  
+    const pivot = arr[Math.floor(arr.length / 2)];
+    const less = [];
+    const greater = [];
+  
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].likes > pivot.likes) {
+        greater.push(arr[i]);
+      } else if (arr[i].likes < pivot.likes) {
+        less.push(arr[i]);
+      }
+    }
+  
+    return [...quickSort(greater), pivot, ...quickSort(less)];
+  }
+  
   function DisplayPostLists() {
+    const sortedPostList = quickSort([...postList]); // create a new array
     return (
       <div className='galleryContainer'>
-        {postList?.map((post) => (
+        {sortedPostList?.map((post) => (
           <TrendingCard key={post.id} post={post} />
         ))}
       </div>

@@ -143,6 +143,18 @@ app.get("/bookmarks", async (req, res) => {
     });
 });
 
+app.get("/getHomePosts", async (req, res) => {
+  axios
+    .get("https://my.api.mockaroo.com/post_schema.json?key=90e03700")
+    .then((apiResponse) => {
+      const { data, status } = apiResponse;
+      res.json({ data, status });
+    })
+    .catch((err) => {
+      res.json({ error: err.message, status: err.response.status });
+    });
+});
+
 app.get("/chats", async (req, res) => {
   axios
     .get("https://my.api.mockaroo.com/users_chats.json?key=90e03700")
