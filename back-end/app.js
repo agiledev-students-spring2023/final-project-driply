@@ -47,17 +47,16 @@ app.post("/profile", (req, res, next) => {
     .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
     .then((apiResponse) => {
       firstRandomPost = apiResponse.data[0];
-      
+
       var own = false;
       // check if logged in user is the one who owns this profile once auth is implemented
       // set own to true if it is
-
 
       const body = {
         message: "success",
         username: firstRandomPost.username,
         description: firstRandomPost.description,
-        ownProfile: own
+        ownProfile: own,
       };
       res.json(body);
     })
@@ -93,7 +92,7 @@ app.post("/like/:postID", (req, res) => {
 });
 
 app.post("/unlike/:postId", (req, res) => {
-  const postId = req.params.postId;
+  const id = req.params.postId;
   // TODO: Find post in database based on postId
   // TODO: update post in database to mark it as unliked by the user
   const data = {
@@ -171,10 +170,10 @@ app.post("/unbookmark", (req, res) => {
 
 app.get("/getHomePosts", async (req, res) => {
   axios
-    .get("https://my.api.mockaroo.com/post_schema.json?key=90e03700")
+    .get("https://my.api.mockaroo.com/post.json?key=e833d640")
     .then((apiResponse) => {
-      const { data, status } = apiResponse;
-      res.json({ data, status });
+      const { data } = apiResponse;
+      res.json({ data });
     })
     .catch((err) => {
       res.json({ error: err.message, status: err.response.status });
@@ -211,18 +210,6 @@ app.get("/following", async (req, res) => {
     .then((apiResponse) => {
       const { data, status } = apiResponse;
       res.json({ data, status });
-    })
-    .catch((err) => {
-      res.json({ error: err.message, status: err.response.status });
-    });
-});
-
-app.get("/getHomePosts", async (req, res) => {
-  axios
-    .get("https://my.api.mockaroo.com/post.json?key=e833d640")
-    .then((apiResponse) => {
-      const { data } = apiResponse;
-      res.json({ data });
     })
     .catch((err) => {
       res.json({ error: err.message, status: err.response.status });
