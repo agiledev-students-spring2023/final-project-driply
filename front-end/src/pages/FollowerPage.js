@@ -14,9 +14,11 @@ function FollowerPage() {
         headers: {
           "Content-Type": "application/json",
         },
+
         // body: JSON.stringify({
         //     "userId": id
         // })
+        
       });
       let json = await response.json();
       if (json.status === 200) {
@@ -33,17 +35,6 @@ function FollowerPage() {
 
     fetchFollowerList();
   }, []);
-
-  function LoadFollowerList() {
-    return Array.from({ length: 10 }).map((_, idx) => {
-      return (
-        <div key={idx} className="eachFollowerDisplay">
-          <div className="followerImgLoading"></div>
-          <div className="followerDetailsLoading"></div>
-        </div>
-      );
-    });
-  }
 
   function Follower({ follower }) {
     return (
@@ -65,6 +56,17 @@ function FollowerPage() {
         </div>
       </div>
     );
+  }
+
+  function LoadFollowerList() {
+    return Array.from({ length: 10 }).map((_, idx) => {
+      return (
+        <div key={idx} className="eachFollowerDisplay">
+          <div className="followerImgLoading"></div>
+          <div className="followerDetailsLoading"></div>
+        </div>
+      );
+    });
   }
 
   function DisplayFollowerList() {
