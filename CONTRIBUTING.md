@@ -20,9 +20,11 @@
 - Once all group members are finished with the Daily Standup, paste the written stnadup in team_driply_standups text channel with the daily standup date.
 
 ### Planning Poker
-Work estiminations for users stories are decided using planning pokers with the created cards here:
- 
-[Part 1](https://docs.google.com/drawings/d/14-hLOWZkmxGu3JMO_Y3raz-O4OfDSxh1C6yRuGgld0Q/edit?usp=sharing) [Part 2](https://docs.google.com/drawings/d/1gqDCBqP189jqCQjhEp1CHdnBSOKUufvdRqq94aBiC-E/edit?usp=sharing) [Part 3](https://docs.google.com/drawings/d/1K5De_d6yqVGIhSOuChqhQ65jc2Fl5kMRcT8xGg17s18/edit?usp=sharing)
+- Work estiminations for users stories are decided using planning pokers with the created cards.
+- [Part 1](https://docs.google.com/drawings/d/14-hLOWZkmxGu3JMO_Y3raz-O4OfDSxh1C6yRuGgld0Q/edit?usp=sharing)
+- [Part 2](https://docs.google.com/drawings/d/1gqDCBqP189jqCQjhEp1CHdnBSOKUufvdRqq94aBiC-E/edit?usp=sharing)
+- [Part 3](https://docs.google.com/drawings/d/1K5De_d6yqVGIhSOuChqhQ65jc2Fl5kMRcT8xGg17s18/edit?usp=sharing)
+
 ### Coding Standards
 - Visual Studio Code as IDE
 - Make small commits and stick to the workflow below 
@@ -49,7 +51,6 @@ Work estiminations for users stories are decided using planning pokers with the 
 	`git fetch origin` <br>
 	`git merge origin/master`
 
-
 6. Push branch changes to YOUR BRANCH <br>
 	`git push origin <branch-name>`
 
@@ -68,7 +69,7 @@ Work estiminations for users stories are decided using planning pokers with the 
 
 ---
 ## Rules of Contributing and Any Considerations or How and What to Contribute
-Follow the git workflow above.
+- Follow the git workflow above.
 
 ---
 ## Setting up the local development environment
