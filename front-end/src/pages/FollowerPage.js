@@ -14,11 +14,6 @@ function FollowerPage() {
         headers: {
           "Content-Type": "application/json",
         },
-
-        // body: JSON.stringify({
-        //     "userId": id
-        // })
-        
       });
       let json = await response.json();
       if (json.status === 200) {
