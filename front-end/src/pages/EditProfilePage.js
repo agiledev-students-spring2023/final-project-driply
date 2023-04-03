@@ -7,42 +7,73 @@ import { DarkModeContext } from "../context/DarkModeContext";
 function EditProfilePage() {
 
     const navigate = useNavigate();
-    const { user } = useAuthContext();
+    const { user, dispatch } = useAuthContext();
+
+    // hooks to store data
     const usernameInputRef = useRef();
     const passwordInputRef = useRef();
     const confirmPasswordInputRef = useRef();
+
     const [modalOpen, setModalOpen] = useState(false);
     const [savedChanges, setSavedChanges] = useState(false);
     const [errorSaving, setErrorSaving] = useState(null);
     const { ifDarkMode } = useContext(DarkModeContext);
 
-    const handleSubmit = () => {
-        setSavedChanges(false);
+    const saveChanges = async (username, password) => {
+        console.log(username, password);
+        const user = JSON.parse(localStorage.getItem("user"));
+            const response = await fetch("http://localhost:4000/editProfile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    "userId": user.id, // temp until db working
+                    "username": username,
+                    "password": password,
+                })
+            });
+
+            const json = await response.json();
+            if (json.status === 200) {
+                const ifNewUsername = (username.length > 0) ? username : user.username;
+                user.username = ifNewUsername;
+
+                // save the user to local storage
+                localStorage.setItem("user", JSON.stringify(user));
+                
+                // update the auth context
+                dispatch({type: 'LOGIN', payload: user});
+                setErrorSaving(null);
+                setSavedChanges(true);
+                usernameInputRef.current.value = "";
+                passwordInputRef.current.value = "";
+                confirmPasswordInputRef.current.value = "";
+            } else {
+                setErrorSaving(json.error);
+                setSavedChanges(false);
+            }
+    }
+
+    const handleSubmit = async () => {
+        const username = usernameInputRef.current.value;
+        const password = passwordInputRef.current.value;
+        const confirmedPassword = confirmPasswordInputRef.current.value;
         setErrorSaving(null);
+        setSavedChanges(false);
 
-        // user updating username and password
-        if (usernameInputRef.current.value.length !== 0 && passwordInputRef.current.value.length !== 0 && confirmPasswordInputRef.current.value.length !== 0) {
-            if (passwordInputRef.current.value !== confirmPasswordInputRef.current.value) {
-                setErrorSaving("Error: Passwords are not matching");
-            } else {
-                setSavedChanges(true);
-                setErrorSaving(null);
+        if (username.length === 0 && password.length === 0 & confirmedPassword.length === 0) {
+            setErrorSaving("Empty fields");
+            return;
+        } else {
+            if (password !== confirmedPassword) {
+                setErrorSaving("passwords don't match");
+                return;
             }
 
-        // udating password only
-        } else if (passwordInputRef.current.value.length !== 0 && confirmPasswordInputRef.current.value.length !== 0) {
-            if (passwordInputRef.current.value === confirmPasswordInputRef.current.value) {
-                setErrorSaving("Error: Passwords are not matching");
-            } else {
-                setSavedChanges(true);
-                setErrorSaving(null);
-            }
-
-        // updating username only
-        } else if (usernameInputRef.current.value.length !== 0) {
-            setSavedChanges(true);
-            setErrorSaving(null);
+            saveChanges(username, password);
         }
+
     }
 
     return (
