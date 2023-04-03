@@ -144,10 +144,10 @@ app.get("/bookmarks", async (req, res) => {
 
 app.get("/getHomePosts", async (req, res) => {
   axios
-    .get("https://my.api.mockaroo.com/post_schema.json?key=90e03700")
+    .get("https://my.api.mockaroo.com/post.json?key=e833d640")
     .then((apiResponse) => {
-      const { data, status } = apiResponse;
-      res.json({ data, status });
+      const { data } = apiResponse;
+      res.json({ data });
     })
     .catch((err) => {
       res.json({ error: err.message, status: err.response.status });
@@ -184,18 +184,6 @@ app.get("/follower", async (req, res) => {
     .then((apiResponse) => {
       const { data, status } = apiResponse;
       res.json({ data, status });
-    })
-    .catch((err) => {
-      res.json({ error: err.message, status: err.response.status });
-    });
-});
-
-app.get("/getHomePosts", async (req, res) => {
-  axios
-    .get("https://my.api.mockaroo.com/post.json?key=e833d640")
-    .then((apiResponse) => {
-      const { data } = apiResponse;
-      res.json({ data });
     })
     .catch((err) => {
       res.json({ error: err.message, status: err.response.status });

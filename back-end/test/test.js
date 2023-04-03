@@ -386,9 +386,9 @@ describe("GET request to /bookmarks route", () => {
         if (err) return done(err);
         assert.deepStrictEqual(res.body, {
           data: [
-            { id: 1, title: "Bookmark 1", url: "https://example.com/1" },
-            { id: 2, title: "Bookmark 2", url: "https://example.com/2" },
-            { id: 3, title: "Bookmark 3", url: "https://example.com/3" },
+            { id: 1, title: "Bookmark 1", url: "https://examplebm.com/1" },
+            { id: 2, title: "Bookmark 2", url: "https://examplebm.com/2" },
+            { id: 3, title: "Bookmark 3", url: "https://examplebm.com/3" },
           ],
           status: 200,
         });
