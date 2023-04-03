@@ -76,6 +76,7 @@
 
 ---
 ## Setting up the local development environment
+
 ### Prerequisites
 - [Node.js](https://nodejs.org/) and npm installed on your local machine
 - [Git](https://git-scm.com/) installed on your local machine
@@ -110,3 +111,5 @@ cd final_project_driply
 
 ___
 ## Testing the Project
+(Update once complete)
+
