@@ -5,10 +5,11 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import Like from "../components/Like";
 
-function Comment() {
+function Comment(prop) {
     const [comment, setComment] = useState("");
     const [commentList, setCommentList] = useState([]);
     const [fakeName, setFakeName] = useState(""); // remove after sprint 1, only used to randomize displayed username using mockaroo
+    const [info, setInfo] = useState(null);
     const { user } = useAuthContext();
     const [postError, setPostError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -42,7 +43,7 @@ function Comment() {
 
             }
         }
-
+        console.log(prop);
         fetchComment();
     }, []);
 
@@ -83,7 +84,7 @@ function Comment() {
         <div>
             {user && (
                 <div>
-                    <Like/>
+                    <Like likes={prop.likes} postId={prop.postId}/>
                     <div class="container">
                         <Form onSubmit={handleComment} ref={form} class="row align-items-center">
                             <div className="col-auto px-0">

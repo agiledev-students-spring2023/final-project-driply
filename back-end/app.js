@@ -44,7 +44,7 @@ app.post("/post-form", upload.single("image"), (req, res) => {
 app.post("/profile", (req, res, next) => {
   console.log("fetching profile of user with id " + req.body.userId);
   axios
-    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .get("https://my.api.mockaroo.com/post.json?key=997e9440")
     .then((apiResponse) => {
       firstRandomPost = apiResponse.data[0];
 
@@ -67,11 +67,12 @@ app.get("/getPost", (req, res, next) => {
   console.log("get post with id " + req.body.postId);
 
   axios
-    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .get("https://my.api.mockaroo.com/post.json?key=997e9440")
     .then((apiResponse) => {
       firstRandomPost = apiResponse.data[0];
       const body = {
         message: "success",
+        likes: firstRandomPost.likes,
         username: firstRandomPost.username,
         description: firstRandomPost.description,
         price: firstRandomPost.price,
@@ -104,7 +105,7 @@ app.post("/unlike/:postId", (req, res) => {
 app.get("/fetchComment", (req, res, next) => {
   console.log("creating new comment " + req.body.comment);
   axios
-    .get("https://my.api.mockaroo.com/post.json?key=9e339cc0")
+    .get("https://my.api.mockaroo.com/post.json?key=997e9440")
     .then((apiResponse) => {
       firstRandomPost = apiResponse.data[0];
       const body = {
