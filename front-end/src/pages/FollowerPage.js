@@ -1,6 +1,67 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 
+
+function FollowerPage() {
+  const [followerList, setFollowerList] = useState([]);
+  const [followerError, setFollowerError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { ifDarkMode } = useContext(DarkModeContext);
+
+  useEffect(() => {
+    async function fetchFollowerList() {
+      const response = await fetch(`http://localhost:4000/follower`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      let json = await response.json();
+      if (json.status === 200) {
+        setFollowerList(json.data);
+        setFollowerError(null);
+        setLoading(false);
+        console.log(json);
+      } else {
+        console.log(json.error);
+        setFollowerError({ error: json.error, status: json.status });
+        setLoading(false);
+      }
+    }
+
+    fetchFollowerList();
+  }, []);
+
+// function FollowerPage() {
+//   const [followerList, setFollowerList] = useState([]);
+//   const [followerError, setFollowerError] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const { ifDarkMode } = useContext(DarkModeContext);
+
+//   useEffect(() => {
+//     async function fetchFollowerList() {
+//       const response = await fetch(`http://localhost:5000/follower`, {
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//       });
+//       let json = await response.json();
+//       if (json.status === 200) {
+//         setFollowerList(json.data);
+//         setFollowerError(null);
+//         setLoading(false);
+//         console.log(json);
+//       } else {
+//         console.log(json.error);
+//         setFollowerError({ error: json.error, status: json.status });
+//         setLoading(false);
+//       }
+//     }
+
+//     fetchFollowerList();
+//   }, []);
+
   function LoadFollowerList() {
     return Array.from({ length: 10 }).map((_, idx) => {
       return (
