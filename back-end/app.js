@@ -229,4 +229,20 @@ app.get("/getTrendingPosts", async (req, res) => {
     });
 });
 
+app.post("/editProfile", async (req, res) => {
+  // api route is receiving a username and password to save but doesn't have to update both.
+  // User can just save username or password only
+
+  try {
+    console.log(`updating user profile (userId: ${req.body.userId}) `);
+    const body = {
+      message: "success",
+      status: 200,
+    };
+    res.json(body);
+  } catch (error) {
+    res.json({ error: error.message, status: 500, });
+  }
+})
+
 module.exports = app;

@@ -33,7 +33,7 @@ export default function AboutUs() {
                 <div className='eachDev'>
                     <img src='https://github.com/MannySotoRuiz.png' alt='Manny' />
                     <a href='https://github.com/MannySotoRuiz' className='devHandler'>@Manny Soto Ruiz</a>
-                    <p className='devName'>Ex-Google, Ex-Facebook Tech Lead</p>
+                    <p className='devName'>Senior SWE</p>
                 </div>
                 <div className='eachDev'>
                     <img src='https://github.com/b-chen00.png' alt='Brandon' />

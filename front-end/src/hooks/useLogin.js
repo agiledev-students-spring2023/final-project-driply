@@ -10,10 +10,16 @@ export const useLogin = () => {
     setIsLoading(true)
     setError(null)
 
+    const json = {
+      id: "1234567890",
+      username: username,
+    }
+
     // save the user to local storage
-    localStorage.setItem("user", JSON.stringify({ username: username }))
+    localStorage.setItem("user", JSON.stringify(json))
+    
     // update the auth context
-    dispatch({type: 'LOGIN', payload: { username: username }})
+    dispatch({type: 'LOGIN', payload: json})
 
     // update loading state
     setIsLoading(false)
