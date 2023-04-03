@@ -169,7 +169,7 @@ app.get("/chats", async (req, res) => {
 
 app.get("/follower", async (req, res) => {
   axios
-    .get("")
+    .get("https://my.api.mockaroo.com/follower_schema.json?key=90e03700")
     .then((apiResponse) => {
       const { data, status } = apiResponse;
       res.json({ data, status });
