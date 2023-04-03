@@ -161,7 +161,7 @@ describe("POST request to /post-form route", () => {
 
 describe("POST request to /like/:postID route", () => {
   it("should return a success message when a post is liked", (done) => {
-    const postID = "1"; // set a dummy post ID for testing purposes
+    const postID = "1";
     chai
       .request(server)
       .post(`/like/${postID}`)
@@ -177,10 +177,10 @@ describe("POST request to /like/:postID route", () => {
 
 describe("POST request to /unlike/:postID route", () => {
   it("should return a success message when a post is liked", (done) => {
-    const postID = "1"; // set a dummy post ID for testing purposes
+    const postID = "1";
     chai
       .request(server)
-      .post(`/like/${postID}`)
+      .post(`/unlike/${postID}`)
       .end((err, res) => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
@@ -195,12 +195,10 @@ describe("GET request to /getPost route", () => {
   let axiosGetStub;
 
   beforeEach(() => {
-    // create a stub for the axios.get method
     axiosGetStub = sinon.stub(axios, "get");
   });
 
   afterEach(() => {
-    // restore the original axios.get method
     axiosGetStub.restore();
   });
 
@@ -264,7 +262,7 @@ describe("GET request to /chats route", () => {
   it("should return chat data with 200 status code", (done) => {
     // mock the response data for this test
     axiosGetStub.resolves({
-      data: [{ id: 1, user: "Alice", message: "Hello" }],
+      data: [{ id: 1, user: "testuser", message: "Hello" }],
       status: 200,
     });
 
@@ -274,7 +272,7 @@ describe("GET request to /chats route", () => {
       .end((err, res) => {
         if (err) return done(err);
         assert.deepStrictEqual(res.body, {
-          data: [{ id: 1, user: "Alice", message: "Hello" }],
+          data: [{ id: 1, user: "testuser", message: "Hello" }],
           status: 200,
         });
         done();
@@ -290,6 +288,64 @@ describe("GET request to /chats route", () => {
 
     request(server)
       .get("/chats")
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        assert.deepStrictEqual(res.body, {
+          error: "API is down",
+          status: 500,
+        });
+        done();
+      });
+  });
+});
+
+describe("GET request to /getTrendingPosts route", () => {
+  let axiosGetStub;
+
+  beforeEach(() => {
+    axiosGetStub = sinon.stub(axios, "get");
+  });
+
+  afterEach(() => {
+    axiosGetStub.restore();
+  });
+
+  it("should return trending posts with 200 status code", (done) => {
+    // mock the response data for this test
+    axiosGetStub.resolves({
+      data: [
+        { id: 1, title: "Post 1", likes: 10 },
+        { id: 2, title: "Post 2", likes: 20 },
+        { id: 3, title: "Post 3", likes: 30 },
+      ],
+      status: 200,
+    });
+
+    request(server)
+      .get("/getTrendingPosts")
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        assert.deepStrictEqual(res.body, {
+          data: [
+            { id: 1, title: "Post 1", likes: 10 },
+            { id: 2, title: "Post 2", likes: 20 },
+            { id: 3, title: "Post 3", likes: 30 },
+          ],
+        });
+        done();
+      });
+  });
+
+  it("should handle errors with an error message and status code", (done) => {
+    axiosGetStub.rejects({
+      message: "API is down",
+      response: { status: 500 },
+    });
+
+    request(server)
+      .get("/getTrendingPosts")
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
