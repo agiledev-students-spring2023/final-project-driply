@@ -71,6 +71,8 @@
 ---
 ## Rules of Contributing and Any Considerations or How and What to Contribute
 - Follow the git workflow above.
+- Use GitHub Issues to view and assign work.
+- Follow the Agile & Scrum methodology.
 
 ---
 ## Setting up the local development environment
