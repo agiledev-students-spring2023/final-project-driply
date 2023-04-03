@@ -14,9 +14,6 @@ function FollowingPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        // body: JSON.stringify({
-        //     "userId": id
-        // })
       });
       let json = await response.json();
       if (json.status === 200) {
@@ -33,6 +30,36 @@ function FollowingPage() {
 
     fetchFollowingList();
   }, []);
+
+// function FollowingPage() {
+//   const [followingList, setFollowingList] = useState([]);
+//   const [followingError, setFollowingError] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const { ifDarkMode } = useContext(DarkModeContext);
+
+//   useEffect(() => {
+//     async function fetchFollowingList() {
+//       const response = await fetch(`http://localhost:5000/following`, {
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//       });
+//       let json = await response.json();
+//       if (json.status === 200) {
+//         setFollowingList(json.data);
+//         setFollowingError(null);
+//         setLoading(false);
+//         console.log(json);
+//       } else {
+//         console.log(json.error);
+//         setFollowingError({ error: json.error, status: json.status });
+//         setLoading(false);
+//       }
+//     }
+
+//     fetchFollowingList();
+//   }, []);
 
   function LoadingFollowingList() {
     return Array.from({ length: 6 }).map((_, idx) => {
@@ -90,3 +117,5 @@ function FollowingPage() {
 }
 
 export default FollowingPage;
+
+
