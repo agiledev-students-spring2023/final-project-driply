@@ -89,30 +89,112 @@ describe("POST request to /createComment route", () => {
 });
 
 describe("GET request to /following route", () => {
-  it("it should respond with an HTTP 200 status code and an object in the response body", (done) => {
-    chai
-      .request(server)
+  let axiosGetStub;
+
+  beforeEach(() => {
+    axiosGetStub = sinon.stub(axios, "get");
+  });
+
+  afterEach(() => {
+    axiosGetStub.restore();
+  });
+
+  it("should return an array of following data with 200 status code", (done) => {
+    const mockData = [
+      { id: 1, user: "testuser1", following: "testuser2" },
+      { id: 2, user: "testuser1", following: "testuser3" },
+    ];
+
+    axiosGetStub.resolves({
+      data: mockData,
+      status: 200,
+    });
+
+    request(server)
       .get("/following")
+      .expect(200)
       .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a("object");
-        res.body.should.have.property("data");
-        res.body.data.should.be.an("array");
+        if (err) return done(err);
+        expect(res.body).to.be.an("object");
+        expect(res.body).to.have.property("data");
+        expect(res.body.data).to.deep.equal(mockData);
+        expect(res.body).to.have.property("status", 200);
+        done();
+      });
+  });
+
+  it("should return an error message and status code when API is down", (done) => {
+    const errorMessage = "API is down";
+
+    axiosGetStub.rejects({
+      message: errorMessage,
+      response: { status: 500 },
+    });
+
+    request(server)
+      .get("/following")
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.body).to.be.an("object");
+        expect(res.body).to.have.property("error", errorMessage);
+        expect(res.body).to.have.property("status", 500);
         done();
       });
   });
 });
 
 describe("GET request to /follower route", () => {
-  it("it should respond with an HTTP 200 status code and an object in the response body", (done) => {
-    chai
-      .request(server)
+  let axiosGetStub;
+
+  beforeEach(() => {
+    axiosGetStub = sinon.stub(axios, "get");
+  });
+
+  afterEach(() => {
+    axiosGetStub.restore();
+  });
+
+  it("should return an array of following data with 200 status code", (done) => {
+    const mockData = [
+      { id: 1, user: "testuser1", following: "testuser2" },
+      { id: 2, user: "testuser1", following: "testuser3" },
+    ];
+
+    axiosGetStub.resolves({
+      data: mockData,
+      status: 200,
+    });
+
+    request(server)
       .get("/follower")
+      .expect(200)
       .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a("object");
-        res.body.should.have.property("data");
-        res.body.data.should.be.an("array");
+        if (err) return done(err);
+        expect(res.body).to.be.an("object");
+        expect(res.body).to.have.property("data");
+        expect(res.body.data).to.deep.equal(mockData);
+        expect(res.body).to.have.property("status", 200);
+        done();
+      });
+  });
+
+  it("should return an error message and status code when API is down", (done) => {
+    const errorMessage = "API is down";
+
+    axiosGetStub.rejects({
+      message: errorMessage,
+      response: { status: 500 },
+    });
+
+    request(server)
+      .get("/follower")
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.body).to.be.an("object");
+        expect(res.body).to.have.property("error", errorMessage);
+        expect(res.body).to.have.property("status", 500);
         done();
       });
   });
@@ -246,41 +328,22 @@ describe("GET request to /getPost route", () => {
   });
 });
 
-describe("GET request to /chats route", () => {
-  let axiosGetStub;
-
-  beforeEach(() => {
-    // create a stub for the axios.get method
-    axiosGetStub = sinon.stub(axios, "get");
-  });
-
-  afterEach(() => {
-    // restore the original axios.get method
-    axiosGetStub.restore();
-  });
-
-  it("should return chat data with 200 status code", (done) => {
-    // mock the response data for this test
-    axiosGetStub.resolves({
-      data: [{ id: 1, user: "testuser", message: "Hello" }],
-      status: 200,
-    });
-
+describe("GET request /chats route", () => {
+  it("should respond with status 200 and a list of chats", (done) => {
     request(server)
       .get("/chats")
-      .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        assert.deepStrictEqual(res.body, {
-          data: [{ id: 1, user: "testuser", message: "Hello" }],
-          status: 200,
-        });
+        expect(res.statusCode).to.equal(200);
+        expect(res.body).to.be.an("object");
+        expect(res.body).to.have.property("data").that.is.an("array");
+        expect(res.body).to.have.property("status").that.is.a("number");
         done();
       });
   });
 
-  it("should handle errors with an error message and status code", (done) => {
-    // create a stub for the axios.get method that rejects with an error
+  it("should respond with an error message and status code 500 when the API is down", (done) => {
+    const axiosGetStub = sinon.stub(axios, "get");
     axiosGetStub.rejects({
       message: "API is down",
       response: { status: 500 },
@@ -288,13 +351,13 @@ describe("GET request to /chats route", () => {
 
     request(server)
       .get("/chats")
-      .expect(200)
       .end((err, res) => {
+        axiosGetStub.restore();
         if (err) return done(err);
-        assert.deepStrictEqual(res.body, {
-          error: "API is down",
-          status: 500,
-        });
+        expect(res.statusCode).to.equal(200);
+        expect(res.body).to.be.an("object");
+        expect(res.body).to.have.property("error").that.equals("API is down");
+        expect(res.body).to.have.property("status").that.equals(500);
         done();
       });
   });
