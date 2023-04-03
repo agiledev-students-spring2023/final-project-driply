@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-function Like() {
-  const [likes, setLikes] = useState([]);
+function Like(prop) {
+  const [likes, setLikes] = useState([...prop.likes]);
   const [likeChanged, setLikeChanged] = useState(false);
   const { user } = useAuthContext();
 
@@ -11,15 +11,52 @@ function Like() {
   }, [likeChanged]);
 
   const handleLike = () => {
-    if (
-      likes.filter((e) => e.localeCompare(user.username) === 0).length === 0
-    ) {
-      likes.push(user.username);
-    } else {
-      const index = likes.indexOf(user.username);
-      likes.splice(index, 1);
+    async function like() {
+      const response = await fetch(`http://localhost:4000/like/${prop.postId}`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          }
+      });
+      let json = await response.json();
+      if (response.status === 200) {
+        console.log(json);
+        if (json.success){
+          likes.push(user.username);
+          setLikeChanged(true);
+        }
+      } else {
+        // setPostError(response.status);
+        // setLoading(false);
+      }
     }
-    setLikeChanged(true);
+    async function unlike() {
+      const response = await fetch(`http://localhost:4000/unlike/${prop.postId}`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          }
+      });
+      let json = await response.json();
+      if (response.status === 200) {
+        console.log(json);
+        if (json.success){
+          const index = likes.indexOf(user.username);
+          likes.splice(index, 1);
+          setLikeChanged(true);
+        }
+      } else {
+        // setPostError(response.status);
+        // setLoading(false);
+      }
+    }
+    console.log(likes);
+    if (likes.filter((e) => e.localeCompare(user.username) === 0).length === 0) {
+      like();
+    } 
+    else {
+      unlike();
+    }
   };
 
   return (

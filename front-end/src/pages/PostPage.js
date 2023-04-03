@@ -11,7 +11,7 @@ const PostPage = () => {
     const navigate = useNavigate();
     //const [comment, setComment] = useState("");
     //const [commentList, setCommentList] = useState([]);
-    //const [likes, setLikes] = useState([]);
+    const [likes, setLikes] = useState([]);
     //const [likeChanged, setLikeChanged] = useState(false);
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
@@ -43,6 +43,7 @@ const PostPage = () => {
             if (response.status === 200) {
                 // Commented out fetching likes from mockaroo as clicking like would trigger the useEffect and refetch from mockaroo resulting in inaccurate like count and update.
                 // setLikes(p.likes);
+                setLikes([...json.likes]);
                 setFakeName(json.username);
                 setDescription(json.description);
                 setPrice(json.price);
@@ -74,7 +75,7 @@ const PostPage = () => {
             <img className="center-block img-responsive" src={`https://picsum.photos/${randomPostSize[randomPostIndex]}/300`} alt="pic"/>
             {description}
             <br/>
-            <Comment/>
+            <Comment postId={id} likes={likes}/>
         </div>
     );
 };
