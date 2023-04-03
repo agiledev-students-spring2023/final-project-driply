@@ -16,8 +16,8 @@
 - Sprint 4: 04/24-05/03
 
 ### Daily Standups
-- Pre-Scheduled Daily Standups are to be held the evening of the days lecture is held, Monday and Wednesdays. The third Daily Standup of the week is to be scheduled through when2meet.
-- Once all group members are finished with the Daily Standup, paste the written stnadup in team_driply_standups text channel with the daily standup date.
+- Pre-Scheduled Daily Standups are to be held the evening of the days lecture is held, Monday and Wednesdays. The third Daily Standup of the week/sprint is to be scheduled through when2meet.
+- After a daily standup session, the scrum master of the sprint is to organize all the members' daily standup and paste them with a labeled date onto the "team_driply_standup" channel.
 
 ### Planning Poker
 - Work estiminations for users stories are decided using planning pokers with the created cards.
@@ -76,8 +76,37 @@
 
 ---
 ## Setting up the local development environment
-(Update with that information once the project reaches that stage.)
+### Prerequisites
+- [Node.js](https://nodejs.org/) and npm installed on your local machine
+- [Git](https://git-scm.com/) installed on your local machine
+- Visual Studio Code
+
+### Installation
+1. Clone the project repository to your local machine using Git.
+```
+git clone https://github.com/agiledev-students-spring-2023/final-project-driply.git
+```
+2. Navigate to the project directory using the terminal.
+```
+cd final_project_driply
+```
+3. Install the dependencies required for the project using npm, as seen in the steps below in "Building the Project"
+
 
 ---
-## Building and Testing the Project
-(Update with that information once the project reaches that stage.)
+## Building the Project
+
+### Build and launch the front end
+
+1. Navigate into the front-end directory
+2. Run ```npm install``` to install all dependencies listed in the package.json file.
+3. Run ```npm start``` to launch the React.js server
+
+### Build and launch the back end
+
+1. Navigate into the back-end directory
+2. Run ```npm install``` to install all dependencies listed in the package.json file.
+3. Run ```npm start``` to launch the back-end server
+
+___
+## Testing the Project
