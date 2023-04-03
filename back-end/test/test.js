@@ -357,3 +357,62 @@ describe("GET request to /getTrendingPosts route", () => {
       });
   });
 });
+
+describe("GET request to /bookmarks route", () => {
+  let axiosGetStub;
+
+  beforeEach(() => {
+    axiosGetStub = sinon.stub(axios, "get");
+  });
+
+  afterEach(() => {
+    axiosGetStub.restore();
+  });
+
+  it("should return bookmark data with a 200 status code", (done) => {
+    axiosGetStub.resolves({
+      data: [
+        { id: 1, title: "Bookmark 1", url: "https://examplebm.com/1" },
+        { id: 2, title: "Bookmark 2", url: "https://examplebm.com/2" },
+        { id: 3, title: "Bookmark 3", url: "https://examplebm.com/3" },
+      ],
+      status: 200,
+    });
+
+    request(server)
+      .get("/bookmarks")
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        assert.deepStrictEqual(res.body, {
+          data: [
+            { id: 1, title: "Bookmark 1", url: "https://example.com/1" },
+            { id: 2, title: "Bookmark 2", url: "https://example.com/2" },
+            { id: 3, title: "Bookmark 3", url: "https://example.com/3" },
+          ],
+          status: 200,
+        });
+        done();
+      });
+  });
+
+  it("should handle errors with an error message and status code", (done) => {
+    // Create a stub for the axios.get method that rejects with an error
+    axiosGetStub.rejects({
+      message: "API is down",
+      response: { status: 500 },
+    });
+
+    request(server)
+      .get("/bookmarks")
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        assert.deepStrictEqual(res.body, {
+          error: "API is down",
+          status: 500,
+        });
+        done();
+      });
+  });
+});
