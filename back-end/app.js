@@ -167,9 +167,9 @@ app.get("/chats", async (req, res) => {
     });
 });
 
-app.get("/following", async (req, res) => {
+app.get("/follower", async (req, res) => {
   axios
-    .get("https://my.api.mockaroo.com/following_schema.json?key=90e03700")
+    .get("https://my.api.mockaroo.com/follower_schema.json?key=90e03700")
     .then((apiResponse) => {
       const { data, status } = apiResponse;
       res.json({ data, status });
@@ -179,9 +179,9 @@ app.get("/following", async (req, res) => {
     });
 });
 
-app.get("/follower", async (req, res) => {
+app.get("/following", async (req, res) => {
   axios
-    .get("https://my.api.mockaroo.com/follower_schema.json?key=90e03700")
+    .get("https://my.api.mockaroo.com/following_schema.json?key=90e03700")
     .then((apiResponse) => {
       const { data, status } = apiResponse;
       res.json({ data, status });
