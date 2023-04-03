@@ -247,3 +247,57 @@ describe("GET request to /getPost route", () => {
       });
   });
 });
+
+describe("GET request to /chats route", () => {
+  let axiosGetStub;
+
+  beforeEach(() => {
+    // create a stub for the axios.get method
+    axiosGetStub = sinon.stub(axios, "get");
+  });
+
+  afterEach(() => {
+    // restore the original axios.get method
+    axiosGetStub.restore();
+  });
+
+  it("should return chat data with 200 status code", (done) => {
+    // mock the response data for this test
+    axiosGetStub.resolves({
+      data: [{ id: 1, user: "Alice", message: "Hello" }],
+      status: 200,
+    });
+
+    request(server)
+      .get("/chats")
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        assert.deepStrictEqual(res.body, {
+          data: [{ id: 1, user: "Alice", message: "Hello" }],
+          status: 200,
+        });
+        done();
+      });
+  });
+
+  it("should handle errors with an error message and status code", (done) => {
+    // create a stub for the axios.get method that rejects with an error
+    axiosGetStub.rejects({
+      message: "API is down",
+      response: { status: 500 },
+    });
+
+    request(server)
+      .get("/chats")
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        assert.deepStrictEqual(res.body, {
+          error: "API is down",
+          status: 500,
+        });
+        done();
+      });
+  });
+});
