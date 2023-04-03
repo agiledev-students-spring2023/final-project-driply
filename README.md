@@ -6,6 +6,7 @@
 
 Driply is a fashion social networking app where users can share their outfits as well as find inspirations and new stores. This application and the community will be dedicated entirely to budget fashion and making fashion and trends as accessible as apossible for everyone. Users can share and view outfits with accompanying information like price range and source. Liking, commenting, and chatting will be some functionalities to increase interactivity between users. Users also can personalize their feed by following other users as well as bookmarking particularly interesting posts.
 
+
 ## The Team
 
 [Brandon Chen](https://github.com/b-chen00)
