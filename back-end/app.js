@@ -143,6 +143,32 @@ app.get("/bookmarks", async (req, res) => {
     });
 });
 
+app.post("/bookmark", (req, res) => {
+  console.log(
+    "bookmark post with id " +
+      req.body.postId +
+      " by user " +
+      req.body.user
+  );
+  const body = {
+    message: "success",
+  };
+  res.json(body);
+});
+
+app.post("/unbookmark", (req, res) => {
+  console.log(
+    "unbookmarking post with id " +
+      req.body.postId +
+      " by user " +
+      req.body.user
+  );
+  const body = {
+    message: "success",
+  };
+  res.json(body);
+});
+
 app.get("/getHomePosts", async (req, res) => {
   axios
     .get("https://my.api.mockaroo.com/post_schema.json?key=90e03700")

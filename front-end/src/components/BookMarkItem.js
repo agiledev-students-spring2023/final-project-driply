@@ -13,7 +13,56 @@ function BookMarkItem({ post }) {
     if (user) {
       // only bookmark post if logged in
       e.stopPropagation();
-      post.bookmarked = !ifBookmarked;
+      async function addBookmark() {
+        const response = await fetch(`http://localhost:4000/bookmark`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // body: JSON.stringify({
+            //     "postId": id,
+            //     "comment": comment
+            // })
+        });
+        let json = await response.json();
+        if (response.status === 200) {
+          console.log(json);
+          if (json.message === "success"){
+            post.bookmarked = !ifBookmarked;
+          }
+        } else {
+          // setPostError(response.status);
+          // setLoading(false);
+        }
+      }
+      async function removeBookmark() {
+        const response = await fetch(`http://localhost:4000/unbookmark`, {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          // body: JSON.stringify({
+          //     "postId": id,
+          //     "comment": comment
+          // })
+        });
+        let json = await response.json();
+        if (response.status === 200) {
+          console.log(json);
+          if (json.message === "success"){
+            post.bookmarked = !ifBookmarked;
+          }
+        } else {
+          //setPostError(response.status);
+          //setLoading(false);
+        }
+      }
+      if (ifBookmarked){
+        removeBookmark();
+      }
+      else{
+        addBookmark();
+      }
       setIfBookmarked(!ifBookmarked);
     } else {
       // navigate user to login page
