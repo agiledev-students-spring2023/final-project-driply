@@ -479,3 +479,58 @@ describe("GET request to /bookmarks route", () => {
       });
   });
 });
+
+describe("POST request to /editProfile route", () => {
+  it("should update user profile", (done) => {
+    const userData = {
+      userId: 123,
+      username: "testuser",
+      password: "testpassword",
+    };
+
+    chai
+      .request(server)
+      .post("/editProfile")
+      .send(userData)
+      .end((err, res) => {
+        chai.expect(res).to.have.status(200);
+        chai.expect(res.body.message).to.equal("success");
+        done();
+      });
+  });
+
+  it("should return an error with invalid data", (done) => {
+    const invalidData = {
+      username: "testuser",
+    };
+
+    chai
+      .request(server)
+      .post("/editProfile")
+      .send(invalidData)
+      .end((err, res) => {
+        chai.expect(res).to.have.status(500);
+        chai.expect(res.body.error).to.exist;
+        done();
+      });
+  });
+});
+
+describe("POST request to /unbookmark", () => {
+  it("should unbookmark a post", (done) => {
+    const data = {
+      user: "testuser",
+      postId: 123,
+    };
+
+    chai
+      .request(server)
+      .post("/unbookmark")
+      .send(data)
+      .end((err, res) => {
+        chai.expect(res).to.have.status(500);
+        chai.expect(res.body.message).to.equal("success");
+        done();
+      });
+  });
+});
