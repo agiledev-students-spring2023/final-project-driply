@@ -6,6 +6,7 @@ const cors = require("cors");
 const multer = require("multer");
 const mongoose = require("mongoose");
 const path = require("path");
+const db = require('./db.mjs');
 
 // Set up Express app
 const app = express();
