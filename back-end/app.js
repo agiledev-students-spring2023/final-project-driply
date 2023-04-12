@@ -8,6 +8,12 @@ const mongoose = require("mongoose");
 const path = require("path");
 const db = require('./db.mjs');
 
+mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
+
+const Post = mongoose.model('Post');
+const User = mongoose.model('User');
+const Comment = mongoose.model('Comment');
+
 // Set up Express app
 const app = express();
 app.use(morgan("dev", { skip: (req, res) => process.env.NODE_ENV === "test" }));
