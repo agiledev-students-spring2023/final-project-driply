@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv")
 dotenv.config()
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
-const jwtStrategy = require("../config/jwt-config.js")
 
 mongoose.connect(process.env.MONGO_URI);
 

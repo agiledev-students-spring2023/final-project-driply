@@ -5,19 +5,30 @@ const morgan = require("morgan");
 const cors = require("cors");
 const multer = require("multer");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser")
 const path = require("path");
-const db = require('./db.mjs');
+
+const jwt = require("jsonwebtoken")
+const passport = require("passport")
+
+// use this JWT strategy within passport for authentication handling
+const jwtStrategy = require("./config/jwt-config.js") // import setup options for using JWT in passport
+passport.use(jwtStrategy)
+
+// tell express to use passport middleware
+app.use(passport.initialize())
 
 mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
 
-const Post = mongoose.model('Post');
-const User = mongoose.model('User');
-const Comment = mongoose.model('Comment');
+const Post = require("./models/Post.js")
+const User = require("./models/User.js")
+const Comment = require("./models/Comment.js")
 
 // Set up Express app
 const app = express();
 app.use(morgan("dev", { skip: (req, res) => process.env.NODE_ENV === "test" }));
-app.use(cors());
+app.use(cookieParser())
+app.use(cors({ origin: process.env.FRONT_END_DOMAIN, credentials: true }))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -251,5 +262,13 @@ app.post("/editProfile", async (req, res) => {
     res.json({ error: error.message, status: 500, });
   }
 })
+
+const authenticationRoutes = require("./routes/authRoutes.js")
+const cookieRoutes = require("./routes/cookieRoutes.js")
+const protectedContentRoutes = require("./routes/protectedContentRoutes.js")
+
+app.use("/auth", authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
+app.use("/cookie", cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
+app.use("/protected", protectedContentRoutes())
 
 module.exports = app;
