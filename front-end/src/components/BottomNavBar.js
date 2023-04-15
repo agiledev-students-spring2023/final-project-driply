@@ -21,7 +21,7 @@ function BottomNavBar() {
 
   const handleProfileClick = () => {
     if (user) {
-      navigate("/profile");
+      navigate(`/profile/${user.id}`);
       setCurr(1);
     } else {
       navigate("/login");
@@ -76,7 +76,7 @@ function BottomNavBar() {
           </div>
           <div onClick={handleProfileClick}>
             {(location.pathname === "/login" ||
-              location.pathname === "/profile") &&
+              location.pathname === `/profile/${user.id}`) &&
             curr === 1 ? (
               <AccountBoxIcon fontSize="large" />
             ) : (

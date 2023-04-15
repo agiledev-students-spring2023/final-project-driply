@@ -1,9 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { DarkModeContext } from "../context/DarkModeContext";
 import Follow from "../components/Follow";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 function ProfilePage() {
+  const { user } = useAuthContext();
+
   const navigate = useNavigate();
   const [fakeName, setFakeName] = useState(""); // remove after sprint 1, only used to randomize displayed username using mockaroo
   const [description, setDescription] = useState("");
@@ -27,7 +30,7 @@ function ProfilePage() {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                "userId": 1
+                "userId": user.id
             })
         });
         let json = await response.json();

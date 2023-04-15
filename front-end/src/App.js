@@ -40,7 +40,7 @@ function App() {
         <Route path="/chats" element={<MainChatPage />} />
         <Route path="/bookmarks" element={<BookmarksPage />} />
         <Route path="/chatroom/:chatId" element={<ChatRoomPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile/:userId" element={<ProfilePage />} />
         <Route path="/following" element={<FollowingPage />} />
         <Route path="/followers" element={<FollowerPage />} />
         <Route path="/trending" element={<TrendingPage />} />

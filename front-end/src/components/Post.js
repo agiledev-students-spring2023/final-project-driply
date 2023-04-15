@@ -143,10 +143,10 @@ function Post({ post }) {
       {/* header */}
       <div className="postHeader">
         <div className="postHeaderDetails">
-          <Link to="/profile">
+          <Link to={`/profile/${post.id}`}>
             <img src={post.user_picture} alt="user img" />
           </Link>
-          <p onClick={() => navigate("/profile")}>{post.username}</p>
+          <p onClick={() => navigate(`/profile/${post.id}`)}>{post.username}</p>
         </div>
         <p className="postCost">Total Cost: ${post.price}</p>
       </div>
