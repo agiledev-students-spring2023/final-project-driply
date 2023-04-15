@@ -58,8 +58,13 @@ function ProfilePage() {
         <div className="loadingSpinner"></div>
       ) : (
         <>
-          {/* dont display follow btn on ur own account */}
-          {user?.id !== userId && <Follow ownProfile={ownProfile}/>}
+          {/* dont display message/follow btn on ur own account */}
+          {user?.id !== userId && (
+            <>
+              <div className="profilePageMsgBtn btn btn-secondary">Message</div> 
+              <Follow ownProfile={ownProfile}/>
+            </>
+          )}
           <div className="pfpContainer">
             <div className="pfp">
               <img src={`https://picsum.photos/${randomSize[randomIndex5]}/300`} alt="pic" />
