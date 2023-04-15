@@ -237,8 +237,11 @@ app.get("/following", async (req, res) => {
 });
 
 app.get("/getTrendingPosts", async (req, res) => {
-  Post.find({}).exec((err, posts) => {
+  Post.find({}).then((posts) => {
+    console.log(posts); //process this array later to find the trending posts
     res.json({data: posts});
+  }).catch((err) => {
+    console.log(err);
   });
 });
 
