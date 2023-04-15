@@ -13,10 +13,10 @@ const authenticationRouter = () => {
   router.post("/signup", async (req, res) => {
     // console.log(`Incoming signup data: ${JSON.stringify(req.body, null, 0)}`)
     // grab the username and password from the POST body
-    const username = req.body.username
+    const name = req.body.name
     const password = req.body.password
 
-    if (!username || !password) {
+    if (!name || !password) {
       // no username or password received in the POST body... send an error
       res.status(401).json({
         success: false,
@@ -26,7 +26,7 @@ const authenticationRouter = () => {
 
     // try to create a new user
     try {
-      const user = await new User({ username, password }).save()
+      const user = await new User({ name, password }).save()
       // user saved successfully... send a success response
       console.error(`New user: ${user}`)
       const token = user.generateJWT() // generate a signed token
@@ -34,7 +34,7 @@ const authenticationRouter = () => {
         success: true,
         message: "User saved successfully.",
         token: token,
-        username: user.username,
+        username: user.name,
       }) // send the token to the client to store
     } catch (err) {
       // error saving user to database... send an error response

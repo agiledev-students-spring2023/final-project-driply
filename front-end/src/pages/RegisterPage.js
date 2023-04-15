@@ -6,13 +6,12 @@ import { useSignup } from "../hooks/useSignup";
 function RegisterPage() {
     const navigate = useNavigate();
     const form = useRef();
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [successful, setSuccessful] = useState(false);
-    const [message, setMessage] = useState("");
+    const [unmatchedPass, setUnmatchedPass] = useState(false);
 
-    const { signup, isLoading: signupIsLoading } = useSignup();
+    const { signup, isLoading: signupIsLoading, error } = useSignup();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -20,21 +19,10 @@ function RegisterPage() {
         form.current.validateAll();
 
         if (password !== confirmPassword) {
-            setMessage("Passwords do not match");
-            setSuccessful(false);
+            setUnmatchedPass(true)
         } else {
-            try {
-                await signup(email, password);
-                setMessage("Registration successful");
-                setSuccessful(true);
-                navigate('/');
-            } catch (error) {
-                const resMessage = (error.response && error.response.data && error.response.data.message) ||
-                error.message || error.toString();
-
-                setMessage(resMessage);
-                setSuccessful(false);
-            }
+            setUnmatchedPass(false)
+            await signup(username, password);
         }
     };
 
@@ -43,15 +31,15 @@ function RegisterPage() {
             Register
             <Form onSubmit={handleRegister} ref={form}>
                 <div className="form-group">
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="username">Username</label>
                     <input
-                        type="email"
+                        type="text"
                         className="form-control"
-                        id="email"
+                        id="username"
                         required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        name="email"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        name="username"
                     />
                 </div>
 
@@ -86,7 +74,8 @@ function RegisterPage() {
                 </div>
             </Form>
             {signupIsLoading && <h1>Loading...</h1>}
-            {message && <h1 className={successful ? "success" : "error"}>{message}</h1>}
+            {error && <h1 className="error">{error}</h1>}
+            {unmatchedPass && <h1 className='error'>Passwords dont match</h1>}
         </div>
     )
 }
