@@ -7,6 +7,9 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser")
 const path = require("path");
+const Post = require("./models/Post.js")
+const User = require("./models/User.js")
+const Comment = require("./models/Comment.js")
 
 const jwt = require("jsonwebtoken")
 const passport = require("passport")
@@ -15,17 +18,15 @@ const passport = require("passport")
 const jwtStrategy = require("./config/jwt-config.js") // import setup options for using JWT in passport
 passport.use(jwtStrategy)
 
-// tell express to use passport middleware
-app.use(passport.initialize())
-
+console.log('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
 mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
-
-const Post = require("./models/Post.js")
-const User = require("./models/User.js")
-const Comment = require("./models/Comment.js")
 
 // Set up Express app
 const app = express();
+
+// tell express to use passport middleware
+app.use(passport.initialize())
+
 app.use(morgan("dev", { skip: (req, res) => process.env.NODE_ENV === "test" }));
 app.use(cookieParser())
 app.use(cors({ origin: process.env.FRONT_END_DOMAIN, credentials: true }))
@@ -236,15 +237,12 @@ app.get("/following", async (req, res) => {
 });
 
 app.get("/getTrendingPosts", async (req, res) => {
-  axios
-    .get("https://my.api.mockaroo.com/post_schema.json?key=90e03700")
-    .then((apiResponse) => {
-      const { data } = apiResponse;
-      res.json({ data });
-    })
-    .catch((err) => {
-      res.json({ error: err.message, status: err.response.status });
-    });
+  Post.find({}).then((posts) => {
+    console.log(posts); //process this array later to find the trending posts
+    res.json({data: posts});
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.post("/editProfile", async (req, res) => {
