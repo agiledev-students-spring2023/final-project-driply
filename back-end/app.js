@@ -60,26 +60,34 @@ app.post("/post-form", upload.single("image"), (req, res) => {
   } else throw "error";
 });
 
-app.post("/profile", (req, res, next) => {
+app.post("/profile", async (req, res, next) => {
   console.log("fetching profile of user with id " + req.body.userId);
-  axios
-    .get("https://my.api.mockaroo.com/post.json?key=997e9440")
-    .then((apiResponse) => {
-      firstRandomPost = apiResponse.data[0];
-
-      var own = false;
-      // check if logged in user is the one who owns this profile once auth is implemented
-      // set own to true if it is
-
-      const body = {
-        message: "success",
-        username: firstRandomPost.username,
-        description: firstRandomPost.description,
-        ownProfile: own,
-      };
-      res.json(body);
-    })
-    .catch((err) => next(err));
+  // find user in db
+  try {
+    const user = await User.findOne({ _id: req.body.userId }).exec();
+    // check if user was found
+    if (!user) {
+      console.error('User was not found');
+      return res.status(401).json({
+        success: false,
+        message: 'User was not found in db',
+      });
+    }
+    // send user data if user exists
+    console.log(user);
+    const { name, posts, followers, following } = user;
+    res.json({
+      success: true,
+      data: { name, posts, followers, following },
+    });
+  } catch (error) {
+    console.log(`Err looking up user: ${error}`);
+    return res.status(500).json({
+      success: false,
+      message: "Error looking up user in database.",
+      error: error,
+    });
+  }
 });
 
 app.get("/getPost", (req, res, next) => {
