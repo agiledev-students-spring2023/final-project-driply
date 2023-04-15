@@ -59,15 +59,12 @@ function ChatRoomPage() {
             });
             let json = await response1.json();
             let json2 = await response2.json();
-            console.log(json);
             const getUser = JSON.parse(localStorage.getItem("user"));
             if (json.success && json2.success) {
                 if (json.data.id === getUser.id) {
-                    console.log(json.data.id === getUser.id, json.data.id, getUser.id);
                     setSender(json.data);
                     setReceiver(json2.data);
                 } else if (json2.data.id === getUser.id) {
-                    console.log(json2.data.id === getUser.id, json2.data.id, getUser.id);
                     setSender(json2.data);
                     setReceiver(json.data);
                 }
