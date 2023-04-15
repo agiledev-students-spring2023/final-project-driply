@@ -50,11 +50,11 @@ const authenticationRouter = () => {
   // a route to handle login attempts requested to /auth/login
   router.post("/login", async function (req, res) {
     // brab the name and password that were submitted as POST body data
-    const username = req.body.username
+    const name = req.body.name
     const password = req.body.password
     // console.log(`${username}, ${password}`)
 
-    if (!username || !password) {
+    if (!name || !password) {
       // no username or password received in the POST body... send an error
       res
         .status(401)
@@ -63,7 +63,7 @@ const authenticationRouter = () => {
 
     // find this user in the database
     try {
-      const user = await User.findOne({ username: username }).exec()
+      const user = await User.findOne({ name }).exec()
       // check if user was found
       if (!user) {
         console.error(`User not found.`)
@@ -87,7 +87,7 @@ const authenticationRouter = () => {
         success: true,
         message: "User logged in successfully.",
         token: token,
-        username: user.username,
+        username: user.name,
       }) // send the token to the client to store
     } catch (err) {
       // check error

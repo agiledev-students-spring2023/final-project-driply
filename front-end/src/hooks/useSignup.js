@@ -12,9 +12,6 @@ export const useSignup = () => {
     setIsLoading(true)
     setError(null)
     
-    /*
-    will be using this code for when backend is created for creating new user accounts
-    */
     const response = await fetch('http://localhost:4000/auth/signup', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -37,7 +34,7 @@ export const useSignup = () => {
 
       // update loading state
       setIsLoading(false)
-      navigate('/');
+      navigate('/')
     }
   }
 
