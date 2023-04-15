@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv")
 dotenv.config()
 
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
 
 const PostSchema = new mongoose.Schema({
 	user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},

@@ -2,17 +2,17 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-const jwtStrategy = require("../config/jwt-config.js")
+//const jwtStrategy = require("../config/jwt-config.js")
 
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
 
 const UserSchema = new mongoose.Schema({
 	name: String,
-	password: String, //tbd
-    posts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
-    followers: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    following: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    bookmark: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}]
+  password: String,
+  posts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
+  followers: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  following: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  bookmark: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}]
 });
 
 // hash the password before the user is saved
@@ -60,7 +60,7 @@ UserSchema.pre("save", function (next) {
   }
   
   // create a model from this schema
-  mongoose.model('User', UserSchema);
+  const User = mongoose.model('User', UserSchema);
   
   // export the model
   module.exports = User
