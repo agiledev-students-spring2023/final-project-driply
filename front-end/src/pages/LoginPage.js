@@ -1,8 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
-import { isEmail } from 'validator';
 import { useLogin } from '../hooks/useLogin';
 
 const required = (value) => {
@@ -12,7 +10,6 @@ const required = (value) => {
 };
 
 function LoginPage() {
-    const navigate = useNavigate();
     const form = useRef();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState('');

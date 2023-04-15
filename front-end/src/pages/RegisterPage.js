@@ -1,10 +1,8 @@
 import React, { useRef, useState } from 'react';
 import Form from "react-validation/build/form";
-import { useNavigate } from 'react-router-dom';
 import { useSignup } from "../hooks/useSignup";
 
 function RegisterPage() {
-    const navigate = useNavigate();
     const form = useRef();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
