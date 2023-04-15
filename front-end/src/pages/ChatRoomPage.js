@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SendIcon from '@mui/icons-material/Send';
 import { DarkModeContext } from '../context/DarkModeContext';
+import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy } from "firebase/firestore";
+import { dbFirebase } from '../firebase-config';
 
 function ChatRoomPage() {
     const navigate = useNavigate();
@@ -13,6 +15,26 @@ function ChatRoomPage() {
     const [id1, id2] = chatId.split("--");
     const [sender, setSender] = useState("");
     const [receiver, setReceiver] = useState("");
+    const messagesRef = collection(dbFirebase, "messages");
+    const [messages, setMessages] = useState([]);
+    const inputRef = useRef();
+
+    useEffect(() => {
+        const queryMessages = query(
+            messagesRef, 
+            where("room", "==", chatId), 
+            orderBy("createdAt")
+        );
+        const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
+            let messages = [];
+            snapshot.forEach((doc) => {
+                messages.push({...doc.data(), id: doc.id});
+            });
+            setMessages(messages);
+        });
+
+        return () => unsubscribe();
+    }, [chatId, messagesRef]);
 
     useEffect(() => {
 
@@ -57,15 +79,13 @@ function ChatRoomPage() {
 
     }, [id1, id2]);
 
-    const [messages, setMessages] = useState([]);
-    const inputRef = useRef();
     const onInput = () => inputRef.current.value;
 
     function SenderMessage({ message, idx }) {
-        const animation = (idx === messages.length-1) ? "newMessage" : "";
+        const animation = (idx === messages.length-1) ? "" : "";
         return (
             <div className={`senderMessage ${animation}`}>
-                <div className="white">{message.message}</div>
+                <div className="white">{message.text}</div>
             </div>
         );
     }
@@ -74,22 +94,25 @@ function ChatRoomPage() {
         return (
             <div className="receiverMessageBubble">
                 <img className="receiverImg" src={senderImg} width="40px" height="40px" alt="img"/>
-                <div className="receiverMessage">{message.message}</div>
+                <div className="receiverMessage">{message.text}</div>
             </div>
         );
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const typedMessage = inputRef.current.value;
         if (typedMessage.length === 0) {
             console.log("empty message");
             return;
         }
-        const messageObj = {id: messages.length+1, from: "me", message: typedMessage};
-        const copiedMessages = [...messages];
-        copiedMessages.push(messageObj);
-        setMessages(copiedMessages);
+
+        await addDoc(messagesRef, {
+            text: inputRef.current.value,
+            createdAt: serverTimestamp(),
+            user: sender.id,
+            room: chatId,
+        })
         inputRef.current.value = "";
     }
 
@@ -121,7 +144,7 @@ function ChatRoomPage() {
             {/* body - display messages */}
             <div className="displayMessages">
                 {messages.map((message, idx) => {
-                    if (message.from === "me") {
+                    if (message.user === sender.id) {
                         return (
                             <SenderMessage key={message.id} message={message} idx={idx}/>
                         )
