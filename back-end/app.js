@@ -10,6 +10,7 @@ const path = require("path");
 const Post = require("./models/Post.js")
 const User = require("./models/User.js")
 const Comment = require("./models/Comment.js")
+const bcrypt = require('bcryptjs')
 
 const jwt = require("jsonwebtoken")
 const passport = require("passport")
@@ -18,8 +19,8 @@ const passport = require("passport")
 const jwtStrategy = require("./config/jwt-config.js") // import setup options for using JWT in passport
 passport.use(jwtStrategy)
 
-console.log('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
-mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
+console.log('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority');
 
 // Set up Express app
 const app = express();
@@ -268,19 +269,35 @@ app.post("/editProfile", async (req, res) => {
 
   try {
     console.log(`updating user profile (userId: ${req.body.userId}) `);
-    const body = {
-      message: "success",
-      status: 200,
-    };
-    res.json(body);
+    const { userId } = req.body;
+
+    const update = {};
+    if (req.body.name) {
+      update.name = req.body.name;
+    }
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(req.body.password, salt);
+      update.password = hash;
+    }
+    const user = await User.findOneAndUpdate({_id: userId}, update, {new: true});
+    const token = user.generateJWT()
+    return res.json({
+      success: true,
+      message: "Updated user.",
+      token: token,
+      username: user.name,
+      id: user.id,
+    });
   } catch (error) {
-    res.json({ error: error.message, status: 500, });
+    res.json({ success: false, status: 500, message: "Err trying to update your info" });
   }
 })
 
 const authenticationRoutes = require("./routes/authRoutes.js")
 const cookieRoutes = require("./routes/cookieRoutes.js")
-const protectedContentRoutes = require("./routes/protectedContentRoutes.js")
+const protectedContentRoutes = require("./routes/protectedContentRoutes.js");
+const { error } = require("console");
 
 app.use("/auth", authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
 app.use("/cookie", cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
