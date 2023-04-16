@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DarkModeContext } from '../context/DarkModeContext';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { io } from "socket.io-client";
 
 function MainChatPage() {
   let navigate = useNavigate();
@@ -11,6 +12,18 @@ function MainChatPage() {
   const [loading, setLoading] = useState(true);
   const { user } = useAuthContext();
   const { ifDarkMode } = useContext(DarkModeContext);
+  const socket = useRef();
+
+  useEffect(() => {
+    socket.current = io("http://localhost:4000");
+    socket.current.on("test", (data) => {
+      console.log(data);
+    });
+  }, []);
+
+  // useEffect(() => {
+
+  // }, []);
 
   useEffect(() => {
     async function fetchUsersChat () {
