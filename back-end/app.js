@@ -18,8 +18,7 @@ const passport = require("passport")
 const jwtStrategy = require("./config/jwt-config.js") // import setup options for using JWT in passport
 passport.use(jwtStrategy)
 
-console.log('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
-mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority');
 
 // Set up Express app
 const app = express();
@@ -253,6 +252,10 @@ app.get("/getTrendingPosts", async (req, res) => {
   }).catch((err) => {
     console.log(err);
   });
+});
+
+app.post("/image", async (req, res) => {
+  res.sendFile(__dirname + "/public/uploads/" + req.body.filename);
 });
 
 app.post("/editProfile", async (req, res) => {
