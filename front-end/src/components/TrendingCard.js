@@ -25,7 +25,7 @@ const TrendingCard = ({post}) => {
         }
 
         fetchImage();
-    });
+    }, [post.image]);
 
     const randomSize = Math.floor(Math.random() * 3);
     let picSize;
@@ -55,11 +55,10 @@ const TrendingCard = ({post}) => {
         height = 150;
     }
 
-//src={`https://picsum.photos/100/${height}`}
   return (
     <div className={`galleryCard card ${picSize}`}>
         {/* <img src={post.post_picture}/> */}
-        <Link to={`/post/0`}>
+        <Link to={`/post/${post._id}`}>
           <img className={`imgStyle trendingHeight${height}`} src={img} alt="postpic" />
         </Link>
     </div>

@@ -91,23 +91,21 @@ app.post("/profile", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-app.get("/getPost", (req, res, next) => {
-  console.log("get post with id " + req.body.postId);
-
-  axios
-    .get("https://my.api.mockaroo.com/post.json?key=997e9440")
-    .then((apiResponse) => {
-      firstRandomPost = apiResponse.data[0];
-      const body = {
-        message: "success",
-        likes: firstRandomPost.likes,
-        username: firstRandomPost.username,
-        description: firstRandomPost.description,
-        price: firstRandomPost.price,
-      };
-      res.json(body);
+app.post("/getPost", (req, res, next) => {
+  Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
+    User.findById(p.user).then((u) => {
+      res.json({
+        username: u.name,
+        description: p.description,
+        price: p.price,
+        likes: p.likes
+      });
+    }).catch((err) => {
+      console.log(err);
     })
-    .catch((err) => next(err));
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.post("/like/:postID", (req, res) => {
@@ -131,7 +129,6 @@ app.post("/unlike/:postId", (req, res) => {
 });
 
 app.get("/fetchComment", (req, res, next) => {
-  console.log("creating new comment " + req.body.comment);
   axios
     .get("https://my.api.mockaroo.com/post.json?key=997e9440")
     .then((apiResponse) => {
