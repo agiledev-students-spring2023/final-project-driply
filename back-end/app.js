@@ -19,7 +19,6 @@ const passport = require("passport")
 const jwtStrategy = require("./config/jwt-config.js") // import setup options for using JWT in passport
 passport.use(jwtStrategy)
 
-console.log('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority');
 mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority');
 
 // Set up Express app
@@ -100,23 +99,22 @@ app.post("/profile", async (req, res, next) => {
   }
 });
 
-app.get("/getPost", (req, res, next) => {
-  console.log("get post with id " + req.body.postId);
-
-  axios
-    .get("https://my.api.mockaroo.com/post.json?key=997e9440")
-    .then((apiResponse) => {
-      firstRandomPost = apiResponse.data[0];
-      const body = {
-        message: "success",
-        likes: firstRandomPost.likes,
-        username: firstRandomPost.username,
-        description: firstRandomPost.description,
-        price: firstRandomPost.price,
-      };
-      res.json(body);
+app.post("/getPost", (req, res, next) => {
+  Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
+    User.findById(p.user).then((u) => {
+      res.json({
+        username: "temp",//u.name,
+        description: p.description,
+        price: p.price,
+        likes: p.likes,
+        image: p.image
+      });
+    }).catch((err) => {
+      console.log(err);
     })
-    .catch((err) => next(err));
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.post("/like/:postID", (req, res) => {
@@ -140,7 +138,6 @@ app.post("/unlike/:postId", (req, res) => {
 });
 
 app.get("/fetchComment", (req, res, next) => {
-  console.log("creating new comment " + req.body.comment);
   axios
     .get("https://my.api.mockaroo.com/post.json?key=997e9440")
     .then((apiResponse) => {
@@ -214,7 +211,7 @@ app.get("/getHomePosts", async (req, res) => {
       res.json({ data });
     })
     .catch((err) => {
-      res.json({ error: err.message, status: err.response.status });
+      res.json({ error: err.message });
     });
 });
 
@@ -261,6 +258,10 @@ app.get("/getTrendingPosts", async (req, res) => {
   }).catch((err) => {
     console.log(err);
   });
+});
+
+app.post("/image", async (req, res) => {
+  res.sendFile(__dirname + "/public/uploads/" + req.body.filename);
 });
 
 app.post("/editProfile", async (req, res) => {

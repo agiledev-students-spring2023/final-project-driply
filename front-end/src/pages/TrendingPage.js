@@ -17,7 +17,7 @@ function TrendingPage() {
       );
       let json = await response.json();
       if (response.status === 200) {
-        setPostList(json.data);
+        setPostList(oldArray => [...oldArray, ...json.data]);
         setPostListError(null);
       } else {
         setPostListError({ error: json.error, status: response.status });
@@ -69,10 +69,11 @@ function TrendingPage() {
   
   function DisplayPostLists() {
     const sortedPostList = quickSort([...postList]); // create a new array
+    console.log(sortedPostList);
     return (
       <div className='galleryContainer'>
         {sortedPostList?.map((post) => (
-          <TrendingCard key={post.id} post={post} />
+          <TrendingCard key={post._id} post={post} />
         ))}
       </div>
     );

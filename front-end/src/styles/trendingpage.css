@@ -47,3 +47,14 @@
     object-fit: cover;
 }
 
+.trendingHeight100{
+    height: 100px;
+}
+
+.trendingHeight125{
+    height: 125px;
+}
+
+.trendingHeight150{
+    height: 150px;
+}

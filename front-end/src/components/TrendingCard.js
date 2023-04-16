@@ -1,7 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState }  from 'react'
 import { Link } from 'react-router-dom';
 
 const TrendingCard = ({post}) => {
+    const [img, setImg] = useState();
+
+    useEffect(() => {
+        async function fetchImage() {
+            const response = await fetch(
+            `http://localhost:4000/image`,{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "filename": post.image
+                })
+            });
+            //let json = await response.json();
+            if (response.status === 200) {
+                const imageBlob = await response.blob();
+                const imageObjectURL = URL.createObjectURL(imageBlob);
+                setImg(imageObjectURL);
+            }
+        }
+
+        fetchImage();
+    }, [post.image]);
 
     const randomSize = Math.floor(Math.random() * 3);
     let picSize;
@@ -34,8 +58,8 @@ const TrendingCard = ({post}) => {
   return (
     <div className={`galleryCard card ${picSize}`}>
         {/* <img src={post.post_picture}/> */}
-        <Link to={`/post/0`}>
-          <img className="imgStyle" src={`https://picsum.photos/100/${height}`} alt="postpic" />
+        <Link to={`/post/${post._id}`}>
+          <img className={`imgStyle trendingHeight${height}`} src={img} alt="postpic" />
         </Link>
     </div>
   )

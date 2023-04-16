@@ -15,11 +15,12 @@ const PostPage = () => {
     //const [likeChanged, setLikeChanged] = useState(false);
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
+    const [img, setImg] = useState();
     const [postError, setPostError] = useState(null);
-    const { id } = useParams();
+    const { postId } = useParams();
     const [loading, setLoading] = useState(true);
 
-    const [fakeName, setFakeName] = useState(""); // remove after sprint 1, only used to randomize displayed username using mockaroo
+    const [name, setName] = useState(""); // remove after sprint 1, only used to randomize displayed username using mockaroo
 
     // this is just temp to get different imgs and sizes
     const randomProfileSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
@@ -31,24 +32,40 @@ const PostPage = () => {
         //setLikeChanged(false);
         async function fetchPostInfo() {
             const response = await fetch(`http://localhost:4000/getPost`, {
-                method: "GET",
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
-                }
-                // body: JSON.stringify({
-                //     "postId": id
-                // })
+                },
+                body: JSON.stringify({
+                    "postId": postId
+                })
             });
             let json = await response.json();
             if (response.status === 200) {
                 // Commented out fetching likes from mockaroo as clicking like would trigger the useEffect and refetch from mockaroo resulting in inaccurate like count and update.
                 // setLikes(p.likes);
                 setLikes([...json.likes]);
-                setFakeName(json.username);
+                setName(json.username);
                 setDescription(json.description);
                 setPrice(json.price);
                 setPostError(null);
                 setLoading(false);
+                const response = await fetch(
+                    `http://localhost:4000/image`,{
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "filename": json.image
+                        })
+                    }
+                );
+                if (response.status === 200) {
+                    const imageBlob = await response.blob();
+                    const imageObjectURL = URL.createObjectURL(imageBlob);
+                    setImg(imageObjectURL);
+                }
             } else {
                 setPostError(response.status);
                 setLoading(false);
@@ -66,16 +83,16 @@ const PostPage = () => {
                     <div onClick={() => navigate("/profile")} className="postpfp">
                         <img src={`https://picsum.photos/${randomProfileSize[randomProfileIndex]}/300`} alt="user img"/>
                     </div>
-                    <span onClick={() => navigate("/profile")}>{fakeName}</span>
+                    <span onClick={() => navigate("/profile")}>{name}</span>
                 </div>
                 <div className="col-4 d-flex justify-content-end px-0 mx-auto">
                     <span className="mr-3">${price}</span>
                 </div>
             </div>
-            <img className="center-block img-responsive" src={`https://picsum.photos/${randomPostSize[randomPostIndex]}/300`} alt="pic"/>
+            <img className="center-block img-responsive" src={img} alt="pic"/>
             {description}
             <br/>
-            <Comment postId={id} likes={likes}/>
+            <Comment postId={postId} likes={likes}/>
         </div>
     );
 };
