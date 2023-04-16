@@ -15,6 +15,7 @@ const PostPage = () => {
     //const [likeChanged, setLikeChanged] = useState(false);
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
+    const [img, setImg] = useState();
     const [postError, setPostError] = useState(null);
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
@@ -49,6 +50,22 @@ const PostPage = () => {
                 setPrice(json.price);
                 setPostError(null);
                 setLoading(false);
+                const response = await fetch(
+                    `http://localhost:4000/image`,{
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "filename": json.image
+                        })
+                    }
+                );
+                if (response.status === 200) {
+                    const imageBlob = await response.blob();
+                    const imageObjectURL = URL.createObjectURL(imageBlob);
+                    setImg(imageObjectURL);
+                }
             } else {
                 setPostError(response.status);
                 setLoading(false);
@@ -72,7 +89,7 @@ const PostPage = () => {
                     <span className="mr-3">${price}</span>
                 </div>
             </div>
-            <img className="center-block img-responsive" src={`https://picsum.photos/${randomPostSize[randomPostIndex]}/300`} alt="pic"/>
+            <img className="center-block img-responsive" src={img} alt="pic"/>
             {description}
             <br/>
             <Comment postId={postId} likes={likes}/>

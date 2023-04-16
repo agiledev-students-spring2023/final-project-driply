@@ -103,10 +103,11 @@ app.post("/getPost", (req, res, next) => {
   Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
     User.findById(p.user).then((u) => {
       res.json({
-        username: u.name,
+        username: "temp",//u.name,
         description: p.description,
         price: p.price,
-        likes: p.likes
+        likes: p.likes,
+        image: p.image
       });
     }).catch((err) => {
       console.log(err);
@@ -210,7 +211,7 @@ app.get("/getHomePosts", async (req, res) => {
       res.json({ data });
     })
     .catch((err) => {
-      res.json({ error: err.message, status: err.response.status });
+      res.json({ error: err.message });
     });
 });
 
