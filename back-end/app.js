@@ -10,6 +10,7 @@ const path = require("path");
 const Post = require("./models/Post.js")
 const User = require("./models/User.js")
 const Comment = require("./models/Comment.js")
+const bcrypt = require('bcryptjs')
 
 const jwt = require("jsonwebtoken")
 const passport = require("passport")
@@ -69,26 +70,33 @@ app.post("/post-form", upload.single("image"), (req, res) => {
   }
 });
 
-app.post("/profile", (req, res, next) => {
+app.post("/profile", async (req, res, next) => {
   console.log("fetching profile of user with id " + req.body.userId);
-  axios
-    .get("https://my.api.mockaroo.com/post.json?key=997e9440")
-    .then((apiResponse) => {
-      firstRandomPost = apiResponse.data[0];
-
-      var own = false;
-      // check if logged in user is the one who owns this profile once auth is implemented
-      // set own to true if it is
-
-      const body = {
-        message: "success",
-        username: firstRandomPost.username,
-        description: firstRandomPost.description,
-        ownProfile: own,
-      };
-      res.json(body);
-    })
-    .catch((err) => next(err));
+  // find user in db
+  try {
+    const user = await User.findOne({ _id: req.body.userId }).exec();
+    // check if user was found
+    if (!user) {
+      console.error('User was not found');
+      return res.status(401).json({
+        success: false,
+        message: 'User was not found in db',
+      });
+    }
+    // send user data if user exists
+    const { _id, name, posts, followers, following } = user;
+    res.json({
+      success: true,
+      data: { id: _id, name, posts, followers, following },
+    });
+  } catch (error) {
+    console.log(`Err looking up user: ${error}`);
+    return res.status(500).json({
+      success: false,
+      message: "Error looking up user in database.",
+      error: error,
+    });
+  }
 });
 
 app.post("/getPost", (req, res, next) => {
@@ -261,19 +269,35 @@ app.post("/editProfile", async (req, res) => {
 
   try {
     console.log(`updating user profile (userId: ${req.body.userId}) `);
-    const body = {
-      message: "success",
-      status: 200,
-    };
-    res.json(body);
+    const { userId } = req.body;
+
+    const update = {};
+    if (req.body.name) {
+      update.name = req.body.name;
+    }
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(req.body.password, salt);
+      update.password = hash;
+    }
+    const user = await User.findOneAndUpdate({_id: userId}, update, {new: true});
+    const token = user.generateJWT()
+    return res.json({
+      success: true,
+      message: "Updated user.",
+      token: token,
+      username: user.name,
+      id: user.id,
+    });
   } catch (error) {
-    res.json({ error: error.message, status: 500, });
+    res.json({ success: false, status: 500, message: "Err trying to update your info" });
   }
 })
 
 const authenticationRoutes = require("./routes/authRoutes.js")
 const cookieRoutes = require("./routes/cookieRoutes.js")
-const protectedContentRoutes = require("./routes/protectedContentRoutes.js")
+const protectedContentRoutes = require("./routes/protectedContentRoutes.js");
+const { error } = require("console");
 
 app.use("/auth", authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
 app.use("/cookie", cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router

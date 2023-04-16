@@ -1,38 +1,19 @@
 import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
-import { isEmail } from 'validator';
 import { useLogin } from '../hooks/useLogin';
 
 const required = (value) => {
     if (!value.trim()) {
       return <div className="text-danger">This field is required</div>;
     }
-  };
-  
-  const validEmail = (value) => {
-    if (!isEmail(value)) {
-      return <div className="text-danger">Invalid email format</div>;
-    }
-  };
+};
 
 function LoginPage() {
-    const navigate = useNavigate();
     const form = useRef();
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState('');
     const { login, error: loginError, isLoading: loginIsLoading } = useLogin();
-    
-    // const handleLogin = async (e) => { // PREVIOUS handleLogin
-    //     e.preventDefault();
-
-    //     form.current.validateAll();
-    //     // setAuth(true);
-    //     // setUser("Chewy the Dog");
-    //     await login("Chewy the Dog", "password");
-    //     navigate('/');
-    // };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -40,12 +21,7 @@ function LoginPage() {
         form.current.validateAll();
     
         if (form.current.getChildContext()._errors.length === 0) {
-          try {
-            await login(email, password);
-            navigate('/');
-          } catch (error) {
-            console.error(error);
-          }
+          await login(username, password);
         }
       };
 
@@ -54,14 +30,14 @@ function LoginPage() {
       <h1>Login</h1>
       <Form ref={form}>
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="username">Username</label>
           <Input
             type="text"
             className="form-control"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            validations={[required, validEmail]}
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            validations={[required]}
           />
         </div>
         <div className="form-group">

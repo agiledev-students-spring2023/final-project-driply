@@ -29,15 +29,17 @@ function EditProfilePage() {
                 },
                 body: JSON.stringify({
                     "userId": user.id, // temp until db working
-                    "username": username,
+                    "name": username,
                     "password": password,
                 })
             });
 
             const json = await response.json();
-            if (json.status === 200) {
-                const ifNewUsername = (username.length > 0) ? username : user.username;
-                user.username = ifNewUsername;
+            if (json.success) {
+                console.log(json);
+
+                const { token, username, id } = json;
+                const user  = {token, username, id};
 
                 // save the user to local storage
                 localStorage.setItem("user", JSON.stringify(user));
