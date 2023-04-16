@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function PostForm() {
@@ -22,17 +21,19 @@ function PostForm() {
     e.preventDefault();
     const formData = new FormData();
     formData.append("image", image);
-    formData.append("name", "name");
+    formData.append("userid", "643adc94e8f4cd3fcd5b041c");
     formData.append("price", price);
     formData.append("description", description);
-    try {
-      const response = await axios.post(
-        "http://localhost:4000/post-form",
-        formData
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.log(err);
+
+    const response = await fetch(`http://localhost:4000/post-form`, {
+      method: "POST",
+      body: formData
+    });
+    let json = await response.json();
+    if (response.status === 200) {
+        console.log(json);
+    } else {
+
     }
   }
 
@@ -105,9 +106,7 @@ function PostForm() {
         {image ? promptPriceInput() : null}
         {price ? promptDescriptionInput() : null}
 
-        <button className="submit-button" onClick={() => navigate("/")}>
-          Submit
-        </button>
+        <input className="submit-button" type="submit" value="Submit" />
       </form>
     </div>
   );

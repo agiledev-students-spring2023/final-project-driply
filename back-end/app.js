@@ -50,14 +50,24 @@ const upload = multer({ storage: storage });
 
 app.post("/post-form", upload.single("image"), (req, res) => {
   if (req.file) {
-    const data = {
-      name: req.body.name,
-      price: req.body.price,
-      description: req.body.description,
+    const newPost = new Post({
+      user: new mongoose.Types.ObjectId(req.body.userid),
       image: req.file.filename,
-    };
-    res.json(data);
-  } else throw "error";
+      description: req.body.description,
+      price: req.body.price,
+      comments: [],
+      likes: []
+    });
+    newPost.save().then((savedImg) => {
+      res.json({ message: "success"});
+    }).catch(err => {
+      res.json({ message: "Error creating post " + err});
+    })
+  } else{
+    res.json({
+      message: "invalid file"
+    })
+  }
 });
 
 app.post("/profile", (req, res, next) => {
