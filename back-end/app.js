@@ -74,11 +74,10 @@ app.post("/profile", async (req, res, next) => {
       });
     }
     // send user data if user exists
-    console.log(user);
-    const { name, posts, followers, following } = user;
+    const { _id, name, posts, followers, following } = user;
     res.json({
       success: true,
-      data: { name, posts, followers, following },
+      data: { id: _id, name, posts, followers, following },
     });
   } catch (error) {
     console.log(`Err looking up user: ${error}`);
