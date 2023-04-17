@@ -7,7 +7,8 @@ mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.e
 const CommentSchema = new mongoose.Schema({
 	user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
 	content: String,
-	post: {type: mongoose.Schema.Types.ObjectId, ref: 'Post'}
+	post: {type: mongoose.Schema.Types.ObjectId, ref: 'Post'},
+	profilepic: String
 });
 
 Comment = mongoose.model('Comment', CommentSchema);
