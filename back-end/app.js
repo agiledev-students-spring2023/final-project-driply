@@ -111,7 +111,8 @@ app.post("/getPost", (req, res, next) => {
         description: p.description,
         price: p.price,
         likes: p.likes,
-        image: p.image
+        image: p.image,
+        pfp: u.profilepic
       });
     }).catch((err) => {
       console.log(err);
@@ -161,7 +162,18 @@ app.post("/unlike/:postId", (req, res) => {
   });
 });
 
-app.get("/fetchComment", (req, res, next) => {
+app.post("/fetchComment", (req, res, next) => {
+  // Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
+  //   const body = {
+  //     message: "success",
+  //     username: firstRandomPost.username,
+  //     comments: firstRandomPost.comments,
+  //   };
+  //   res.json(body);
+  // }).catch((err) => {
+  //   console.log(err);
+  // });
+
   axios
     .get("https://my.api.mockaroo.com/post.json?key=997e9440")
     .then((apiResponse) => {
@@ -178,17 +190,22 @@ app.get("/fetchComment", (req, res, next) => {
 
 app.post("/createComment", (req, res) => {
   Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
-    const newComment = new Comment({
-      user: new mongoose.Types.ObjectId(req.body.userId),
-      content: req.body.comment,
-      post: new mongoose.Types.ObjectId(req.body.postId)
-    });
-    newComment.save().then((savedComment) => {
-      p.comments.push(new mongoose.Types.ObjectId(savedComment._id))
-      p.save();
-      res.json({ message: "success"});
-    }).catch(err => {
-      res.json({ message: "Error creating comment " + err});
+    User.findById(new mongoose.Types.ObjectId(req.body.userId)).then((u) => {
+      const newComment = new Comment({
+        user: new mongoose.Types.ObjectId(req.body.userId),
+        content: req.body.comment,
+        post: new mongoose.Types.ObjectId(req.body.postId),
+        profilepic: u.profilepic
+      });
+      newComment.save().then((savedComment) => {
+        p.comments.push(new mongoose.Types.ObjectId(savedComment._id))
+        p.save();
+        res.json({ message: "success"});
+      }).catch(err => {
+        res.json({ message: "Error creating comment " + err});
+      })
+    }).catch((err) => {
+      console.log(err);
     })
   }).catch((err) => {
     console.log(err);

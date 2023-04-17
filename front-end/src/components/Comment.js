@@ -26,13 +26,13 @@ function Comment(prop) {
     useEffect(() => {
         async function fetchComment() {
             const response = await fetch(`http://localhost:4000/fetchComment`, {
-                method: "GET",
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
-                }
-                // body: JSON.stringify({
-                //     "postId": id
-                // })
+                },
+                body: JSON.stringify({
+                    "postId": prop.postId,
+                })
             });
             let json = await response.json();
             if (response.status === 200) {
