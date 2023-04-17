@@ -7,6 +7,26 @@ function Like(prop) {
   const { user } = useAuthContext();
 
   useEffect(() => {
+    async function fetchLikes() {
+      const response = await fetch(`http://localhost:4000/getPost`, {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              "postId": prop.postId
+          })
+      });
+      let json = await response.json();
+      if (response.status === 200) {
+        let arr = [...json.likes];
+        setLikes(arr);
+      } else {
+
+      }
+    }
+
+    fetchLikes();
     setLikeChanged(false);
   }, [likeChanged]);
 
@@ -16,13 +36,15 @@ function Like(prop) {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({
+            "userId": user.id
+          })
       });
       let json = await response.json();
       if (response.status === 200) {
-        console.log(json);
         if (json.success){
-          likes.push(user.username);
+          likes.push(user.id);
           setLikeChanged(true);
         }
       } else {
@@ -35,13 +57,15 @@ function Like(prop) {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({
+            "userId": user.id
+          })
       });
       let json = await response.json();
       if (response.status === 200) {
-        console.log(json);
         if (json.success){
-          const index = likes.indexOf(user.username);
+          const index = likes.indexOf(user.id);
           likes.splice(index, 1);
           setLikeChanged(true);
         }
@@ -50,8 +74,7 @@ function Like(prop) {
         // setLoading(false);
       }
     }
-    console.log(likes);
-    if (likes.filter((e) => e.localeCompare(user.username) === 0).length === 0) {
+    if (likes.filter((e) => e.localeCompare(user.id) === 0).length === 0) {
       like();
     } 
     else {
@@ -62,13 +85,13 @@ function Like(prop) {
   return (
     <div className="right">
       {likes.length}
-      {likes.filter((e) => e.localeCompare(user.username) === 0).length ===
+      {likes.filter((e) => e.localeCompare(user.id) === 0).length ===
         0 && (
         <button onClick={() => handleLike()} className="btn btn-secondary mx-2">
           Like
         </button>
       )}
-      {likes.filter((e) => e.localeCompare(user.username) === 0).length > 0 && (
+      {likes.filter((e) => e.localeCompare(user.id) === 0).length > 0 && (
         <button onClick={() => handleLike()} className="btn btn-primary mx-2">
           Liked
         </button>

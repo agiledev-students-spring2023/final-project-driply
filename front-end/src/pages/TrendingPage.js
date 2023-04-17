@@ -17,7 +17,9 @@ function TrendingPage() {
       );
       let json = await response.json();
       if (response.status === 200) {
+        console.log(json);
         setPostList(oldArray => [...oldArray, ...json.data]);
+        console.log(postList);
         setPostListError(null);
       } else {
         setPostListError({ error: json.error, status: response.status });
@@ -55,15 +57,15 @@ function TrendingPage() {
     const pivot = arr[Math.floor(arr.length / 2)];
     const less = [];
     const greater = [];
-  
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i].likes > pivot.likes) {
+      if (arr[i].likes.length > pivot.likes.length) {
         greater.push(arr[i]);
-      } else if (arr[i].likes < pivot.likes) {
-        less.push(arr[i]);
+      } else {
+        if (i !== Math.floor(arr.length / 2)) less.push(arr[i]);
       }
     }
-  
+    console.log(less);
+    console.log(greater);
     return [...quickSort(greater), pivot, ...quickSort(less)];
   }
   
