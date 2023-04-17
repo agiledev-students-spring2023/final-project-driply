@@ -163,29 +163,28 @@ app.post("/unlike/:postId", (req, res) => {
 });
 
 app.post("/fetchComment", (req, res, next) => {
-  // Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
-  //   const body = {
-  //     message: "success",
-  //     username: firstRandomPost.username,
-  //     comments: firstRandomPost.comments,
-  //   };
-  //   res.json(body);
-  // }).catch((err) => {
-  //   console.log(err);
-  // });
+  Post.findById(new mongoose.Types.ObjectId(req.body.postId)).populate('comments').then((p) => {
+    const body = {
+      message: "success",
+      comments: p.comments,
+    };
+    res.json(body);
+  }).catch((err) => {
+    console.log(err);
+  });
 
-  axios
-    .get("https://my.api.mockaroo.com/post.json?key=997e9440")
-    .then((apiResponse) => {
-      firstRandomPost = apiResponse.data[0];
-      const body = {
-        message: "success",
-        username: firstRandomPost.username,
-        comments: firstRandomPost.comments,
-      };
-      res.json(body);
-    })
-    .catch((err) => next(err));
+  // axios
+  //   .get("https://my.api.mockaroo.com/post.json?key=997e9440")
+  //   .then((apiResponse) => {
+  //     firstRandomPost = apiResponse.data[0];
+  //     const body = {
+  //       message: "success",
+  //       username: firstRandomPost.username,
+  //       comments: firstRandomPost.comments,
+  //     };
+  //     res.json(body);
+  //   })
+  //   .catch((err) => next(err));
 });
 
 app.post("/createComment", (req, res) => {
@@ -200,7 +199,8 @@ app.post("/createComment", (req, res) => {
       newComment.save().then((savedComment) => {
         p.comments.push(new mongoose.Types.ObjectId(savedComment._id))
         p.save();
-        res.json({ message: "success"});
+        console.log(savedComment);
+        res.json({ message: "success", newComment: savedComment});
       }).catch(err => {
         res.json({ message: "Error creating comment " + err});
       })

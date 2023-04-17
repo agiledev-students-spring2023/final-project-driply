@@ -8,7 +8,6 @@ import Like from "../components/Like";
 function Comment(prop) {
     const [comment, setComment] = useState("");
     const [commentList, setCommentList] = useState([]);
-    const [fakeName, setFakeName] = useState(""); // remove after sprint 1, only used to randomize displayed username using mockaroo
     const [info, setInfo] = useState(null);
     const { user } = useAuthContext();
     const [postError, setPostError] = useState(null);
@@ -36,8 +35,32 @@ function Comment(prop) {
             });
             let json = await response.json();
             if (response.status === 200) {
-                setFakeName(json.username);
-                setCommentList(json.comments);
+                async function setCommentImages(commentList) {
+                    console.log(commentList);
+                    for (let c of commentList) {
+                      const response = await fetch(
+                        `http://localhost:4000/image`,
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json"
+                          },
+                          body: JSON.stringify({
+                            filename: c.profilepic
+                          })
+                        }
+                      );
+                  
+                      if (response.status === 200) {
+                        const imageBlob = await response.blob();
+                        const imageObjectURL = URL.createObjectURL(imageBlob);
+                        c.pfp = imageObjectURL;
+                      }
+                    }
+                }
+                setCommentImages(json.comments).then(() => {
+                    setCommentList([...json.comments].reverse());
+                });
             } else {
 
             }
@@ -66,7 +89,7 @@ function Comment(prop) {
             let json = await response.json();
             if (response.status === 200) {
                 if (json.message === "success"){
-                    setCommentList([comment, ...commentList]);
+                    setCommentList([json.newComment, ...commentList]);
                     setComment('');
                 }
             } else {
@@ -77,7 +100,33 @@ function Comment(prop) {
 
         addComment();
     };
-    
+
+    // async function getImage (imageUrl) {
+    //     async function fetchPostInfo() {
+    //         const response = await fetch(
+    //             `http://localhost:4000/image`,{
+    //                 method: "POST",
+    //                 headers: {
+    //                     'Content-Type': 'application/json'
+    //                 },
+    //                 body: JSON.stringify({
+    //                     "filename": imageUrl
+    //                 })
+    //             }
+    //         );
+    //         if (response.status === 200) {
+    //             const imageBlob = await response.blob();
+    //             const imageObjectURL = URL.createObjectURL(imageBlob);
+    //             return imageObjectURL;
+    //         }
+    //         else{
+    //             return null;
+    //         }
+    //     }
+    //     const result = await fetchPostInfo();
+    //     return result;
+    // }
+
     return (
         <div>
             {user && (
@@ -111,11 +160,11 @@ function Comment(prop) {
                 <div className="row align-items-center mx-auto">
                     <div className="col-12 d-flex align-items-center px-0 mx-0">
                         <div onClick={() => navigate("/profile")}>
-                            <img src={`https://picsum.photos/id/22/131/150`} alt="user img" className="postpfp"/>
+                            <img src={c.pfp} alt="user img" className="postpfp"/>
                         </div>
                         <div className="d-flex flex-column align-items-left mx-2">
-                            <span className="username">{fakeName}</span>
-                            <span>{c}</span>
+                            <span className="username">{user.username}</span>
+                            <span>{c.content}</span>
                         </div>
                     </div>
                 </div>
