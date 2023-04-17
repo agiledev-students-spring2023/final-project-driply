@@ -57,10 +57,11 @@ function Comment(prop) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                // body: JSON.stringify({
-                //     "postId": id,
-                //     "comment": comment
-                // })
+                body: JSON.stringify({
+                    "postId": prop.postId,
+                    "comment": comment,
+                    "userId": user.id
+                })
             });
             let json = await response.json();
             if (response.status === 200) {

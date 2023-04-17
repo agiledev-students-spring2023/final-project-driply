@@ -177,16 +177,22 @@ app.get("/fetchComment", (req, res, next) => {
 });
 
 app.post("/createComment", (req, res) => {
-  console.log(
-    "commenting on post with id " +
-      req.body.postId +
-      " by user " +
-      req.body.user
-  );
-  const body = {
-    message: "success",
-  };
-  res.json(body);
+  Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
+    const newComment = new Comment({
+      user: new mongoose.Types.ObjectId(req.body.userId),
+      content: req.body.comment,
+      post: new mongoose.Types.ObjectId(req.body.postId)
+    });
+    newComment.save().then((savedComment) => {
+      p.comments.push(new mongoose.Types.ObjectId(savedComment._id))
+      p.save();
+      res.json({ message: "success"});
+    }).catch(err => {
+      res.json({ message: "Error creating comment " + err});
+    })
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.get("/bookmarks", async (req, res) => {
