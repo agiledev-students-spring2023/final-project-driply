@@ -34,9 +34,19 @@ io.on("connection", async (socket) => {
     socket.emit('createdRoom', { room: chatRoom, newChat: false, messages: chatRoom.messages });
   }
 
-  socket.on("sendMessage", (data) => {
-    console.log(data);
-    io.emit("sendMessage", { message: "sent data back" });
+  socket.on("sendMessage", async (data) => {
+    const messages = chatRoom.messages;
+    const { id_from, message } = data;
+    const newMsg = { id_from, message };
+    const room = await Chat.findOneAndUpdate(
+      {chatId: chatId},
+      {$push: { messages:  newMsg }},
+      { new: true }
+    );
+    console.log(room);
+    messages.push(data);
+    console.log(messages);
+    io.emit("sendMessage", { messages: room.messages });
   });
   
 });
