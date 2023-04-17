@@ -12,7 +12,6 @@ const PostPage = () => {
     //const [comment, setComment] = useState("");
     //const [commentList, setCommentList] = useState([]);
     const [likes, setLikes] = useState([]);
-    //const [likeChanged, setLikeChanged] = useState(false);
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
     const [img, setImg] = useState();
@@ -29,7 +28,6 @@ const PostPage = () => {
     const randomPostIndex = Math.floor(Math.random() * randomPostSize.length);
 
     useEffect(() => {
-        //setLikeChanged(false);
         async function fetchPostInfo() {
             const response = await fetch(`http://localhost:4000/getPost`, {
                 method: "POST",
@@ -44,7 +42,9 @@ const PostPage = () => {
             if (response.status === 200) {
                 // Commented out fetching likes from mockaroo as clicking like would trigger the useEffect and refetch from mockaroo resulting in inaccurate like count and update.
                 // setLikes(p.likes);
-                setLikes([...json.likes]);
+                //setLikes(oldArray => [...oldArray, ...json.likes]);
+                let arr = [...json.likes];
+                setLikes(arr);
                 setName(json.username);
                 setDescription(json.description);
                 setPrice(json.price);

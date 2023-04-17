@@ -106,7 +106,6 @@ app.post("/profile", async (req, res, next) => {
 app.post("/getPost", (req, res, next) => {
   Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
     User.findById(p.user).then((u) => {
-      console.log(u)
       res.json({
         username: u.name,
         description: p.description,
@@ -122,20 +121,44 @@ app.post("/getPost", (req, res, next) => {
   });
 });
 
-app.post("/like/:postID", (req, res) => {
-  const id = req.params.postID;
-  const data = {
-    success: true,
-  };
-  res.json(data);
+app.post("/like/:postId", (req, res) => {
+  const id = req.params.postId;
+  Post.findById(new mongoose.Types.ObjectId(id)).then((p) => {
+    let isInArray = p.likes.some(function (element) {
+      return element.equals(req.body.userId);
+    });
+
+    if (!isInArray){
+      p.likes.push(new mongoose.Types.ObjectId(req.body.userId));
+      p.save();
+    }
+    const data = {
+      success: true,
+    };
+    res.json(data);
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.post("/unlike/:postId", (req, res) => {
   const id = req.params.postId;
-  const data = {
-    success: true,
-  };
-  res.json(data);
+  Post.findById(new mongoose.Types.ObjectId(id)).then((p) => {
+    let isInArray = p.likes.some(function (element) {
+      return element.equals(req.body.userId);
+    });
+    //console.log(isInArray);
+    if (isInArray){
+      p.likes.pull(new mongoose.Types.ObjectId(req.body.userId));
+      p.save();
+    }
+    const data = {
+      success: true,
+    };
+    res.json(data);
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.get("/fetchComment", (req, res, next) => {
