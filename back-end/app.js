@@ -50,18 +50,22 @@ const upload = multer({ storage: storage });
 
 app.post("/post-form", upload.single("image"), (req, res) => {
   if (req.file) {
-    const newPost = new Post({
-      user: new mongoose.Types.ObjectId(req.body.userid),
-      image: req.file.filename,
-      description: req.body.description,
-      price: req.body.price,
-      comments: [],
-      likes: []
-    });
-    newPost.save().then((savedImg) => {
-      res.json({ message: "success"});
-    }).catch(err => {
-      res.json({ message: "Error creating post " + err});
+    User.findOne({name: req.body.user}).then((u) => {
+      const newPost = new Post({
+        user: u._id,
+        image: req.file.filename,
+        description: req.body.description,
+        price: req.body.price,
+        comments: [],
+        likes: []
+      });
+      newPost.save().then((savedImg) => {
+        res.json({ message: "success"});
+      }).catch(err => {
+        res.json({ message: "Error creating post " + err});
+      })
+    }).catch((err) => {
+      console.log(err);
     })
   } else{
     res.json({
@@ -103,7 +107,7 @@ app.post("/getPost", (req, res, next) => {
   Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
     User.findById(p.user).then((u) => {
       res.json({
-        username: "temp",//u.name,
+        username: u.name,
         description: p.description,
         price: p.price,
         likes: p.likes,
@@ -117,24 +121,44 @@ app.post("/getPost", (req, res, next) => {
   });
 });
 
-app.post("/like/:postID", (req, res) => {
-  const id = req.params.postID;
-  // TODO: Find post in database based on postId
-  // TODO: update post in database to mark it as liked by the user
-  const data = {
-    success: true,
-  };
-  res.json(data);
+app.post("/like/:postId", (req, res) => {
+  const id = req.params.postId;
+  Post.findById(new mongoose.Types.ObjectId(id)).then((p) => {
+    let isInArray = p.likes.some(function (element) {
+      return element.equals(req.body.userId);
+    });
+
+    if (!isInArray){
+      p.likes.push(new mongoose.Types.ObjectId(req.body.userId));
+      p.save();
+    }
+    const data = {
+      success: true,
+    };
+    res.json(data);
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.post("/unlike/:postId", (req, res) => {
   const id = req.params.postId;
-  // TODO: Find post in database based on postId
-  // TODO: update post in database to mark it as unliked by the user
-  const data = {
-    success: true,
-  };
-  res.json(data);
+  Post.findById(new mongoose.Types.ObjectId(id)).then((p) => {
+    let isInArray = p.likes.some(function (element) {
+      return element.equals(req.body.userId);
+    });
+    //console.log(isInArray);
+    if (isInArray){
+      p.likes.pull(new mongoose.Types.ObjectId(req.body.userId));
+      p.save();
+    }
+    const data = {
+      success: true,
+    };
+    res.json(data);
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.get("/fetchComment", (req, res, next) => {
@@ -153,16 +177,22 @@ app.get("/fetchComment", (req, res, next) => {
 });
 
 app.post("/createComment", (req, res) => {
-  console.log(
-    "commenting on post with id " +
-      req.body.postId +
-      " by user " +
-      req.body.user
-  );
-  const body = {
-    message: "success",
-  };
-  res.json(body);
+  Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
+    const newComment = new Comment({
+      user: new mongoose.Types.ObjectId(req.body.userId),
+      content: req.body.comment,
+      post: new mongoose.Types.ObjectId(req.body.postId)
+    });
+    newComment.save().then((savedComment) => {
+      p.comments.push(new mongoose.Types.ObjectId(savedComment._id))
+      p.save();
+      res.json({ message: "success"});
+    }).catch(err => {
+      res.json({ message: "Error creating comment " + err});
+    })
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.get("/bookmarks/:id", async (req, res) => {
@@ -301,7 +331,7 @@ app.get("/following/:id", async (req, res) => {
 
 app.get("/getTrendingPosts", async (req, res) => {
   Post.find({}).then((posts) => {
-    console.log(posts); //process this array later to find the trending posts
+    //console.log(posts); //process this array later to find the trending posts
     res.json({data: posts});
   }).catch((err) => {
     console.log(err);

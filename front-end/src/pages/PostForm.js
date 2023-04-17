@@ -1,12 +1,14 @@
 import React, { useContext, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function PostForm() {
   const [image, setImage] = useState(null);
   const [price, setPrice] = useState(null);
   const [description, setDescription] = useState("");
   const { ifDarkMode } = useContext(DarkModeContext);
+  const { user } = useAuthContext();
   const navigate = useNavigate();
 
   function handleImageSelect(e) {
@@ -21,7 +23,7 @@ function PostForm() {
     e.preventDefault();
     const formData = new FormData();
     formData.append("image", image);
-    formData.append("userid", "643adc94e8f4cd3fcd5b041c");
+    formData.append("user", user.username);
     formData.append("price", price);
     formData.append("description", description);
 

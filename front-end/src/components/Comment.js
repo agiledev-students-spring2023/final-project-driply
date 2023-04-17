@@ -36,14 +36,12 @@ function Comment(prop) {
             });
             let json = await response.json();
             if (response.status === 200) {
-                console.log(json);
                 setFakeName(json.username);
                 setCommentList(json.comments);
             } else {
 
             }
         }
-        console.log(prop);
         fetchComment();
     }, []);
 
@@ -59,14 +57,14 @@ function Comment(prop) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                // body: JSON.stringify({
-                //     "postId": id,
-                //     "comment": comment
-                // })
+                body: JSON.stringify({
+                    "postId": prop.postId,
+                    "comment": comment,
+                    "userId": user.id
+                })
             });
             let json = await response.json();
             if (response.status === 200) {
-                console.log(json);
                 if (json.message === "success"){
                     setCommentList([comment, ...commentList]);
                     setComment('');
