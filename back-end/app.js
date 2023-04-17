@@ -165,9 +165,10 @@ app.post("/createComment", (req, res) => {
   res.json(body);
 });
 
-app.post("/bookmarks", async (req, res) => {
+app.get("/bookmarks/:id", async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.body.userId }).exec();
+    const { id } = req.params;
+    const user = await User.findOne({ _id: id }).exec();
     // check if user was found
     if (!user) {
       console.error('User was not found');

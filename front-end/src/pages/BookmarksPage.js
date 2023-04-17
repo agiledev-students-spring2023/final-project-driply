@@ -19,14 +19,11 @@ function Bookmarks() {
   useEffect(() => {
     async function fetchBookmarkList() {
       if (user) {
-        const response = await fetch(`http://localhost:4000/bookmarks`, {
-          method: "POST",
+        const response = await fetch(`http://localhost:4000/bookmarks/${user.id}`, {
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-              "userId": user.id
-          })
         });
         let json = await response.json();
         console.log(json);
