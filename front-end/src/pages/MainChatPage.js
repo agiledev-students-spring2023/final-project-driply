@@ -3,16 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { DarkModeContext } from '../context/DarkModeContext';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { io } from "socket.io-client";
+// import { collection, onSnapshot, query } from 'firebase/firestore';
+// import { dbFirebase } from '../firebase-config';
 
 function MainChatPage() {
   let navigate = useNavigate();
 
+  const [chatsList, setChatLists] = useState([]);
   const [allChats, setAllChats] = useState([]);
   const [chatError, setChatError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { user } = useAuthContext();
   const { ifDarkMode } = useContext(DarkModeContext);
   const socket = useRef();
+  
 
   useEffect(() => {
     socket.current = io("http://localhost:4000");
@@ -20,10 +24,6 @@ function MainChatPage() {
       console.log(data);
     });
   }, []);
-
-  // useEffect(() => {
-
-  // }, []);
 
   useEffect(() => {
     async function fetchUsersChat () {

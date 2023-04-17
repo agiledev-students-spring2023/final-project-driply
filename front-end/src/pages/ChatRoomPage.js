@@ -5,8 +5,11 @@ import SendIcon from '@mui/icons-material/Send';
 import { DarkModeContext } from '../context/DarkModeContext';
 import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy } from "firebase/firestore";
 import { dbFirebase } from '../firebase-config';
+import { io } from "socket.io-client";
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function ChatRoomPage() {
+    const { user } = useAuthContext();
     const navigate = useNavigate();
     const { ifDarkMode } = useContext(DarkModeContext);
     const senderImg = "https://picsum.photos/100/100";
@@ -15,26 +18,52 @@ function ChatRoomPage() {
     const [id1, id2] = chatId.split("--");
     const [sender, setSender] = useState("");
     const [receiver, setReceiver] = useState("");
-    const messagesRef = collection(dbFirebase, "messages");
+    const messagesRef = collection(dbFirebase, `chats/${chatId}/messages`);
     const [messages, setMessages] = useState([]);
     const inputRef = useRef();
+    const socket = useRef();
 
+    // useEffect(() => {
+    //     const queryMessages = query(
+    //         messagesRef, 
+    //         where("room", "==", chatId), 
+    //         orderBy("createdAt")
+    //     );
+    //     const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
+    //         let messages = [];
+    //         snapshot.forEach((doc) => {
+    //             messages.push({...doc.data(), id: doc.id});
+    //         });
+    //         setMessages(messages);
+    //     });
+
+    //     return () => unsubscribe();
+    // }, [chatId]);
+
+    // async function createChatRoom(chatId) {
+    //     const response = await fetch(`http://localhost:4000/chats/create-room`, {
+    //         method: "POST",
+    //         headers: {
+    //           'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             "chatId": chatId
+    //         })
+    //     });
+    
+    //     const json = await response.json();
+    //     console.log(json);
+    // }
+    
     useEffect(() => {
-        const queryMessages = query(
-            messagesRef, 
-            where("room", "==", chatId), 
-            orderBy("createdAt")
-        );
-        const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
-            let messages = [];
-            snapshot.forEach((doc) => {
-                messages.push({...doc.data(), id: doc.id});
-            });
-            setMessages(messages);
+        socket.current = io(`http://localhost:4000?chatId=${chatId}`);
+        socket.current.on("createdRoom", (data) => {
+          console.log(data);
         });
-
-        return () => unsubscribe();
-    }, [chatId]);
+        socket.current.on("sendMessage", (data) => {
+            console.log(data);
+        });
+    }, []);
 
     useEffect(() => {
 
@@ -104,12 +133,21 @@ function ChatRoomPage() {
             return;
         }
 
-        await addDoc(messagesRef, {
-            text: inputRef.current.value,
-            createdAt: serverTimestamp(),
-            user: sender.id,
-            room: chatId,
-        })
+        console.log(user.username); 
+
+        const newMessage = {
+            id_from: user.id,
+            message: typedMessage,
+        };
+
+        socket.current.emit("sendMessage", newMessage);
+
+        // await addDoc(messagesRef, {
+        //     text: inputRef.current.value,
+        //     createdAt: serverTimestamp(),
+        //     user: sender.id,
+        //     room: chatId,
+        // })
         inputRef.current.value = "";
     }
 

@@ -3,7 +3,8 @@
 // import the express app
 const server = require("./app");
 require("dotenv").config({ silent: true }); // load environmental variables from a hidden file named .env
-const socket = require("socket.io")
+const socket = require("socket.io");
+const Chat = require("./models/Chat.js");
 
 
 // which port to listen for HTTP(S) requests
@@ -21,15 +22,24 @@ const io = socket(listener, {
   },
 })
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log("a user has connected");
-  socket.emit('test', { message: "conncted" });
+  const chatId = socket.handshake.query.chatId;
+  const members = chatId.split("--");
+  const chatRoom = await Chat.findOne({ chatId });
+  if (!chatRoom) {
+    const room = await Chat.createroom(chatId, members);
+    socket.emit('createdRoom', { room: room, newChat: true, messages: [] });
+  } else {
+    socket.emit('createdRoom', { room: chatRoom, newChat: false, messages: chatRoom.messages });
+  }
 
-  socket.on("test", (data) => {
+  socket.on("sendMessage", (data) => {
     console.log(data);
-    io.emit("test", { message: "sent data back" });
+    io.emit("sendMessage", { message: "sent data back" });
   });
-})
+  
+});
 
 // a function to stop listening to the port
 const close = () => {

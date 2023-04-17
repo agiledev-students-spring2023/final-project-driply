@@ -51,10 +51,12 @@ function ProfilePage() {
     fetchProfileInfo();
   }, [userId]);
 
-  const handleMessageBtn = () => {
-    console.log(userId, user.id);
+  const handleMessageBtn = async () => {
     const idsArr = [user.id, userId];
     const sortedIds = idsArr.sort();
+
+    // create chat room in database
+
     navigate(`/chatroom/${sortedIds[0]}--${sortedIds[1]}`);
   }
   

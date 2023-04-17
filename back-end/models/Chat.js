@@ -9,7 +9,6 @@ const MessageSchema = new mongoose.Schema({
     id_from: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     name_from: {
         type: String,
-        required: true,
     },
     message: {
         type: String,
@@ -22,23 +21,30 @@ const ChatSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    members: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }],
     messages: {
         type: [MessageSchema],
         default: []
     }
 }, {timestamps: true});
 
-const Chat = mongoose.model("Chat", ChatSchema);
-
-ChatSchema.statics.createChatRoom = async function(chatId) {
+ChatSchema.statics.createroom = async function(chatId, members) {
     // validation
     if (!chatId) {
         throw new Error("Can't create chat room. Missing chat id");
     }
+    if (!members) {
+        throw new Error('Missing members ids to create chat room');
+    }
 
-    const chatroom = await this.create({ chatId });
+    const chatroom = await this.create({ chatId, members });
 
     return chatroom;
 }
 
+const Chat = mongoose.model("Chat", ChatSchema);
 module.exports = Chat;
