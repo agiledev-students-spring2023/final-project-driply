@@ -20,22 +20,22 @@ function Bookmarks() {
     async function fetchBookmarkList() {
       if (user) {
         const response = await fetch(`http://localhost:4000/bookmarks`, {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          // body: JSON.stringify({
-          //     "userId": id
-          // })
+          body: JSON.stringify({
+              "userId": user.id
+          })
         });
         let json = await response.json();
         console.log(json);
-        if (json.status === 200) {
-          setBookmarkList(json.data);
+        if (json.success) {
+          setBookmarkList(json.bookmarks);
           setBookmarkError(null);
           setLoading(false);
         } else {
-          setBookmarkError({ error: json.error, status: json.status });
+          setBookmarkError({ error: json.message });
           setLoading(false);
         }
       }
@@ -53,11 +53,11 @@ function Bookmarks() {
   function BookmarkItem({ bookmark }) {
     return (
       <div onClick={handlePostClick} className="bookmarkItem">
-        <BookMarkItem post={bookmark}/>
+        {/* commented out until api route and db working */}
+        {/* <BookMarkItem post={bookmark}/> */}
         <div className="bookmarkImg">
-          <img src={bookmark.image} alt="bookmark img" />
+          <img src={bookmark?.image} alt="bookmark img" />
         </div>
-        <div className="bookmarkTitle">{bookmark.title}</div>
       </div>
     );
   }
@@ -102,7 +102,6 @@ function Bookmarks() {
         )}
         {bookmarkError && user && (
           <div>
-            <h1 className="error">{bookmarkError.status}</h1>
             <h3 className="error">{bookmarkError.error}</h3>
           </div>
         )}

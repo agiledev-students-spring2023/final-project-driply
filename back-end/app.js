@@ -165,16 +165,31 @@ app.post("/createComment", (req, res) => {
   res.json(body);
 });
 
-app.get("/bookmarks", async (req, res) => {
-  axios
-    .get("https://my.api.mockaroo.com/bookmark_schema.json?key=90e03700")
-    .then((apiResponse) => {
-      const { data, status } = apiResponse;
-      res.json({ data, status });
-    })
-    .catch((err) => {
-      res.json({ error: err.message, status: err.response.status });
+app.post("/bookmarks", async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.body.userId }).exec();
+    // check if user was found
+    if (!user) {
+      console.error('User was not found');
+      return res.status(401).json({
+        success: false,
+        message: 'User was not found in db',
+      });
+    }
+    // send user data if user exists
+    const { bookmark } = user;
+    res.json({
+      success: true,
+      bookmarks: bookmark,
     });
+  } catch (error) {
+    console.log(`Err looking up user: ${error}`);
+    return res.status(500).json({
+      success: false,
+      message: "Error looking up user in database.",
+      error: error,
+    });
+  }
 });
 
 app.post("/bookmark", (req, res) => {
