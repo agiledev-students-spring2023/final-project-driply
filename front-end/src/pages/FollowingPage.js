@@ -1,35 +1,38 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
+import { useParams } from "react-router-dom";
 
 function FollowingPage() {
   const [followingList, setFollowingList] = useState([]);
   const [followingError, setFollowingError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { ifDarkMode } = useContext(DarkModeContext);
+  const params = useParams();
+  const { userId } = params;
 
   useEffect(() => {
     async function fetchFollowingList() {
-      const response = await fetch(`http://localhost:4000/following`, {
+      const response = await fetch(`http://localhost:4000/following/${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
       let json = await response.json();
-      if (json.status === 200) {
-        setFollowingList(json.data);
+      if (json.success) {
+        setFollowingList(json.following);
         setFollowingError(null);
         setLoading(false);
         console.log(json);
       } else {
         console.log(json.error);
-        setFollowingError({ error: json.error, status: json.status });
+        setFollowingError({ error: json.error.message, message: json.message });
         setLoading(false);
       }
     }
 
     fetchFollowingList();
-  }, []);
+  }, [userId]);
 
 // function FollowingPage() {
 //   const [followingList, setFollowingList] = useState([]);
@@ -108,7 +111,7 @@ function FollowingPage() {
       {loading ? <LoadingFollowingList /> : <DisplayFollowingList />}
       {followingError && (
         <div>
-          <h1 className="error">{followingError.status}</h1>
+          <h1 className="error">{followingError.message}</h1>
           <h3 className="error">{followingError.error}</h3>
         </div>
       )}

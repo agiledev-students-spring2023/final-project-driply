@@ -18,8 +18,9 @@ function Bookmarks() {
 
   useEffect(() => {
     async function fetchBookmarkList() {
-      if (user) {
-        const response = await fetch(`http://localhost:4000/bookmarks/${user.id}`, {
+      const getUser = JSON.parse(localStorage.getItem("user"));
+      if (getUser) {
+        const response = await fetch(`http://localhost:4000/bookmarks/${getUser.id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
+import { useParams } from "react-router-dom";
 
 
 function FollowerPage() {
@@ -7,60 +8,33 @@ function FollowerPage() {
   const [followerError, setFollowerError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { ifDarkMode } = useContext(DarkModeContext);
+  const params = useParams();
+  const { userId } = params;
+
 
   useEffect(() => {
     async function fetchFollowerList() {
-      const response = await fetch(`http://localhost:4000/follower`, {
+      const response = await fetch(`http://localhost:4000/follower/${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
       let json = await response.json();
-      if (json.status === 200) {
-        setFollowerList(json.data);
+      if (json.success) {
+        setFollowerList(json.followers);
         setFollowerError(null);
         setLoading(false);
         console.log(json);
       } else {
         console.log(json.error);
-        setFollowerError({ error: json.error, status: json.status });
+        setFollowerError({ error: json.error.message, message: json.message });
         setLoading(false);
       }
     }
 
     fetchFollowerList();
-  }, []);
-
-// function FollowerPage() {
-//   const [followerList, setFollowerList] = useState([]);
-//   const [followerError, setFollowerError] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const { ifDarkMode } = useContext(DarkModeContext);
-
-//   useEffect(() => {
-//     async function fetchFollowerList() {
-//       const response = await fetch(`http://localhost:5000/follower`, {
-//         method: "GET",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       });
-//       let json = await response.json();
-//       if (json.status === 200) {
-//         setFollowerList(json.data);
-//         setFollowerError(null);
-//         setLoading(false);
-//         console.log(json);
-//       } else {
-//         console.log(json.error);
-//         setFollowerError({ error: json.error, status: json.status });
-//         setLoading(false);
-//       }
-//     }
-
-//     fetchFollowerList();
-//   }, []);
+  }, [userId]);
 
   function LoadFollowerList() {
     return Array.from({ length: 10 }).map((_, idx) => {
@@ -77,11 +51,11 @@ function FollowerPage() {
     return (
       <div className="eachFollowerDisplay">
         <div className="followerImg">
-          <img src={follower.user_img} alt="user img" />
+          <img src={follower?.image} alt="user img" />
         </div>
         <div className="followerDetails">
-          <p>{follower.username}</p>
-          {follower.if_following ? (
+          <p>{follower?.name}</p>
+          {follower?.if_following ? (
             <div className={`followBtn ${ifDarkMode && "followBtn-dark"}`}>
               Unfollow
             </div>
@@ -115,7 +89,7 @@ function FollowerPage() {
       {loading ? <LoadFollowerList /> : <DisplayFollowerList />}
       {followerError && (
         <div>
-          <h1 className="error">Error: {followerError.status}</h1>
+          <h1 className="error">Error: {followerError.message}</h1>
           <h3 className="error">{followerError.error}</h3>
         </div>
       )}
