@@ -34,7 +34,7 @@ function ChatRoomPage() {
         });
 
         return () => unsubscribe();
-    }, [chatId, messagesRef]);
+    }, [chatId]);
 
     useEffect(() => {
 
@@ -91,7 +91,7 @@ function ChatRoomPage() {
         return (
             <div className="receiverMessageBubble">
                 <img className="receiverImg" src={senderImg} width="40px" height="40px" alt="img"/>
-                <div className="receiverMessage">{message.text}</div>
+                <div className={ifDarkMode ? "receiverMessage-dark" : "receiverMessage"}>{message.text}</div>
             </div>
         );
     }
@@ -152,9 +152,9 @@ function ChatRoomPage() {
                     }
                 })}
             </div>
-            <div className="chatroomInput">
+            <div className={ifDarkMode ? "chatroomInput chatroomInput-dark" : "chatroomInput"}>
                 <form>
-                    <input onKeyDown={event => handleKeyDown(event)} type="text" ref={inputRef} id="chatInput" placeholder="Type in here…" onInput={onInput}/>
+                    <input onKeyDown={event => handleKeyDown(event)} type="text" ref={inputRef} className={ifDarkMode ? "chatInput chatInput-dark" : "chatInput"} placeholder="Type in here…" onInput={onInput}/>
                     <SendBtn className="submitChat" />
                 </form>
             </div>

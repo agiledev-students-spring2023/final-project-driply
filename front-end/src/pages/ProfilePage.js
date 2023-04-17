@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate, Link, useLocation, useParams } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import { DarkModeContext } from "../context/DarkModeContext";
 import Follow from "../components/Follow";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -49,7 +49,7 @@ function ProfilePage() {
         setLoading(false);
     }
     fetchProfileInfo();
-  }, []);
+  }, [userId]);
 
   const handleMessageBtn = () => {
     console.log(userId, user.id);
@@ -94,7 +94,7 @@ function ProfilePage() {
               <p>Posts</p>
             </div>
             <div
-              onClick={() => navigate("/followers")}
+              onClick={() => navigate(`/followers/${userId}`)}
               className={
                 ifDarkMode ? "profileInfoSpecific-dark" : "profileInfoSpecific"
               }
@@ -103,7 +103,7 @@ function ProfilePage() {
               <p>Followers</p>
             </div>
             <div
-              onClick={() => navigate("/following")}
+              onClick={() => navigate(`/following/${userId}`)}
               className={
                 ifDarkMode ? "profileInfoSpecific-dark" : "profileInfoSpecific"
               }

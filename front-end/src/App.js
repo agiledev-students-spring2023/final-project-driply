@@ -41,8 +41,8 @@ function App() {
         <Route path="/bookmarks" element={<BookmarksPage />} />
         <Route path="/chatroom/:chatId" element={<ChatRoomPage />} />
         <Route path="/profile/:userId" element={<ProfilePage />} />
-        <Route path="/following" element={<FollowingPage />} />
-        <Route path="/followers" element={<FollowerPage />} />
+        <Route path="/following/:userId" element={<FollowingPage />} />
+        <Route path="/followers/:userId" element={<FollowerPage />} />
         <Route path="/trending" element={<TrendingPage />} />
         <Route path="/postform" element={<PostForm />} />
         <Route path="/post/:postId" element={<PostPage />} />
