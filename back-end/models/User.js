@@ -12,7 +12,8 @@ const UserSchema = new mongoose.Schema({
   posts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
   followers: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
   following: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-  bookmark: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}]
+  bookmark: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
+  profilepic: {type: String, default: "default.jpg"}
 });
 
 // hash the password before the user is saved

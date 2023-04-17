@@ -15,6 +15,7 @@ const PostPage = () => {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
     const [img, setImg] = useState();
+    const [pfp, setPfp] = useState();
     const [postError, setPostError] = useState(null);
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
@@ -40,9 +41,7 @@ const PostPage = () => {
             });
             let json = await response.json();
             if (response.status === 200) {
-                // Commented out fetching likes from mockaroo as clicking like would trigger the useEffect and refetch from mockaroo resulting in inaccurate like count and update.
-                // setLikes(p.likes);
-                //setLikes(oldArray => [...oldArray, ...json.likes]);
+                console.log(json);
                 let arr = [...json.likes];
                 setLikes(arr);
                 setName(json.username);
@@ -66,6 +65,22 @@ const PostPage = () => {
                     const imageObjectURL = URL.createObjectURL(imageBlob);
                     setImg(imageObjectURL);
                 }
+                const response2 = await fetch(
+                    `http://localhost:4000/image`,{
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "filename": json.pfp
+                        })
+                    }
+                );
+                if (response2.status === 200) {
+                    const imageBlob = await response2.blob();
+                    const imageObjectURL = URL.createObjectURL(imageBlob);
+                    setPfp(imageObjectURL);
+                }
             } else {
                 setPostError(response.status);
                 setLoading(false);
@@ -81,7 +96,7 @@ const PostPage = () => {
             <div className="row align-items-center mx-auto">
                 <div className="col-8 d-flex align-items-center px-0 mx-auto">
                     <div onClick={() => navigate("/profile")} className="postpfp">
-                        <img src={`https://picsum.photos/${randomProfileSize[randomProfileIndex]}/300`} alt="user img"/>
+                        <img src={pfp} alt="user img"/>
                     </div>
                     <span onClick={() => navigate("/profile")}>{name}</span>
                 </div>
