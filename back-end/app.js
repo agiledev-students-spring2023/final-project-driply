@@ -50,18 +50,22 @@ const upload = multer({ storage: storage });
 
 app.post("/post-form", upload.single("image"), (req, res) => {
   if (req.file) {
-    const newPost = new Post({
-      user: new mongoose.Types.ObjectId(req.body.userid),
-      image: req.file.filename,
-      description: req.body.description,
-      price: req.body.price,
-      comments: [],
-      likes: []
-    });
-    newPost.save().then((savedImg) => {
-      res.json({ message: "success"});
-    }).catch(err => {
-      res.json({ message: "Error creating post " + err});
+    User.findOne({name: req.body.user}).then((u) => {
+      const newPost = new Post({
+        user: u._id,
+        image: req.file.filename,
+        description: req.body.description,
+        price: req.body.price,
+        comments: [],
+        likes: []
+      });
+      newPost.save().then((savedImg) => {
+        res.json({ message: "success"});
+      }).catch(err => {
+        res.json({ message: "Error creating post " + err});
+      })
+    }).catch((err) => {
+      console.log(err);
     })
   } else{
     res.json({
@@ -102,8 +106,9 @@ app.post("/profile", async (req, res, next) => {
 app.post("/getPost", (req, res, next) => {
   Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
     User.findById(p.user).then((u) => {
+      console.log(u)
       res.json({
-        username: "temp",//u.name,
+        username: u.name,
         description: p.description,
         price: p.price,
         likes: p.likes,
@@ -119,8 +124,6 @@ app.post("/getPost", (req, res, next) => {
 
 app.post("/like/:postID", (req, res) => {
   const id = req.params.postID;
-  // TODO: Find post in database based on postId
-  // TODO: update post in database to mark it as liked by the user
   const data = {
     success: true,
   };
@@ -129,8 +132,6 @@ app.post("/like/:postID", (req, res) => {
 
 app.post("/unlike/:postId", (req, res) => {
   const id = req.params.postId;
-  // TODO: Find post in database based on postId
-  // TODO: update post in database to mark it as unliked by the user
   const data = {
     success: true,
   };
@@ -253,7 +254,7 @@ app.get("/following", async (req, res) => {
 
 app.get("/getTrendingPosts", async (req, res) => {
   Post.find({}).then((posts) => {
-    console.log(posts); //process this array later to find the trending posts
+    //console.log(posts); //process this array later to find the trending posts
     res.json({data: posts});
   }).catch((err) => {
     console.log(err);
