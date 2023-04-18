@@ -19,10 +19,6 @@ function ProfilePage() {
   const [pfp, setPfp] = useState("");
   const [postList, setPostList] = useState([]);
 
-  const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
-  const randomIndex1 = Math.floor(Math.random() * randomSize.length);
-  const randomIndex5 = Math.floor(Math.random() * randomSize.length);
-
   useEffect(() => {
     async function fetchProfileInfo() {
         setPostList([]);
@@ -78,8 +74,8 @@ function ProfilePage() {
 
   useEffect(() => {
     async function getPictureUrls() {
-      if (userData.allPosts.length !== 0) {
-        for (let i = 0; i < userData.allPosts.length; i++) {
+      if (userData?.allPosts?.length !== 0) {
+        for (let i = 0; i < userData?.allPosts?.length; i++) {
           const response = await fetch(
             `http://localhost:4000/image`,{
                 method: "POST",

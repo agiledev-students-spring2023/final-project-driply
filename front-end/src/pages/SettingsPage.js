@@ -1,11 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Switch from '@mui/material/Switch';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import InfoIcon from '@mui/icons-material/Info';
-import CreateIcon from '@mui/icons-material/Create';
 import { useLogout } from '../hooks/useLogout';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -17,6 +14,7 @@ function SettingsPage() {
     const { user } = useAuthContext();
     const navigate = useNavigate();
     const { ifDarkMode, toggleDarkMode } = useContext(DarkModeContext);
+    const [pfp, setPfp] = useState(null);
 
     const handleDarkThemeChange = () => {
         toggleDarkMode();
@@ -26,7 +24,28 @@ function SettingsPage() {
         e.preventDefault();
         logout();
         navigate('/login');
-      };
+    };
+
+    useEffect(() => {
+        async function fetchPfp() {
+            const response = await fetch(`http://localhost:4000/getUserPfp`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "userId": user.id,
+                })
+            });
+
+            if (response.status === 200) {
+                const imageBlob = await response.blob();
+                const imageObjectURL = URL.createObjectURL(imageBlob);
+                setPfp(imageObjectURL);
+            }
+        }
+        fetchPfp();
+    }, [user?.id]);
 
     return (
         <>
@@ -35,7 +54,7 @@ function SettingsPage() {
                     <h1>Profile</h1>
         
                     <div onClick={() => navigate("/editprofile")} className="showProfileBtn">
-                        <img src="https://picsum.photos/100/100" alt="profile pic"/>
+                        {pfp && <img src={pfp} alt="profile pic"/>}
                         <div className="showProfileName">
                             <p>{user?.username}</p>
                             <p>Show profile</p>

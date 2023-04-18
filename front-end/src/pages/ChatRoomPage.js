@@ -73,9 +73,17 @@ function ChatRoomPage() {
             const getUser = JSON.parse(localStorage.getItem("user"));
             if (json.success && json2.success) {
                 if (json.data.id === getUser.id) {
+                    const url1 = await fetchPfp(json.data.id);
+                    const url2 = await fetchPfp(json2.data.id);
+                    json.data["profilepic"] = url1;
+                    json2.data["profilepic"] = url2;
                     setSender(json.data);
                     setReceiver(json2.data);
                 } else if (json2.data.id === getUser.id) {
+                    const url1 = await fetchPfp(json2.data.id);
+                    const url2 = await fetchPfp(json.data.id);
+                    json2.data["profilepic"] = url1;
+                    json.data["profilepic"] = url2;
                     setSender(json2.data);
                     setReceiver(json.data);
                 }
@@ -86,6 +94,24 @@ function ChatRoomPage() {
         fetchProfileInfo();
 
     }, [id1, id2]);
+
+    async function fetchPfp(id) {
+        const response = await fetch(`http://localhost:4000/getUserPfp`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "userId": id,
+            })
+        });
+    
+        if (response.status === 200) {
+            const imageBlob = await response.blob();
+            const imageObjectURL = URL.createObjectURL(imageBlob);
+            return imageObjectURL;
+        }
+    }
 
     const onInput = () => inputRef.current.value;
 
@@ -101,7 +127,7 @@ function ChatRoomPage() {
     function ReceiverMessage({ message, idx }) {
         return (
             <div className="receiverMessageBubble">
-                <img className="receiverImg" src={senderImg} width="40px" height="40px" alt="img"/>
+                <img className="receiverImg" src={receiver?.profilepic} width="40px" height="40px" alt="img"/>
                 <div className={ifDarkMode ? "receiverMessage-dark" : "receiverMessage"}>{message.message}</div>
             </div>
         );

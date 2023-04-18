@@ -307,6 +307,11 @@
     flex-direction: column;
 }
 
+.editProfileBtns input {
+    padding: 15px;
+    padding-left: 60px;
+}
+
 .editProfileBtns p {
     color: #222222;
     font-weight: 500;

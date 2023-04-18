@@ -391,6 +391,7 @@ app.post("/editProfile", async (req, res) => {
       token: token,
       username: user.name,
       id: user.id,
+      profilePic: user.profilepic
     });
   } catch (error) {
     res.json({ success: false, status: 500, message: "Err trying to update your info" });

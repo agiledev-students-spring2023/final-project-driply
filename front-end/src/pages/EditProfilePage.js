@@ -16,7 +16,6 @@ function EditProfilePage() {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [pfp, setPfp] = useState(null);
-    const [imgInput, setImgInput] = useState(null);
     const [savedChanges, setSavedChanges] = useState(false);
     const [errorSaving, setErrorSaving] = useState(null);
     const { ifDarkMode } = useContext(DarkModeContext);
@@ -40,7 +39,7 @@ function EditProfilePage() {
             }
         }
         fetchPfp();
-    }, []);
+    }, [user?.id]);
 
     const saveChanges = async (username, password) => {
         console.log(username, password);
@@ -61,8 +60,8 @@ function EditProfilePage() {
             if (json.success) {
                 console.log(json);
 
-                const { token, username, id } = json;
-                const user  = {token, username, id};
+                const { token, username, id, profilePic } = json;
+                const user  = {token, username, id, profilePic};
 
                 // save the user to local storage
                 localStorage.setItem("user", JSON.stringify(user));
@@ -173,7 +172,7 @@ function EditProfilePage() {
                             onChange={changePfp}
                             name="changePfp"
                         />
-                        <p>Delete picture</p>
+                        {/* <p>Delete picture</p> */}
                     </div>
                     <div onClick={() => setModalOpen(false)} className="editProfileBtns">
                         <p className="cancelBtn">Cancel</p>
