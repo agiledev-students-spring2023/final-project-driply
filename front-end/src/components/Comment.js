@@ -12,6 +12,7 @@ function Comment(prop) {
     const { user } = useAuthContext();
     const [postError, setPostError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [img, setImg] = useState();
     const navigate = useNavigate();
     const form = useRef();
 
@@ -55,6 +56,22 @@ function Comment(prop) {
                         const imageBlob = await response.blob();
                         const imageObjectURL = URL.createObjectURL(imageBlob);
                         c.pfp = imageObjectURL;
+                        const response2 = await fetch(`http://localhost:4000/getUserPfp`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                "userId": user.id,
+                            })
+                        });
+
+                        if (response2.status === 200) {
+                            const imageBlob = await response2.blob();
+                            const imageObjectURL = URL.createObjectURL(imageBlob);
+                            setImg(imageObjectURL);
+                        }
+
                       }
                     }
                 }
@@ -136,7 +153,7 @@ function Comment(prop) {
                         <Form onSubmit={handleComment} ref={form} class="row align-items-center">
                             <div className="col-auto px-0">
                             <div onClick={() => navigate("/profile")} className="postpfp">
-                                <img src={`https://picsum.photos/id/22/131/150`} alt="user img"/>
+                                <img src={img} alt="user img"/>
                             </div>    
                             </div>
                             <div class="col px-0">

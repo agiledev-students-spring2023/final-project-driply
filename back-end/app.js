@@ -342,6 +342,14 @@ app.post("/editProfile", async (req, res) => {
   }
 })
 
+app.post("/getUserPfp", (req, res) => {
+  User.findById(new mongoose.Types.ObjectId(req.body.userId)).then((u) => {
+    res.sendFile(__dirname + "/public/uploads/" + u.profilepic);
+  }).catch((err) => {
+    console.log(err);
+  })
+});
+
 const authenticationRoutes = require("./routes/authRoutes.js")
 const cookieRoutes = require("./routes/cookieRoutes.js")
 const protectedContentRoutes = require("./routes/protectedContentRoutes.js");
