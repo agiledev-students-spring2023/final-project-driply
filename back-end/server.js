@@ -25,15 +25,30 @@ const io = socket(listener, {
 io.on("connection", async (socket) => {
   console.log("a user has connected");
   const chatId = socket.handshake.query.chatId;
-  const members = chatId.split("--");
-  const chatRoom = await Chat.findOne({ chatId });
-  if (!chatRoom) {
-    const room = await Chat.createroom(chatId, members);
-    socket.emit('createdRoom', { room: room, newChat: true, messages: [] });
-  } else {
-    socket.emit('createdRoom', { room: chatRoom, newChat: false, messages: chatRoom.messages });
+  const userId = socket.handshake.query.userId;
+  let chatRoom;
+
+  if (chatId) {
+    const members = chatId.split("--");
+    chatRoom = await Chat.findOne({ chatId });
+    if (!chatRoom) {
+      const room = await Chat.createroom(chatId, members);
+      socket.emit('createdRoom', { room: room, newChat: true, messages: [] });
+    } else {
+      socket.emit('createdRoom', { room: chatRoom, newChat: false, messages: chatRoom.messages });
+    }
   }
 
+  if (userId) {
+
+    const chat = await Chat.find({ members: userId }).populate('members', 'name').exec();
+    if (!chat) {
+      socket.emit('chatHistory', { chatList: [] });
+    } else {
+      socket.emit('chatHistory', { chatList: chat });
+    }
+  }
+  
   socket.on("sendMessage", async (data) => {
     const messages = chatRoom.messages;
     const { id_from, message } = data;
@@ -47,6 +62,7 @@ io.on("connection", async (socket) => {
     messages.push(data);
     console.log(messages);
     io.emit("sendMessage", { messages: room.messages });
+    io.emit('updateChatHistory', { newMessage: { chatId: room.chatId, id_from, message } });
   });
   
 });
