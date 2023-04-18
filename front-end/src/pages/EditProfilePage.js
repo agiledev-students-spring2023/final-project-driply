@@ -172,7 +172,7 @@ function EditProfilePage() {
                             onChange={changePfp}
                             name="changePfp"
                         />
-                        <p>Delete picture</p>
+                        {/* <p>Delete picture</p> */}
                     </div>
                     <div onClick={() => setModalOpen(false)} className="editProfileBtns">
                         <p className="cancelBtn">Cancel</p>
