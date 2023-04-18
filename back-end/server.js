@@ -23,7 +23,7 @@ const io = socket(listener, {
 })
 
 io.on("connection", async (socket) => {
-  console.log("a user has connected");
+  // console.log("a user has connected");
   const chatId = socket.handshake.query.chatId;
   const userId = socket.handshake.query.userId;
   let chatRoom;
@@ -58,9 +58,7 @@ io.on("connection", async (socket) => {
       {$push: { messages:  newMsg }},
       { new: true }
     );
-    console.log(room);
     messages.push(data);
-    console.log(messages);
     io.emit("sendMessage", { messages: room.messages });
     io.emit('updateChatHistory', { newMessage: { chatId: room.chatId, id_from, message } });
   });

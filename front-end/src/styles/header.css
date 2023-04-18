@@ -43,5 +43,11 @@
   border: 1px solid black;
 }
 
-
+.menuNotifications {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  z-index: 1002;
+  color: red;
+}
 
