@@ -3,10 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SendIcon from '@mui/icons-material/Send';
 import { DarkModeContext } from '../context/DarkModeContext';
-import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy } from "firebase/firestore";
-import { dbFirebase } from '../firebase-config';
+import { io } from "socket.io-client";
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function ChatRoomPage() {
+    const { user } = useAuthContext();
     const navigate = useNavigate();
     const { ifDarkMode } = useContext(DarkModeContext);
     const senderImg = "https://picsum.photos/100/100";
@@ -15,27 +16,37 @@ function ChatRoomPage() {
     const [id1, id2] = chatId.split("--");
     const [sender, setSender] = useState("");
     const [receiver, setReceiver] = useState("");
-    const messagesRef = collection(dbFirebase, "messages");
     const [messages, setMessages] = useState([]);
     const inputRef = useRef();
+    const socket = useRef();
+    const chatListRef = useRef(null);
+    
+    useEffect(() => {
+        socket.current = io(`http://localhost:4000?chatId=${chatId}`);
+        socket.current.on("createdRoom", (data) => {
+            const copyMessages = data.messages;
+            copyMessages.sort((a, b) => {
+                return new Date(a.createdAt) - new Date(b.createdAt);
+            });
+            setMessages(copyMessages);
+          console.log(data);
+        });
+    }, [chatId]);
+    useEffect(() => {
+        socket.current.on("sendMessage", (data) => {
+            const copyMessages = data.messages;
+            copyMessages.sort((a, b) => {
+                return new Date(a.createdAt) - new Date(b.createdAt);
+            });
+            setMessages(copyMessages);
+        });
+    });
 
     useEffect(() => {
-        const queryMessages = query(
-            messagesRef, 
-            where("room", "==", chatId), 
-            orderBy("createdAt")
-        );
-        const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
-            let messages = [];
-            snapshot.forEach((doc) => {
-                messages.push({...doc.data(), id: doc.id});
-            });
-            setMessages(messages);
-        });
-
-        return () => unsubscribe();
-    }, [chatId]);
-
+        if (messages.length !== 0) {
+            chatListRef.current.scrollIntoView(); // to show the user the last text message always without having to scroll
+        }
+    }, [messages])
     useEffect(() => {
 
         async function fetchProfileInfo() {
@@ -82,7 +93,7 @@ function ChatRoomPage() {
         const animation = (idx === messages.length-1) ? "" : "";
         return (
             <div className={`senderMessage ${animation}`}>
-                <div className="white">{message.text}</div>
+                <div className="white">{message.message}</div>
             </div>
         );
     }
@@ -91,7 +102,7 @@ function ChatRoomPage() {
         return (
             <div className="receiverMessageBubble">
                 <img className="receiverImg" src={senderImg} width="40px" height="40px" alt="img"/>
-                <div className={ifDarkMode ? "receiverMessage-dark" : "receiverMessage"}>{message.text}</div>
+                <div className={ifDarkMode ? "receiverMessage-dark" : "receiverMessage"}>{message.message}</div>
             </div>
         );
     }
@@ -104,12 +115,21 @@ function ChatRoomPage() {
             return;
         }
 
-        await addDoc(messagesRef, {
-            text: inputRef.current.value,
-            createdAt: serverTimestamp(),
-            user: sender.id,
-            room: chatId,
-        })
+        console.log(user.username); 
+
+        const newMessage = {
+            id_from: user.id,
+            message: typedMessage,
+        };
+
+        socket.current.emit("sendMessage", newMessage);
+
+        // await addDoc(messagesRef, {
+        //     text: inputRef.current.value,
+        //     createdAt: serverTimestamp(),
+        //     user: sender.id,
+        //     room: chatId,
+        // })
         inputRef.current.value = "";
     }
 
@@ -141,16 +161,17 @@ function ChatRoomPage() {
             {/* body - display messages */}
             <div className="displayMessages">
                 {messages.map((message, idx) => {
-                    if (message.user === sender.id) {
+                    if (message.id_from === sender.id) {
                         return (
-                            <SenderMessage key={message.id} message={message} idx={idx}/>
+                            <SenderMessage key={idx} message={message} idx={idx}/>
                         )
                     } else  {
                         return (
-                            <ReceiverMessage key={message.id} message={message} idx={idx}/>
+                            <ReceiverMessage key={idx} message={message} idx={idx}/>
                         )
                     }
                 })}
+                <div ref={chatListRef} />
             </div>
             <div className={ifDarkMode ? "chatroomInput chatroomInput-dark" : "chatroomInput"}>
                 <form>

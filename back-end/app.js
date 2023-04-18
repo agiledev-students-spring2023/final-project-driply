@@ -393,10 +393,12 @@ app.post("/editProfile", async (req, res) => {
 const authenticationRoutes = require("./routes/authRoutes.js")
 const cookieRoutes = require("./routes/cookieRoutes.js")
 const protectedContentRoutes = require("./routes/protectedContentRoutes.js");
+const chatRoutes = require("./routes/chatRoutes.js");
 const { error } = require("console");
 
 app.use("/auth", authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
 app.use("/cookie", cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
 app.use("/protected", protectedContentRoutes())
+app.use("/chats", chatRoutes());
 
 module.exports = app;
