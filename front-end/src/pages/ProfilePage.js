@@ -16,6 +16,8 @@ function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [ownProfile, setOwnProfile] = useState(false);
   const { ifDarkMode } = useContext(DarkModeContext);
+  const [pfp, setPfp] = useState("");
+  const [postList, setPostList] = useState([]);
 
   const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
   const randomIndex1 = Math.floor(Math.random() * randomSize.length);
@@ -23,6 +25,7 @@ function ProfilePage() {
 
   useEffect(() => {
     async function fetchProfileInfo() {
+        setPostList([]);
         setLoading(true);
         const response = await fetch(`http://localhost:4000/profile`, {
             method: "POST",
@@ -48,8 +51,57 @@ function ProfilePage() {
         }
         setLoading(false);
     }
+
+    async function fetchPfp() {
+      const getUser = JSON.parse(localStorage.getItem("user"));
+      const response = await fetch(
+          `http://localhost:4000/image`,{
+              method: "POST",
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  "filename": getUser.profilePic
+              })
+          }
+      );
+      if (response.status === 200) {
+          const imageBlob = await response.blob();
+          const imageObjectURL = URL.createObjectURL(imageBlob);
+          setPfp(imageObjectURL);
+      }
+    }
+
+    fetchPfp();
     fetchProfileInfo();
   }, [userId]);
+
+  useEffect(() => {
+    async function getPictureUrls() {
+      if (userData.allPosts.length !== 0) {
+        for (let i = 0; i < userData.allPosts.length; i++) {
+          const response = await fetch(
+            `http://localhost:4000/image`,{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "filename": userData.allPosts[i].image
+                })
+            }
+          );
+          if (response.status === 200) {
+            const imageBlob = await response.blob();
+            const imageObjectURL = URL.createObjectURL(imageBlob);
+            userData.allPosts[i].image = imageObjectURL;
+          }
+        }
+        setPostList(userData.allPosts);
+      }
+    }
+    getPictureUrls();
+  }, [userData.allPosts]);
 
   const handleMessageBtn = async () => {
     const idsArr = [user.id, userId];
@@ -75,7 +127,7 @@ function ProfilePage() {
           )}
           <div className="pfpContainer">
             <div className="pfp">
-              <img src={`https://picsum.photos/${randomSize[randomIndex5]}/300`} alt="pic" />
+              <img src={pfp} alt="pic" />
             </div>
           </div>
           <div className="pf-name">
@@ -92,7 +144,7 @@ function ProfilePage() {
                 ifDarkMode ? "profileInfoSpecific-dark" : "profileInfoSpecific"
               }
             >
-              <p>{userData?.posts?.length}</p>
+              <p>{userData?.allPosts?.length}</p>
               <p>Posts</p>
             </div>
             <div
@@ -118,13 +170,13 @@ function ProfilePage() {
           <div
             className={`${ifDarkMode ? "postsContainer-dark" : "postsContainer"}`}
           >
-            {userData?.posts?.map((post) => {
+            {postList?.map((post) => {
               return (
-                <div key={post.id} className="imagePostsContainer">
-                  <Link to={`/post/0`}>
+                <div key={post._id} className="imagePostsContainer">
+                  <Link to={`/post/${post._id}`}>
                     <img
                       className="img-responsive-post"
-                      src={`https://picsum.photos/${randomSize[randomIndex1]}/300`}
+                      src={post.image}
                       alt="pic"
                     />
                   </Link>
