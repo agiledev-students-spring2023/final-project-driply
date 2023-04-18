@@ -118,32 +118,6 @@ function Comment(prop) {
         addComment();
     };
 
-    // async function getImage (imageUrl) {
-    //     async function fetchPostInfo() {
-    //         const response = await fetch(
-    //             `http://localhost:4000/image`,{
-    //                 method: "POST",
-    //                 headers: {
-    //                     'Content-Type': 'application/json'
-    //                 },
-    //                 body: JSON.stringify({
-    //                     "filename": imageUrl
-    //                 })
-    //             }
-    //         );
-    //         if (response.status === 200) {
-    //             const imageBlob = await response.blob();
-    //             const imageObjectURL = URL.createObjectURL(imageBlob);
-    //             return imageObjectURL;
-    //         }
-    //         else{
-    //             return null;
-    //         }
-    //     }
-    //     const result = await fetchPostInfo();
-    //     return result;
-    // }
-
     return (
         <div>
             {user && (

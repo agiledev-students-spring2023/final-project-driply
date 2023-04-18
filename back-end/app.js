@@ -74,6 +74,16 @@ app.post("/post-form", upload.single("image"), (req, res) => {
   }
 });
 
+app.post("/changePfp", upload.single("image"), (req, res) => {
+  User.findOneAndUpdate({_id: new mongoose.Types.ObjectId(req.body.userId)}, {profilepic: req.file.filename}, {new: true}).then((u) => {
+    Comment.updateMany({user: new mongoose.Types.ObjectId(req.body.userId)}, {profilepic: req.file.filename}).then((c) => {
+      res.json({ message: "success"});
+    })
+  }).catch((err) => {
+    console.log(err);
+  })
+});
+
 app.post("/profile", async (req, res, next) => {
   console.log("fetching profile of user with id " + req.body.userId);
   // find user in db
@@ -172,19 +182,6 @@ app.post("/fetchComment", (req, res, next) => {
   }).catch((err) => {
     console.log(err);
   });
-
-  // axios
-  //   .get("https://my.api.mockaroo.com/post.json?key=997e9440")
-  //   .then((apiResponse) => {
-  //     firstRandomPost = apiResponse.data[0];
-  //     const body = {
-  //       message: "success",
-  //       username: firstRandomPost.username,
-  //       comments: firstRandomPost.comments,
-  //     };
-  //     res.json(body);
-  //   })
-  //   .catch((err) => next(err));
 });
 
 app.post("/createComment", (req, res) => {

@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { useNavigate } from 'react-router-dom';
@@ -15,9 +15,32 @@ function EditProfilePage() {
     const confirmPasswordInputRef = useRef();
 
     const [modalOpen, setModalOpen] = useState(false);
+    const [pfp, setPfp] = useState(null);
+    const [imgInput, setImgInput] = useState(null);
     const [savedChanges, setSavedChanges] = useState(false);
     const [errorSaving, setErrorSaving] = useState(null);
     const { ifDarkMode } = useContext(DarkModeContext);
+
+    useEffect(() => {
+        async function fetchPfp() {
+            const response = await fetch(`http://localhost:4000/getUserPfp`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "userId": user.id,
+                })
+            });
+
+            if (response.status === 200) {
+                const imageBlob = await response.blob();
+                const imageObjectURL = URL.createObjectURL(imageBlob);
+                setPfp(imageObjectURL);
+            }
+        }
+        fetchPfp();
+    }, []);
 
     const saveChanges = async (username, password) => {
         console.log(username, password);
@@ -57,6 +80,30 @@ function EditProfilePage() {
             }
     }
 
+    const changePfp = (e) => {
+        e.preventDefault();
+        async function addComment() {
+            const formData = new FormData();
+            formData.append("image", e.target.files[0]);
+            formData.append("userId", user.id);
+            const response = await fetch(`http://localhost:4000/changePfp`, {
+                method: "POST",
+                body: formData
+            });
+            let json = await response.json();
+            if (response.status === 200) {
+                if (json.message === "success"){
+                    setPfp(URL.createObjectURL(e.target.files[0]));
+                    setModalOpen(false)
+                }
+            } else {
+
+            }
+        }
+
+        addComment();
+    };
+
     const handleSubmit = async () => {
         const username = usernameInputRef.current.value;
         const password = passwordInputRef.current.value;
@@ -92,7 +139,7 @@ function EditProfilePage() {
                 <div className={`editProfileBody`}>
                     {/* users image */}
                     <div onClick={() => setModalOpen(true)} className="editProfileImg">
-                        <img src="https://picsum.photos/150/150" alt="profile pic"/>
+                        <img src={pfp} alt="profile pic"/>
                         <InsertPhotoIcon sx={{ position: "absolute", top: "15px", right: "0px", backgroundColor: "#BDCDD6", fontSize: "60px", padding: "10px", zIndex: 10, color: "white", borderRadius: "50%" }} />
                     </div>
                     
@@ -121,7 +168,11 @@ function EditProfilePage() {
                 <div onClick={() => setModalOpen(false)} className="blackBg"></div>
                 <div className={`editPicture ${modalOpen ? "slideUpAnimation" : ""}`}>
                     <div className="editProfileBtns">
-                        <p>Replace picture</p>
+                        <input
+                            type="file"
+                            onChange={changePfp}
+                            name="changePfp"
+                        />
                         <p>Delete picture</p>
                     </div>
                     <div onClick={() => setModalOpen(false)} className="editProfileBtns">
