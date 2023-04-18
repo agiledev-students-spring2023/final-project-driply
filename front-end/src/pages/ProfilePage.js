@@ -78,8 +78,8 @@ function ProfilePage() {
 
   useEffect(() => {
     async function getPictureUrls() {
-      if (userData.allPosts.length !== 0) {
-        for (let i = 0; i < userData.allPosts.length; i++) {
+      if (userData?.allPosts?.length !== 0) {
+        for (let i = 0; i < userData?.allPosts?.length; i++) {
           const response = await fetch(
             `http://localhost:4000/image`,{
                 method: "POST",
