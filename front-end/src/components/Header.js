@@ -71,14 +71,17 @@ function Header(props) {
     }
   }, []);
   useEffect(() => {
-    socket.current.on("updateChatHistory", (data) => {
-      const getUser = JSON.parse(localStorage.getItem("user"));
-      if (getUser.id !== data.newMessage.id_from) {
-        const message = data.newMessage.message;
-        const newMsgObj = { message };
-        setUnseenMessages((prev) => [...prev, newMsgObj]);
-      }
-    });
+    const getUser = JSON.parse(localStorage.getItem("user"));
+    if (getUser) {
+      socket.current.on("updateChatHistory", (data) => {
+        if (getUser.id !== data.newMessage.id_from) {
+          const message = data.newMessage.message;
+          const newMsgObj = { message };
+          setUnseenMessages((prev) => [...prev, newMsgObj]);
+        }
+      });
+    }
+
   }, []);
   useEffect(() => {
     if (location.pathname === "/chats") {

@@ -26,8 +26,8 @@ export const useSignup = () => {
     }
     if (response.ok) {
       // save the user to local storage
-      const { token, username, id } = json;
-      const user  = {token, username, id};
+      const { token, username, id, profilePic } = json;
+      const user  = {token, username, id, profilePic};
       localStorage.setItem('user', JSON.stringify(user));
 
       // update the auth context

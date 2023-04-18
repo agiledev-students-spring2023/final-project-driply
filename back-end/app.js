@@ -87,11 +87,21 @@ app.post("/profile", async (req, res, next) => {
         message: 'User was not found in db',
       });
     }
+
+    const allPosts = await Post.find({ user: req.body.userId }).populate('user').exec();
     // send user data if user exists
     const { _id, name, posts, followers, following } = user;
+
+    if (!allPosts) {
+      return res.json({
+        success: false,
+        message: "err fetching user's posts",
+      });
+    }
+
     res.json({
       success: true,
-      data: { id: _id, name, posts, followers, following },
+      data: { id: _id, name, posts, followers, following, allPosts },
     });
   } catch (error) {
     console.log(`Err looking up user: ${error}`);
@@ -393,12 +403,10 @@ app.post("/editProfile", async (req, res) => {
 const authenticationRoutes = require("./routes/authRoutes.js")
 const cookieRoutes = require("./routes/cookieRoutes.js")
 const protectedContentRoutes = require("./routes/protectedContentRoutes.js");
-const chatRoutes = require("./routes/chatRoutes.js");
 const { error } = require("console");
 
 app.use("/auth", authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
 app.use("/cookie", cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
 app.use("/protected", protectedContentRoutes())
-app.use("/chats", chatRoutes());
 
 module.exports = app;

@@ -36,6 +36,7 @@ const authenticationRouter = () => {
         token: token,
         username: user.name,
         id: user.id,
+        profilePic: user.profilepic,
       }) // send the token to the client to store
     } catch (err) {
       // error saving user to database... send an error response
@@ -90,6 +91,7 @@ const authenticationRouter = () => {
         token: token,
         username: user.name,
         id: user.id,
+        profilePic: user.profilepic,
       }) // send the token to the client to store
     } catch (err) {
       // check error
