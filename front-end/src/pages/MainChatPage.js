@@ -65,27 +65,29 @@ function MainChatPage() {
 
     useEffect(() => {
       function displayChat() {
-        const copyMessages = [...chat.messages];
-        copyMessages.sort((a, b) => {
-          return new Date(a.createdAt) - new Date(b.createdAt);
-        });
-        setLastMessage(copyMessages[copyMessages.length - 1].message);
-        const createdAt = moment(copyMessages[copyMessages.length - 1].createdAt);
-        const now = moment();
-    
-        // calculate the time difference in hours
-        const hoursDiff = now.diff(createdAt, 'hours');
-    
-        // determine the format based on the time difference
-        let format;
-        if (hoursDiff < 24) {
-          format = 'h:mm A'; // display the hour and minute
-        } else if (hoursDiff < 6 * 24) {
-          format = 'dddd'; // display the day of the week
-        } else {
-          format = 'M/D/YYYY'; // display the date
+        if (chat.messages.length !== 0) {
+          const copyMessages = [...chat.messages];
+          copyMessages.sort((a, b) => {
+            return new Date(a.createdAt) - new Date(b.createdAt);
+          });
+          setLastMessage(copyMessages[copyMessages.length - 1].message);
+          const createdAt = moment(copyMessages[copyMessages.length - 1].createdAt);
+          const now = moment();
+      
+          // calculate the time difference in hours
+          const hoursDiff = now.diff(createdAt, 'hours');
+      
+          // determine the format based on the time difference
+          let format;
+          if (hoursDiff < 24) {
+            format = 'h:mm A'; // display the hour and minute
+          } else if (hoursDiff < 6 * 24) {
+            format = 'dddd'; // display the day of the week
+          } else {
+            format = 'M/D/YYYY'; // display the date
+          }
+          setFormattedTime(createdAt.format(format));
         }
-        setFormattedTime(createdAt.format(format));
       }
 
       displayChat();

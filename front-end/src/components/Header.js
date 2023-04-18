@@ -5,8 +5,13 @@ import { DarkModeContext } from "../context/DarkModeContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useLogout } from "../hooks/useLogout";
 import { useScrollDirection } from "../hooks/useScrollDirection";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { io } from "socket.io-client";
 
 function Header(props) {
+
+  const socket = useRef();
+  const [unseenMessages, setUnseenMessages] = useState([]);
   const { ifDarkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
   const direction = useScrollDirection();
@@ -17,6 +22,8 @@ function Header(props) {
   let ifHide;
   if (splitPath.includes("chatroom") || splitPath.includes("editprofile") || splitPath.includes("aboutus")) {
     ifHide = true;
+    if (splitPath.includes("chatroom")) {
+    }
   } else {
     ifHide = false;
   }
@@ -56,6 +63,28 @@ function Header(props) {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [menuRef]);
+
+  useEffect(() => {
+    const getUser = JSON.parse(localStorage.getItem("user"));
+    if (getUser) {
+      socket.current = io(`http://localhost:4000?userId=${getUser.id}`);
+    }
+  }, []);
+  useEffect(() => {
+    socket.current.on("updateChatHistory", (data) => {
+      const getUser = JSON.parse(localStorage.getItem("user"));
+      if (getUser.id !== data.newMessage.id_from) {
+        const message = data.newMessage.message;
+        const newMsgObj = { message };
+        setUnseenMessages((prev) => [...prev, newMsgObj]);
+      }
+    });
+  }, []);
+  useEffect(() => {
+    if (location.pathname === "/chats") {
+      setUnseenMessages([]);
+    }
+  }, [location.pathname]);
 
   return (
     <>
@@ -100,6 +129,11 @@ function Header(props) {
               Log Out
             </Link>
           </Menu>
+          {(unseenMessages.length > 0) ? (
+            <div className="menuNotifications">
+              <NotificationsIcon sx={{ fontSize: "30px" }} />
+            </div>
+          ) : <></>}
         </div>
       ) : (
         <div className="header">
