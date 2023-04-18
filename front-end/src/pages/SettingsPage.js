@@ -2,10 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Switch from '@mui/material/Switch';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import InfoIcon from '@mui/icons-material/Info';
-import CreateIcon from '@mui/icons-material/Create';
 import { useLogout } from '../hooks/useLogout';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
@@ -48,7 +45,7 @@ function SettingsPage() {
             }
         }
         fetchPfp();
-    }, []);
+    }, [user?.id]);
 
     return (
         <>

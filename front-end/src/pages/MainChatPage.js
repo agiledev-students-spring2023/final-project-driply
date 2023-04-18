@@ -13,13 +13,38 @@ function MainChatPage() {
   const { user } = useAuthContext();
   const { ifDarkMode } = useContext(DarkModeContext);
   const socket = useRef();
+
+  async function fetchPfp(id) {
+    const response = await fetch(`http://localhost:4000/getUserPfp`, {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          "userId": id,
+      })
+    });
+
+    if (response.status === 200) {
+      const imageBlob = await response.blob();
+      const imageObjectURL = URL.createObjectURL(imageBlob);
+      return imageObjectURL;
+    }
+  }
   
 
   useEffect(() => {
     setLoading(true);
     const getUser = JSON.parse(localStorage.getItem("user"));
     socket.current = io(`http://localhost:4000?userId=${getUser.id}`);
-    socket.current.on("chatHistory", (data) => {
+    socket.current.on("chatHistory", async (data) => {
+      for (let i = 0; i < data.chatList.length; i++) {
+        const currentChat = data.chatList[i];
+        for (let j = 0; j < currentChat.members.length; j++) {
+          const url = await fetchPfp(data.chatList[i].members[j]._id);
+          data.chatList[i].members[j].profilepic = url;
+        }
+      }
       // console.log(data.chatList);
       setChatLists(data.chatList);
       setLoading(false);
@@ -61,7 +86,7 @@ function MainChatPage() {
     }, [chat.chatId]);
 
     const getUser = JSON.parse(localStorage.getItem("user"));
-    let receiverName = (getUser.username !== chat.members[0].name) ? chat.members[0].name : chat.members[1].name;
+    let receiver = (getUser.username !== chat.members[0].name) ? chat.members[0] : chat.members[1];
 
     useEffect(() => {
       function displayChat() {
@@ -98,14 +123,14 @@ function MainChatPage() {
         
         {/* image */}
         <div className="chatImg">
-          <img src="https://picsum.photos/100/100" alt="username pic"/>
+          <img src={receiver.profilepic} alt="username pic"/>
         </div>
 
         {/* chat details */}
         <div className="chatDetails">
           {/* Username and time message sent*/}
           <div className="topChatDetails">
-            <h4>{receiverName}</h4>
+            <h4>{receiver.name}</h4>
 
             {unseenMessages.length !== 0 ? (
                 <p className="gray">{formattedTime}</p>

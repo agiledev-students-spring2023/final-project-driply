@@ -19,10 +19,6 @@ function ProfilePage() {
   const [pfp, setPfp] = useState("");
   const [postList, setPostList] = useState([]);
 
-  const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
-  const randomIndex1 = Math.floor(Math.random() * randomSize.length);
-  const randomIndex5 = Math.floor(Math.random() * randomSize.length);
-
   useEffect(() => {
     async function fetchProfileInfo() {
         setPostList([]);
