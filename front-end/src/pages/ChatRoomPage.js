@@ -19,6 +19,7 @@ function ChatRoomPage() {
     const [messages, setMessages] = useState([]);
     const inputRef = useRef();
     const socket = useRef();
+    const chatListRef = useRef(null);
     
     useEffect(() => {
         socket.current = io(`http://localhost:4000?chatId=${chatId}`);
@@ -41,6 +42,11 @@ function ChatRoomPage() {
         });
     });
 
+    useEffect(() => {
+        if (messages.length !== 0) {
+            chatListRef.current.scrollIntoView(); // to show the user the last text message always without having to scroll
+        }
+    }, [messages])
     useEffect(() => {
 
         async function fetchProfileInfo() {
@@ -165,6 +171,7 @@ function ChatRoomPage() {
                         )
                     }
                 })}
+                <div ref={chatListRef} />
             </div>
             <div className={ifDarkMode ? "chatroomInput chatroomInput-dark" : "chatroomInput"}>
                 <form>

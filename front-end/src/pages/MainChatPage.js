@@ -58,7 +58,7 @@ function MainChatPage() {
           setLastMessage(message);
         }
       });
-    }, []);
+    }, [chat.chatId]);
 
     const getUser = JSON.parse(localStorage.getItem("user"));
     let receiverName = (getUser.username !== chat.members[0].name) ? chat.members[0].name : chat.members[1].name;
@@ -116,10 +116,10 @@ function MainChatPage() {
 
           {/* last text and notifcations */}
           <div className="bottomChatDetails">
-            {lastMessage.length < 30 ? (
-              <p>{lastMessage}</p>
+            {lastMessage.length < 24 ? (
+              <p className={ifDarkMode ? "lastMessage-dark" : "lastMessage"}>Text: {lastMessage}</p>
             ) : (
-              <p>{lastMessage.substring(0, 30)}...</p>
+              <p className={ifDarkMode ? "lastMessage-dark" : "lastMessage"}>Text: {lastMessage.substring(0, 24)}...</p>
             )}
             {unseenMessages.length === 0 ? (null) : (<p>{unseenMessages.length}</p>)}
           </div>

@@ -1,6 +1,7 @@
 .chatPage {
     padding-bottom: 90px;
     overflow: hidden;
+    height: 100vh;
 }
 
 .chatPageHeader {
@@ -90,7 +91,6 @@
     font-weight: 500;
 }
 .bottomChatDetails p:nth-child(1) {
-    color: gray;
     font-weight: 400;
 }
 .bottomChatDetails p:nth-child(2) {
@@ -103,6 +103,13 @@
     border-radius: 10px;
     font-size: medium;
     background-color: rgb(37, 99, 235);
+}
+
+.lastMessage {
+    color: gray;
+}
+.lastMessage-dark {
+    color: #E0E0E0;
 }
 
 .chatRoomPage {
