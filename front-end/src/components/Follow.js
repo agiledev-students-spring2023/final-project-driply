@@ -21,7 +21,7 @@ function Follow(props) {
           return (
             <button
               onClick={() => handleFollow()}
-              className='btn btn-secondary'
+              className="btn btn-secondary buttonPaddingRight"
             >
                 Follow
             </button>
@@ -31,7 +31,7 @@ function Follow(props) {
           return (
             <button
                 onClick={() => handleFollow()}
-                className='btn btn-primary'
+                className="btn btn-primary buttonPaddingRight"
             >
                 Followed
             </button>
