@@ -331,3 +331,11 @@
     top: 75px;
     left: 15px;
 }
+
+.buttonPaddingRight {
+    padding-top: 10px;
+    padding-right: 10px;
+    top: 75px;
+    right:15px;
+    position: absolute;
+}
