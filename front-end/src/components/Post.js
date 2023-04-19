@@ -58,7 +58,7 @@ function Post({ post }) {
             const imageBlob2 = await response3.blob();
             const imageObjectURL2 = URL.createObjectURL(imageBlob2);
             setPostImage(imageObjectURL2);
-            if (post.likes.includes(user.id)) {
+            if (user && post.likes.includes(user.id)) {
               setIfLiked(true);
             }
           }
