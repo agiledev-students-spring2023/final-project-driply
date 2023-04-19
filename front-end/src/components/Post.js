@@ -58,6 +58,9 @@ function Post({ post }) {
             const imageBlob2 = await response3.blob();
             const imageObjectURL2 = URL.createObjectURL(imageBlob2);
             setPostImage(imageObjectURL2);
+            if (post.likes.includes(user.id)){
+              setIfLiked(true);
+            }
           }
         }
       }
@@ -134,7 +137,7 @@ function Post({ post }) {
       return;
     }
 
-    const postId = post.id;
+    const postId = post._id;
     const likeUrl = `http://localhost:4000/like/${postId}`;
     const unlikeUrl = `http://localhost:4000/unlike/${postId}`;
 
@@ -144,6 +147,9 @@ function Post({ post }) {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          "userId": user.id
+        })
       })
       .then((res) => res.json())
       .then((data) => {
@@ -163,6 +169,9 @@ function Post({ post }) {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          "userId": user.id
+        })
       })
         .then((res) => res.json())
         .then((data) => {
