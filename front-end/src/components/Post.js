@@ -19,13 +19,13 @@ function Post({ post }) {
   useEffect(() => {
     async function getDetails() {
       const response = await fetch(`http://localhost:4000/getUsername`, {
-          method: "POST",
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              "userId": post.user,
-          })
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: post.user,
+        }),
       });
       let json = await response.json();
       if (response.status === 200) {
@@ -34,11 +34,11 @@ function Post({ post }) {
         const response2 = await fetch(`http://localhost:4000/getUserPfp`, {
           method: "POST",
           headers: {
-              'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-              "userId": post.user
-          })
+            userId: post.user,
+          }),
         });
 
         if (response2.status === 200) {
@@ -48,17 +48,17 @@ function Post({ post }) {
           const response3 = await fetch(`http://localhost:4000/image`, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                "filename": post.image
-            })
+              filename: post.image,
+            }),
           });
           if (response3.status === 200) {
             const imageBlob2 = await response3.blob();
             const imageObjectURL2 = URL.createObjectURL(imageBlob2);
             setPostImage(imageObjectURL2);
-            if (post.likes.includes(user.id)){
+            if (post.likes.includes(user.id)) {
               setIfLiked(true);
             }
           }
@@ -74,20 +74,23 @@ function Post({ post }) {
       // only bookmark post if logged in
       e.stopPropagation();
       async function addBookmark() {
-        const response = await fetch(`http://localhost:4000/bookmark`, {
-          method: "POST",
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          // body: JSON.stringify({
-          //     "postId": id,
-          //     "comment": comment
-          // })
-        });
+        const response = await fetch(
+          `http://localhost:4000/bookmark/${post._id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // body: JSON.stringify({
+            //     "postId": id,
+            //     "comment": comment
+            // })
+          }
+        );
         let json = await response.json();
         if (response.status === 200) {
           console.log(json);
-          if (json.message === "success"){
+          if (json.message === "success") {
             post.bookmarked = !ifBookmarked;
           }
         } else {
@@ -96,20 +99,23 @@ function Post({ post }) {
         }
       }
       async function removeBookmark() {
-        const response = await fetch(`http://localhost:4000/unbookmark`, {
+        const response = await fetch(
+          `http://localhost:4000/unbookmark/${post._id}`,
+          {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
             // body: JSON.stringify({
             //     "postId": id,
             //     "comment": comment
             // })
-        });
+          }
+        );
         let json = await response.json();
         if (response.status === 200) {
           console.log(json);
-          if (json.message === "success"){
+          if (json.message === "success") {
             post.bookmarked = !ifBookmarked;
           }
         } else {
@@ -117,10 +123,9 @@ function Post({ post }) {
           // setLoading(false);
         }
       }
-      if (ifBookmarked){
+      if (ifBookmarked) {
         removeBookmark();
-      }
-      else{
+      } else {
         addBookmark();
       }
       setIfBookmarked(!ifBookmarked);
@@ -148,21 +153,21 @@ function Post({ post }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "userId": user.id
+          userId: user.id,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setIfLiked(false);
+            post.likes.length -= 1;
+          } else {
+            console.log(data.error);
+          }
         })
-      })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setIfLiked(false);
-          post.likes.length -= 1;
-        } else {
-          console.log(data.error);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       fetch(likeUrl, {
         method: "POST",
@@ -170,8 +175,8 @@ function Post({ post }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "userId": user.id
-        })
+          userId: user.id,
+        }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -208,7 +213,9 @@ function Post({ post }) {
           <Link to={`/profile/${post.user}`}>
             <img src={pfp} alt="user img" />
           </Link>
-          <p onClick={() => navigate(`/profile/${post.user}`)}>{postUsername}</p>
+          <p onClick={() => navigate(`/profile/${post.user}`)}>
+            {postUsername}
+          </p>
         </div>
         <p className="postCost">Total Cost: ${post.price}</p>
       </div>
@@ -217,11 +224,13 @@ function Post({ post }) {
       {/* post pictures */}
       <div className="postBody">
         {/* <img src={post.post_picture} alt="post img"/> */}
+
         <Link to={`/post/${post._id}`}>
           <img
             src={postImage}
             alt="postpic"
           />
+
         </Link>
         <div className="postBookmarkIcon">
           {ifBookmarked ? (
