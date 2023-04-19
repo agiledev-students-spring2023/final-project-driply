@@ -17,15 +17,15 @@ function Home() {
         },
       });
       let json = await response.json();
-      console.log(json);
       if (response.status === 200) {
-        setPostList(json.data);
+        console.log(json);
+        setPostList(oldArray => [...oldArray, ...json.data]);
+        console.log(postList);
         setPostListError(null);
-        setLoading(false);
       } else {
         setPostListError({ error: json.error, status: response.status });
-        setLoading(false);
       }
+      setLoading(false);
     }
 
     fetchPostList();

@@ -248,15 +248,12 @@ app.post("/unbookmark", (req, res) => {
 });
 
 app.get("/getHomePosts", async (req, res) => {
-  axios
-    .get("https://my.api.mockaroo.com/post.json?key=e833d640")
-    .then((apiResponse) => {
-      const { data } = apiResponse;
-      res.json({ data });
-    })
-    .catch((err) => {
-      res.json({ error: err.message });
-    });
+  Post.find({}).then((posts) => {
+    //console.log(posts); //process this array later to find the trending posts
+    res.json({data: posts});
+  }).catch((err) => {
+    console.log(err);
+  });
 });
 
 app.get("/chats", async (req, res) => {
@@ -342,6 +339,14 @@ app.post("/editProfile", async (req, res) => {
 app.post("/getUserPfp", (req, res) => {
   User.findById(new mongoose.Types.ObjectId(req.body.userId)).then((u) => {
     res.sendFile(__dirname + "/public/uploads/" + u.profilepic);
+  }).catch((err) => {
+    console.log(err);
+  })
+});
+
+app.post("/getUsername", (req, res) => {
+  User.findById(new mongoose.Types.ObjectId(req.body.userId)).then((u) => {
+    res.json({"username" : u.name});
   }).catch((err) => {
     console.log(err);
   })
