@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"; // not bookmarked
@@ -10,8 +10,61 @@ import ChatBubbleIcon from "@mui/icons-material/ChatBubble"; // comment icon
 function Post({ post }) {
   const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
   const [ifLiked, setIfLiked] = useState(post.liked);
+  const [pfp, setPfp] = useState();
+  const [postUsername, setPostUsername] = useState();
+  const [postImage, setPostImage] = useState();
   const navigate = useNavigate();
   const { user } = useAuthContext();
+
+  useEffect(() => {
+    async function getDetails() {
+      const response = await fetch(`http://localhost:4000/getUsername`, {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              "userId": post.user,
+          })
+      });
+      let json = await response.json();
+      if (response.status === 200) {
+        setPostUsername(json.username);
+
+        const response2 = await fetch(`http://localhost:4000/getUserPfp`, {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              "userId": post.user
+          })
+        });
+
+        if (response2.status === 200) {
+          const imageBlob = await response2.blob();
+          const imageObjectURL = URL.createObjectURL(imageBlob);
+          setPfp(imageObjectURL);
+          const response3 = await fetch(`http://localhost:4000/image`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "filename": post.image
+            })
+          });
+          if (response3.status === 200) {
+            const imageBlob2 = await response3.blob();
+            const imageObjectURL2 = URL.createObjectURL(imageBlob2);
+            setPostImage(imageObjectURL2);
+          }
+        }
+      }
+    }
+
+    getDetails();
+  }, []);
 
   const handleBookmarkClick = (e) => {
     if (user) {
@@ -92,18 +145,18 @@ function Post({ post }) {
           "Content-Type": "application/json",
         },
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            setIfLiked(false);
-            post.likes.length -= 1;
-          } else {
-            console.log(data.error);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setIfLiked(false);
+          post.likes.length -= 1;
+        } else {
+          console.log(data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     } else {
       fetch(likeUrl, {
         method: "POST",
@@ -143,10 +196,10 @@ function Post({ post }) {
       {/* header */}
       <div className="postHeader">
         <div className="postHeaderDetails">
-          <Link to={`/profile/${post.id}`}>
-            <img src={post.user_picture} alt="user img" />
+          <Link to={`/profile/${user.id}`}>
+            <img src={pfp} alt="user img" />
           </Link>
-          <p onClick={() => navigate(`/profile/${post.id}`)}>{post.username}</p>
+          <p onClick={() => navigate(`/profile/${post.user}`)}>{postUsername}</p>
         </div>
         <p className="postCost">Total Cost: ${post.price}</p>
       </div>
@@ -157,7 +210,7 @@ function Post({ post }) {
         {/* <img src={post.post_picture} alt="post img"/> */}
         <Link to={`/post/0`}>
           <img
-            src={`https://picsum.photos/${randomSize[randomIndex]}/300`}
+            src={postImage}
             alt="postpic"
           />
         </Link>
