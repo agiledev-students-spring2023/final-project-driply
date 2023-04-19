@@ -34,6 +34,8 @@ function PostForm() {
     let json = await response.json();
     if (response.status === 200) {
         console.log(json);
+        setImage(null);
+        setPrice(null);
     } else {
 
     }
