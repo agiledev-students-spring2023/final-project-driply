@@ -100,7 +100,7 @@ app.post("/profile", async (req, res, next) => {
 
     const allPosts = await Post.find({ user: req.body.userId }).populate('user').exec();
     // send user data if user exists
-    const { _id, name, posts, followers, following } = user;
+    const { _id, name, posts, followers, following, profilepic } = user;
 
     if (!allPosts) {
       return res.json({
@@ -111,7 +111,7 @@ app.post("/profile", async (req, res, next) => {
 
     res.json({
       success: true,
-      data: { id: _id, name, posts, followers, following, allPosts },
+      data: { id: _id, name, posts, followers, following, allPosts, profilepic },
     });
   } catch (error) {
     console.log(`Err looking up user: ${error}`);

@@ -49,28 +49,30 @@ function ProfilePage() {
     }
 
     async function fetchPfp() {
-      const getUser = JSON.parse(localStorage.getItem("user"));
-      const response = await fetch(
-          `http://localhost:4000/image`,{
-              method: "POST",
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  "filename": getUser.profilePic
-              })
-          }
-      );
-      if (response.status === 200) {
-          const imageBlob = await response.blob();
-          const imageObjectURL = URL.createObjectURL(imageBlob);
-          setPfp(imageObjectURL);
+      if (userData.profilepic) {
+        console.log(userData.profilepic)
+        const response = await fetch(
+            `http://localhost:4000/image`,{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "filename": userData.profilepic
+                })
+            }
+        );
+        if (response.status === 200) {
+            const imageBlob = await response.blob();
+            const imageObjectURL = URL.createObjectURL(imageBlob);
+            setPfp(imageObjectURL);
+        }
       }
     }
 
     fetchPfp();
     fetchProfileInfo();
-  }, [userId]);
+  }, [userData.profilepic]);
 
   useEffect(() => {
     async function getPictureUrls() {
