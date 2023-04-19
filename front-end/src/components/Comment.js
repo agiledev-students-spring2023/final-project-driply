@@ -47,7 +47,7 @@ function Comment(prop) {
                             "Content-Type": "application/json"
                           },
                           body: JSON.stringify({
-                            filename: c.profilepic
+                            filename: c.user.profilepic
                           })
                         }
                       );
@@ -56,22 +56,23 @@ function Comment(prop) {
                         const imageBlob = await response.blob();
                         const imageObjectURL = URL.createObjectURL(imageBlob);
                         c.pfp = imageObjectURL;
-                        const response2 = await fetch(`http://localhost:4000/getUserPfp`, {
-                            method: "POST",
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                "userId": user.id,
-                            })
-                        });
+                        if (user){
+                            const response2 = await fetch(`http://localhost:4000/getUserPfp`, {
+                                method: "POST",
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    "userId": user.id,
+                                })
+                            });
 
-                        if (response2.status === 200) {
-                            const imageBlob = await response2.blob();
-                            const imageObjectURL = URL.createObjectURL(imageBlob);
-                            setImg(imageObjectURL);
+                            if (response2.status === 200) {
+                                const imageBlob = await response2.blob();
+                                const imageObjectURL = URL.createObjectURL(imageBlob);
+                                setImg(imageObjectURL);
+                            }
                         }
-
                       }
                     }
                 }
