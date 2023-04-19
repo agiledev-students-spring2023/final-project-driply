@@ -217,7 +217,7 @@ function Post({ post }) {
       {/* post pictures */}
       <div className="postBody">
         {/* <img src={post.post_picture} alt="post img"/> */}
-        <Link to={`/post/0`}>
+        <Link to={`/post/${post._id}`}>
           <img
             src={postImage}
             alt="postpic"
