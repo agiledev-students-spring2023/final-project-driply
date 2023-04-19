@@ -14,20 +14,23 @@ function BookMarkItem({ post }) {
       // only bookmark post if logged in
       e.stopPropagation();
       async function addBookmark() {
-        const response = await fetch(`http://localhost:4000/bookmark`, {
+        const response = await fetch(
+          `http://localhost:4000/bookmark/${post._id}`,
+          {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
             // body: JSON.stringify({
             //     "postId": id,
             //     "comment": comment
             // })
-        });
+          }
+        );
         let json = await response.json();
         if (response.status === 200) {
           console.log(json);
-          if (json.message === "success"){
+          if (json.message === "success") {
             post.bookmarked = !ifBookmarked;
           }
         } else {
@@ -36,20 +39,23 @@ function BookMarkItem({ post }) {
         }
       }
       async function removeBookmark() {
-        const response = await fetch(`http://localhost:4000/unbookmark`, {
-          method: "POST",
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          // body: JSON.stringify({
-          //     "postId": id,
-          //     "comment": comment
-          // })
-        });
+        const response = await fetch(
+          `http://localhost:4000/unbookmar/${post._id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // body: JSON.stringify({
+            //     "postId": id,
+            //     "comment": comment
+            // })
+          }
+        );
         let json = await response.json();
         if (response.status === 200) {
           console.log(json);
-          if (json.message === "success"){
+          if (json.message === "success") {
             post.bookmarked = !ifBookmarked;
           }
         } else {
@@ -57,10 +63,9 @@ function BookMarkItem({ post }) {
           //setLoading(false);
         }
       }
-      if (ifBookmarked){
+      if (ifBookmarked) {
         removeBookmark();
-      }
-      else{
+      } else {
         addBookmark();
       }
       setIfBookmarked(!ifBookmarked);
@@ -69,7 +74,7 @@ function BookMarkItem({ post }) {
       navigate("/login");
     }
   };
-  
+
   return (
     <div className="postBookmarkIcon">
       {ifBookmarked ? (
