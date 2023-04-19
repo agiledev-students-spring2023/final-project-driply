@@ -222,7 +222,7 @@ app.post("/unlike/:postId", (req, res) => {
 
 app.post("/fetchComment", (req, res, next) => {
   Post.findById(new mongoose.Types.ObjectId(req.body.postId))
-    .populate("comments")
+    .populate({path: "comments", populate: { path: 'user' }})
     .then((p) => {
       const body = {
         message: "success",

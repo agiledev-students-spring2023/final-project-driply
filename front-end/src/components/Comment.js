@@ -154,7 +154,7 @@ function Comment(prop) {
                             <img src={c.pfp} alt="user img" className="postpfp"/>
                         </div>
                         <div className="d-flex flex-column align-items-left mx-2">
-                            <span className="username">{user.username}</span>
+                            <span className="username">{c.user.name}</span>
                             <span>{c.content}</span>
                         </div>
                     </div>
