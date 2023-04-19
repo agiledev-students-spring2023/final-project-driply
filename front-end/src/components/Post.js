@@ -205,7 +205,7 @@ function Post({ post }) {
       {/* header */}
       <div className="postHeader">
         <div className="postHeaderDetails">
-          <Link to={`/profile/${user.id}`}>
+          <Link to={`/profile/${post.user}`}>
             <img src={pfp} alt="user img" />
           </Link>
           <p onClick={() => navigate(`/profile/${post.user}`)}>{postUsername}</p>
