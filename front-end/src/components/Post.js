@@ -210,7 +210,7 @@ function Post({ post }) {
       {/* header */}
       <div className="postHeader">
         <div className="postHeaderDetails">
-          <Link to={`/profile/${user.id}`}>
+          <Link to={`/profile/${post.user}`}>
             <img src={pfp} alt="user img" />
           </Link>
           <p onClick={() => navigate(`/profile/${post.user}`)}>
@@ -224,8 +224,13 @@ function Post({ post }) {
       {/* post pictures */}
       <div className="postBody">
         {/* <img src={post.post_picture} alt="post img"/> */}
-        <Link to={`/post/0`}>
-          <img src={postImage} alt="postpic" />
+
+        <Link to={`/post/${post._id}`}>
+          <img
+            src={postImage}
+            alt="postpic"
+          />
+
         </Link>
         <div className="postBookmarkIcon">
           {ifBookmarked ? (
