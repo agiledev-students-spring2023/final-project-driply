@@ -35,12 +35,15 @@ function Bookmarks() {
     async function fetchBookmarkList() {
       const getUser = JSON.parse(localStorage.getItem("user"));
       if (getUser) {
-        const response = await fetch(`http://localhost:4000/bookmarks/${getUser.id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `http://localhost:4000/bookmarks/${user.id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         let json = await response.json();
         if (json.success) {
           for (let i = 0; i < json.bookmarks.length; i++) {

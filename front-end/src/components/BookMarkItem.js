@@ -12,29 +12,29 @@ function BookMarkItem({ post, bookmarked, setBookmarked }) {
     if (user) {
       // only bookmark post if logged in
       e.stopPropagation();
-        const response = await fetch(
-          `http://localhost:4000/bookmark/${post._id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // body: JSON.stringify({
-            //     "postId": id,
-            //     "comment": comment
-            // })
-          }
-        );
-        let json = await response.json();
-        if (response.status === 200) {
-          console.log(json);
-          if (json.message === "success") {
-            setBookmarked(true);
-          }
-        } else {
-          // setPostError(response.status);
-          // setLoading(false);
+      const response = await fetch(
+        `http://localhost:4000/bookmark/${user.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postId: post._id,
+            comment: post.comments,
+          }),
         }
+      );
+      let json = await response.json();
+      if (response.status === 200) {
+        console.log(json);
+        if (json.message === "success") {
+          setBookmarked(true);
+        }
+      } else {
+        // setPostError(response.status);
+        // setLoading(false);
+      }
     } else {
       navigate("/login");
     }
@@ -69,7 +69,7 @@ function BookMarkItem({ post, bookmarked, setBookmarked }) {
     } else {
       navigate("/login");
     }
-}
+  };
 
   return (
     <div className="postBookmarkIcon">

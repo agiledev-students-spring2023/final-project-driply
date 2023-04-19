@@ -222,7 +222,7 @@ app.post("/unlike/:postId", (req, res) => {
 
 app.post("/fetchComment", (req, res, next) => {
   Post.findById(new mongoose.Types.ObjectId(req.body.postId))
-    .populate({path: "comments", populate: { path: 'user' }})
+    .populate({ path: "comments", populate: { path: "user" } })
     .then((p) => {
       const body = {
         message: "success",
@@ -295,12 +295,14 @@ app.get("/bookmarks/:id", async (req, res) => {
   }
 });
 
-app.post("/bookmark/:postID", (req, res) => {
-  Post.findById(new mongoose.Types.ObjectId(req.params.postID))
+app.post("/bookmark/:UserID", (req, res) => {
+  Post.findById(new mongoose.Types.ObjectId(req.body.postId))
     .then((p) => {
-      User.findById(new mongoose.Types.ObjectId(req.body.userId))
+      User.findOne({ _id: req.params.UserID })
+        .exec()
         .then((u) => {
-          u.bookmark.push(new mongoose.Types.ObjectId(req.params.postID));
+          console.log(u);
+          u.bookmark.push(new mongoose.Types.ObjectId(req.body.postID));
           u.save();
           const body = {
             message: "success",
@@ -316,12 +318,12 @@ app.post("/bookmark/:postID", (req, res) => {
     });
 });
 
-app.post("/unbookmark/:postID", (req, res) => {
-  Post.findById(new mongoose.Types.ObjectId(req.params.postID))
+app.post("/unbookmark/:userID", (req, res) => {
+  Post.findById(new mongoose.Types.ObjectId(req.body.postID))
     .then((p) => {
-      User.findById(new mongoose.Types.ObjectId(req.body.userId))
+      User.findOne({ _id: req.params.UserID })
         .then((u) => {
-          u.bookmark.pull(new mongoose.Types.ObjectId(req.params.postID));
+          u.bookmark.pull(new mongoose.Types.ObjectId(req.body.postID));
           u.save();
           const body = {
             message: "success",

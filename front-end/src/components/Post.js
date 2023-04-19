@@ -74,17 +74,18 @@ function Post({ post }) {
       // only bookmark post if logged in
       e.stopPropagation();
       async function addBookmark() {
+        const getUser = JSON.parse(localStorage.getItem("user"));
         const response = await fetch(
-          `http://localhost:4000/bookmark/${post._id}`,
+          `http://localhost:4000/bookmark/${user.id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            // body: JSON.stringify({
-            //     "postId": id,
-            //     "comment": comment
-            // })
+            body: JSON.stringify({
+              postId: post._id,
+              comment: post.comments,
+            }),
           }
         );
         let json = await response.json();
@@ -99,17 +100,18 @@ function Post({ post }) {
         }
       }
       async function removeBookmark() {
+        const getUser = JSON.parse(localStorage.getItem("user"));
         const response = await fetch(
-          `http://localhost:4000/unbookmark/${post._id}`,
+          `http://localhost:4000/unbookmark/${user.id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            // body: JSON.stringify({
-            //     "postId": id,
-            //     "comment": comment
-            // })
+            body: JSON.stringify({
+              postId: post._id,
+              comment: post.comments,
+            }),
           }
         );
         let json = await response.json();
@@ -226,11 +228,7 @@ function Post({ post }) {
         {/* <img src={post.post_picture} alt="post img"/> */}
 
         <Link to={`/post/${post._id}`}>
-          <img
-            src={postImage}
-            alt="postpic"
-          />
-
+          <img src={postImage} alt="postpic" />
         </Link>
         <div className="postBookmarkIcon">
           {ifBookmarked ? (
