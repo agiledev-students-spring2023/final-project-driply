@@ -14,17 +14,18 @@ function BookMarkItem({ post }) {
       // only bookmark post if logged in
       e.stopPropagation();
       async function addBookmark() {
+        const getUser = JSON.parse(localStorage.getItem("user"));
         const response = await fetch(
-          `http://localhost:4000/bookmark/${post._id}`,
+          `http://localhost:4000/bookmark/${user.id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            // body: JSON.stringify({
-            //     "postId": id,
-            //     "comment": comment
-            // })
+            body: JSON.stringify({
+              postId: post._id,
+              comment: post.comments,
+            }),
           }
         );
         let json = await response.json();
@@ -39,17 +40,18 @@ function BookMarkItem({ post }) {
         }
       }
       async function removeBookmark() {
+        const getUser = JSON.parse(localStorage.getItem("user"));
         const response = await fetch(
-          `http://localhost:4000/unbookmar/${post._id}`,
+          `http://localhost:4000/unbookmar/${user.id}`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            // body: JSON.stringify({
-            //     "postId": id,
-            //     "comment": comment
-            // })
+            body: JSON.stringify({
+              postId: post._id,
+              comment: post.comments,
+            }),
           }
         );
         let json = await response.json();
