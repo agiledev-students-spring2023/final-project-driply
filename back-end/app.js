@@ -5,31 +5,37 @@ const morgan = require("morgan");
 const cors = require("cors");
 const multer = require("multer");
 const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
 const path = require("path");
-const Post = require("./models/Post.js")
-const User = require("./models/User.js")
-const Comment = require("./models/Comment.js")
-const bcrypt = require('bcryptjs')
+const Post = require("./models/Post.js");
+const User = require("./models/User.js");
+const Comment = require("./models/Comment.js");
+const bcrypt = require("bcryptjs");
 
-const jwt = require("jsonwebtoken")
-const passport = require("passport")
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
 
 // use this JWT strategy within passport for authentication handling
-const jwtStrategy = require("./config/jwt-config.js") // import setup options for using JWT in passport
-passport.use(jwtStrategy)
+const jwtStrategy = require("./config/jwt-config.js"); // import setup options for using JWT in passport
+passport.use(jwtStrategy);
 
-mongoose.connect('mongodb+srv://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority');
+mongoose.connect(
+  "mongodb+srv://" +
+    process.env.MONGO_USERNAME +
+    ":" +
+    process.env.MONGO_PASSWORD +
+    "@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority"
+);
 
 // Set up Express app
 const app = express();
 
 // tell express to use passport middleware
-app.use(passport.initialize())
+app.use(passport.initialize());
 
 app.use(morgan("dev", { skip: (req, res) => process.env.NODE_ENV === "test" }));
-app.use(cookieParser())
-app.use(cors({ origin: process.env.FRONT_END_DOMAIN, credentials: true }))
+app.use(cookieParser());
+app.use(cors({ origin: process.env.FRONT_END_DOMAIN, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -50,38 +56,52 @@ const upload = multer({ storage: storage });
 
 app.post("/post-form", upload.single("image"), (req, res) => {
   if (req.file) {
-    User.findOne({name: req.body.user}).then((u) => {
-      const newPost = new Post({
-        user: u._id,
-        image: req.file.filename,
-        description: req.body.description,
-        price: req.body.price,
-        comments: [],
-        likes: []
-      });
-      newPost.save().then((savedImg) => {
-        res.json({ message: "success"});
-      }).catch(err => {
-        res.json({ message: "Error creating post " + err});
+    User.findOne({ name: req.body.user })
+      .then((u) => {
+        const newPost = new Post({
+          user: u._id,
+          image: req.file.filename,
+          description: req.body.description,
+          price: req.body.price,
+          comments: [],
+          likes: [],
+        });
+        newPost
+          .save()
+          .then((savedImg) => {
+            res.json({ message: "success" });
+          })
+          .catch((err) => {
+            res.json({ message: "Error creating post " + err });
+          });
       })
-    }).catch((err) => {
-      console.log(err);
-    })
-  } else{
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
     res.json({
-      message: "invalid file"
-    })
+      message: "invalid file",
+    });
   }
 });
 
 app.post("/changePfp", upload.single("image"), (req, res) => {
-  User.findOneAndUpdate({_id: new mongoose.Types.ObjectId(req.body.userId)}, {profilepic: req.file.filename}, {new: true}).then((u) => {
-    Comment.updateMany({user: new mongoose.Types.ObjectId(req.body.userId)}, {profilepic: req.file.filename}).then((c) => {
-      res.json({ message: "success"});
+  User.findOneAndUpdate(
+    { _id: new mongoose.Types.ObjectId(req.body.userId) },
+    { profilepic: req.file.filename },
+    { new: true }
+  )
+    .then((u) => {
+      Comment.updateMany(
+        { user: new mongoose.Types.ObjectId(req.body.userId) },
+        { profilepic: req.file.filename }
+      ).then((c) => {
+        res.json({ message: "success" });
+      });
     })
-  }).catch((err) => {
-    console.log(err);
-  })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/profile", async (req, res, next) => {
@@ -91,14 +111,16 @@ app.post("/profile", async (req, res, next) => {
     const user = await User.findOne({ _id: req.body.userId }).exec();
     // check if user was found
     if (!user) {
-      console.error('User was not found');
+      console.error("User was not found");
       return res.status(401).json({
         success: false,
-        message: 'User was not found in db',
+        message: "User was not found in db",
       });
     }
 
-    const allPosts = await Post.find({ user: req.body.userId }).populate('user').exec();
+    const allPosts = await Post.find({ user: req.body.userId })
+      .populate("user")
+      .exec();
     // send user data if user exists
     const { _id, name, posts, followers, following, profilepic } = user;
 
@@ -111,7 +133,15 @@ app.post("/profile", async (req, res, next) => {
 
     res.json({
       success: true,
-      data: { id: _id, name, posts, followers, following, allPosts, profilepic },
+      data: {
+        id: _id,
+        name,
+        posts,
+        followers,
+        following,
+        allPosts,
+        profilepic,
+      },
     });
   } catch (error) {
     console.log(`Err looking up user: ${error}`);
@@ -124,99 +154,117 @@ app.post("/profile", async (req, res, next) => {
 });
 
 app.post("/getPost", (req, res, next) => {
-  Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
-    User.findById(p.user).then((u) => {
-      res.json({
-        username: u.name,
-        description: p.description,
-        price: p.price,
-        likes: p.likes,
-        image: p.image,
-        pfp: u.profilepic
-      });
-    }).catch((err) => {
-      console.log(err);
+  Post.findById(new mongoose.Types.ObjectId(req.body.postId))
+    .then((p) => {
+      User.findById(p.user)
+        .then((u) => {
+          res.json({
+            username: u.name,
+            description: p.description,
+            price: p.price,
+            likes: p.likes,
+            image: p.image,
+            pfp: u.profilepic,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     })
-  }).catch((err) => {
-    console.log(err);
-  });
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/like/:postId", (req, res) => {
   const id = req.params.postId;
-  Post.findById(new mongoose.Types.ObjectId(id)).then((p) => {
-    let isInArray = p.likes.some(function (element) {
-      return element.equals(req.body.userId);
-    });
+  Post.findById(new mongoose.Types.ObjectId(id))
+    .then((p) => {
+      let isInArray = p.likes.some(function (element) {
+        return element.equals(req.body.userId);
+      });
 
-    if (!isInArray){
-      p.likes.push(new mongoose.Types.ObjectId(req.body.userId));
-      p.save();
-    }
-    const data = {
-      success: true,
-    };
-    res.json(data);
-  }).catch((err) => {
-    console.log(err);
-  });
+      if (!isInArray) {
+        p.likes.push(new mongoose.Types.ObjectId(req.body.userId));
+        p.save();
+      }
+      const data = {
+        success: true,
+      };
+      res.json(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/unlike/:postId", (req, res) => {
   const id = req.params.postId;
-  Post.findById(new mongoose.Types.ObjectId(id)).then((p) => {
-    let isInArray = p.likes.some(function (element) {
-      return element.equals(req.body.userId);
+  Post.findById(new mongoose.Types.ObjectId(id))
+    .then((p) => {
+      let isInArray = p.likes.some(function (element) {
+        return element.equals(req.body.userId);
+      });
+      //console.log(isInArray);
+      if (isInArray) {
+        p.likes.pull(new mongoose.Types.ObjectId(req.body.userId));
+        p.save();
+      }
+      const data = {
+        success: true,
+      };
+      res.json(data);
+    })
+    .catch((err) => {
+      console.log(err);
     });
-    //console.log(isInArray);
-    if (isInArray){
-      p.likes.pull(new mongoose.Types.ObjectId(req.body.userId));
-      p.save();
-    }
-    const data = {
-      success: true,
-    };
-    res.json(data);
-  }).catch((err) => {
-    console.log(err);
-  });
 });
 
 app.post("/fetchComment", (req, res, next) => {
-  Post.findById(new mongoose.Types.ObjectId(req.body.postId)).populate('comments').then((p) => {
-    const body = {
-      message: "success",
-      comments: p.comments,
-    };
-    res.json(body);
-  }).catch((err) => {
-    console.log(err);
-  });
+  Post.findById(new mongoose.Types.ObjectId(req.body.postId))
+    .populate("comments")
+    .then((p) => {
+      const body = {
+        message: "success",
+        comments: p.comments,
+      };
+      res.json(body);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/createComment", (req, res) => {
-  Post.findById(new mongoose.Types.ObjectId(req.body.postId)).then((p) => {
-    User.findById(new mongoose.Types.ObjectId(req.body.userId)).then((u) => {
-      const newComment = new Comment({
-        user: new mongoose.Types.ObjectId(req.body.userId),
-        content: req.body.comment,
-        post: new mongoose.Types.ObjectId(req.body.postId),
-        profilepic: u.profilepic
-      });
-      newComment.save().then((savedComment) => {
-        p.comments.push(new mongoose.Types.ObjectId(savedComment._id))
-        p.save();
-        console.log(savedComment);
-        res.json({ message: "success", newComment: savedComment});
-      }).catch(err => {
-        res.json({ message: "Error creating comment " + err});
-      })
-    }).catch((err) => {
-      console.log(err);
+  Post.findById(new mongoose.Types.ObjectId(req.body.postId))
+    .then((p) => {
+      User.findById(new mongoose.Types.ObjectId(req.body.userId))
+        .then((u) => {
+          const newComment = new Comment({
+            user: new mongoose.Types.ObjectId(req.body.userId),
+            content: req.body.comment,
+            post: new mongoose.Types.ObjectId(req.body.postId),
+            profilepic: u.profilepic,
+          });
+          newComment
+            .save()
+            .then((savedComment) => {
+              p.comments.push(new mongoose.Types.ObjectId(savedComment._id));
+              p.save();
+              console.log(savedComment);
+              res.json({ message: "success", newComment: savedComment });
+            })
+            .catch((err) => {
+              res.json({ message: "Error creating comment " + err });
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     })
-  }).catch((err) => {
-    console.log(err);
-  });
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.get("/bookmarks/:id", async (req, res) => {
@@ -225,10 +273,10 @@ app.get("/bookmarks/:id", async (req, res) => {
     const user = await User.findOne({ _id: id }).exec();
     // check if user was found
     if (!user) {
-      console.error('User was not found');
+      console.error("User was not found");
       return res.status(401).json({
         success: false,
-        message: 'User was not found in db',
+        message: "User was not found in db",
       });
     }
     // send user data if user exists
@@ -247,39 +295,57 @@ app.get("/bookmarks/:id", async (req, res) => {
   }
 });
 
-app.post("/bookmark", (req, res) => {
-  console.log(
-    "bookmark post with id " +
-      req.body.postId +
-      " by user " +
-      req.body.user
-  );
-  const body = {
-    message: "success",
-  };
-  res.json(body);
+app.post("/bookmark/:postID", (req, res) => {
+  Post.findById(new mongoose.Types.ObjectId(req.params.postID))
+    .then((p) => {
+      User.findById(new mongoose.Types.ObjectId(req.body.userId))
+        .then((u) => {
+          u.bookmark.push(new mongoose.Types.ObjectId(req.params.postID));
+          u.save();
+          const body = {
+            message: "success",
+          };
+          res.json(body);
+        })
+        .catch((err) => {
+          console.log("Error bookmarking " + err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
-app.post("/unbookmark", (req, res) => {
-  console.log(
-    "unbookmarking post with id " +
-      req.body.postId +
-      " by user " +
-      req.body.user
-  );
-  const body = {
-    message: "success",
-  };
-  res.json(body);
+app.post("/unbookmark/:postID", (req, res) => {
+  Post.findById(new mongoose.Types.ObjectId(req.params.postID))
+    .then((p) => {
+      User.findById(new mongoose.Types.ObjectId(req.body.userId))
+        .then((u) => {
+          u.bookmark.pull(new mongoose.Types.ObjectId(req.params.postID));
+          u.save();
+          const body = {
+            message: "success",
+          };
+          res.json(body);
+        })
+        .catch((err) => {
+          console.log("Error unbookmarking " + err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.get("/getHomePosts", async (req, res) => {
-  Post.find({}).then((posts) => {
-    //console.log(posts); //process this array later to find the trending posts
-    res.json({data: posts});
-  }).catch((err) => {
-    console.log(err);
-  });
+  Post.find({})
+    .then((posts) => {
+      //console.log(posts); //process this array later to find the trending posts
+      res.json({ data: posts });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.get("/chats", async (req, res) => {
@@ -300,10 +366,10 @@ app.get("/follower/:id", async (req, res) => {
     const user = await User.findOne({ _id: id }).exec();
     // check if user was found
     if (!user) {
-      console.error('User was not found');
+      console.error("User was not found");
       return res.status(401).json({
         success: false,
-        message: 'User was not found in db',
+        message: "User was not found in db",
       });
     }
     // send user data if user exists
@@ -328,10 +394,10 @@ app.get("/following/:id", async (req, res) => {
     const user = await User.findOne({ _id: id }).exec();
     // check if user was found
     if (!user) {
-      console.error('User was not found');
+      console.error("User was not found");
       return res.status(401).json({
         success: false,
-        message: 'User was not found in db',
+        message: "User was not found in db",
       });
     }
     // send user data if user exists
@@ -351,12 +417,14 @@ app.get("/following/:id", async (req, res) => {
 });
 
 app.get("/getTrendingPosts", async (req, res) => {
-  Post.find({}).then((posts) => {
-    //console.log(posts); //process this array later to find the trending posts
-    res.json({data: posts});
-  }).catch((err) => {
-    console.log(err);
-  });
+  Post.find({})
+    .then((posts) => {
+      //console.log(posts); //process this array later to find the trending posts
+      res.json({ data: posts });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/image", async (req, res) => {
@@ -380,44 +448,54 @@ app.post("/editProfile", async (req, res) => {
       const hash = await bcrypt.hash(req.body.password, salt);
       update.password = hash;
     }
-    const user = await User.findOneAndUpdate({_id: userId}, update, {new: true});
-    const token = user.generateJWT()
+    const user = await User.findOneAndUpdate({ _id: userId }, update, {
+      new: true,
+    });
+    const token = user.generateJWT();
     return res.json({
       success: true,
       message: "Updated user.",
       token: token,
       username: user.name,
       id: user.id,
-      profilePic: user.profilepic
+      profilePic: user.profilepic,
     });
   } catch (error) {
-    res.json({ success: false, status: 500, message: "Err trying to update your info" });
+    res.json({
+      success: false,
+      status: 500,
+      message: "Err trying to update your info",
+    });
   }
-})
+});
 
 app.post("/getUserPfp", (req, res) => {
-  User.findById(new mongoose.Types.ObjectId(req.body.userId)).then((u) => {
-    res.sendFile(__dirname + "/public/uploads/" + u.profilepic);
-  }).catch((err) => {
-    console.log(err);
-  })
+  User.findById(new mongoose.Types.ObjectId(req.body.userId))
+    .then((u) => {
+      res.sendFile(__dirname + "/public/uploads/" + u.profilepic);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/getUsername", (req, res) => {
-  User.findById(new mongoose.Types.ObjectId(req.body.userId)).then((u) => {
-    res.json({"username" : u.name});
-  }).catch((err) => {
-    console.log(err);
-  })
+  User.findById(new mongoose.Types.ObjectId(req.body.userId))
+    .then((u) => {
+      res.json({ username: u.name });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
-const authenticationRoutes = require("./routes/authRoutes.js")
-const cookieRoutes = require("./routes/cookieRoutes.js")
+const authenticationRoutes = require("./routes/authRoutes.js");
+const cookieRoutes = require("./routes/cookieRoutes.js");
 const protectedContentRoutes = require("./routes/protectedContentRoutes.js");
 const { error } = require("console");
 
-app.use("/auth", authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
-app.use("/cookie", cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
-app.use("/protected", protectedContentRoutes())
+app.use("/auth", authenticationRoutes()); // all requests for /auth/* will be handled by the authenticationRoutes router
+app.use("/cookie", cookieRoutes()); // all requests for /cookie/* will be handled by the cookieRoutes router
+app.use("/protected", protectedContentRoutes());
 
 module.exports = app;
