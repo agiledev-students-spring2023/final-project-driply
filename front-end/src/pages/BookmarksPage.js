@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookMarkItem from "../components/BookMarkItem";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { DarkModeContext } from "../context/DarkModeContext";
@@ -12,9 +11,25 @@ function Bookmarks() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const handlePostClick = () => navigate("/post/0");
-
   const { user } = useAuthContext();
+
+  async function fetchPostImage(file) {
+    const response = await fetch(`http://localhost:4000/image`, {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        filename: file,
+      })
+    });
+
+    if (response.status === 200) {
+      const imageBlob = await response.blob();
+      const imageObjectURL = URL.createObjectURL(imageBlob);
+      return imageObjectURL;
+    }
+  }
 
   useEffect(() => {
     async function fetchBookmarkList() {
@@ -27,8 +42,14 @@ function Bookmarks() {
           },
         });
         let json = await response.json();
-        console.log(json);
         if (json.success) {
+          for (let i = 0; i < json.bookmarks.length; i++) {
+            const currentBookmark = json.bookmarks[i];
+            const url = await fetchPostImage(currentBookmark.image);
+            json.bookmarks[i].image = url;
+          }
+          console.log(json);
+
           setBookmarkList(json.bookmarks);
           setBookmarkError(null);
           setLoading(false);
@@ -49,10 +70,14 @@ function Bookmarks() {
   }
 
   function BookmarkItem({ bookmark }) {
+
+    const [bookmarked, setBookmarked] = useState(true);
+    const handlePostClick = () => navigate(`/post/${bookmark._id}`);
+
     return (
       <div onClick={handlePostClick} className="bookmarkItem">
         {/* commented out until api route and db working */}
-        {/* <BookMarkItem post={bookmark}/> */}
+        <BookMarkItem post={bookmark} bookmarked={bookmarked} setBookmarked={setBookmarked}/>
         <div className="bookmarkImg">
           <img src={bookmark?.image} alt="bookmark img" />
         </div>

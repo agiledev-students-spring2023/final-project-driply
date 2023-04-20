@@ -270,9 +270,9 @@ app.post("/createComment", (req, res) => {
 app.get("/bookmarks/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findOne({ _id: id }).exec();
+    const user = await User.find({ _id: id }).populate('bookmark').exec();
     // check if user was found
-    if (!user) {
+    if (!user[0]) {
       console.error("User was not found");
       return res.status(401).json({
         success: false,
@@ -280,7 +280,7 @@ app.get("/bookmarks/:id", async (req, res) => {
       });
     }
     // send user data if user exists
-    const { bookmark } = user;
+    const { bookmark } = user[0];
     res.json({
       success: true,
       bookmarks: bookmark,
