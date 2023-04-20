@@ -65,6 +65,7 @@ app.post("/post-form", upload.single("image"), (req, res) => {
           price: req.body.price,
           comments: [],
           likes: [],
+          bookmarked: false,
         });
         newPost
           .save()
@@ -222,7 +223,7 @@ app.post("/unlike/:postId", (req, res) => {
 
 app.post("/fetchComment", (req, res, next) => {
   Post.findById(new mongoose.Types.ObjectId(req.body.postId))
-    .populate({path: "comments", populate: { path: 'user' }})
+    .populate({ path: "comments", populate: { path: "user" } })
     .then((p) => {
       const body = {
         message: "success",
@@ -270,7 +271,7 @@ app.post("/createComment", (req, res) => {
 app.get("/bookmarks/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.find({ _id: id }).populate('bookmark').exec();
+    const user = await User.find({ _id: id }).populate("bookmark").exec();
     // check if user was found
     if (!user[0]) {
       console.error("User was not found");
@@ -295,46 +296,91 @@ app.get("/bookmarks/:id", async (req, res) => {
   }
 });
 
-app.post("/bookmark/:postID", (req, res) => {
-  Post.findById(new mongoose.Types.ObjectId(req.params.postID))
-    .then((p) => {
-      User.findById(new mongoose.Types.ObjectId(req.body.userId))
-        .then((u) => {
-          u.bookmark.push(new mongoose.Types.ObjectId(req.params.postID));
-          u.save();
-          const body = {
-            message: "success",
-          };
-          res.json(body);
-        })
-        .catch((err) => {
-          console.log("Error bookmarking " + err);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
+app.post("/bookmark", async (req, res) => {
+  try {
+    const p = await Post.findOne(
+      new mongoose.Types.ObjectId(req.body.postID)
+    ).exec();
+    if (!p) {
+      console.error("Post was not found");
+      return res.status(401).json({
+        success: false,
+        message: "Post was not found in db",
+      });
+    }
+
+    const u = await User.findOne({ _id: req.body.userID }).exec();
+    // update bookmark array
+    u.bookmark.push(new mongoose.Types.ObjectId(req.body.postID));
+    u.save();
+    if (!u) {
+      console.error("User was not found");
+      return res.status(401).json({
+        success: false,
+        message: "User was not found in db",
+      });
+    }
+
+    // update post bookmarked field to true
+    p.bookmarked = true;
+    p.save();
+
+    const body = {
+      success: true,
+      message: "success",
+    };
+    res.json(body);
+  } catch (error) {
+    console.log(`Err looking up user: ${error}`);
+    return res.status(500).json({
+      success: false,
+      message: "Error looking up user in database.",
+      error: error,
     });
+  }
 });
 
-app.post("/unbookmark/:postID", (req, res) => {
-  Post.findById(new mongoose.Types.ObjectId(req.params.postID))
-    .then((p) => {
-      User.findById(new mongoose.Types.ObjectId(req.body.userId))
-        .then((u) => {
-          u.bookmark.pull(new mongoose.Types.ObjectId(req.params.postID));
-          u.save();
-          const body = {
-            message: "success",
-          };
-          res.json(body);
-        })
-        .catch((err) => {
-          console.log("Error unbookmarking " + err);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
+app.post("/unbookmark", async (req, res) => {
+  try {
+    const p = await Post.findOne(
+      new mongoose.Types.ObjectId(req.body.postID)
+    ).exec();
+    if (!p) {
+      console.error("Post was not found");
+      return res.status(401).json({
+        success: false,
+        message: "Post was not found in db",
+      });
+    }
+
+    const u = await User.findOne({ _id: req.body.userID }).exec();
+    // update bookmark array
+    u.bookmark.pull(new mongoose.Types.ObjectId(req.body.postID));
+    u.save();
+    if (!u) {
+      console.error("User was not found");
+      return res.status(401).json({
+        success: false,
+        message: "User was not found in db",
+      });
+    }
+
+    p.bookmarked = false;
+    p.save();
+
+    const body = {
+      success: true,
+      message: "success",
+    };
+    res.json(body);
+  } catch (error) {
+    console.log(`Err looking up user: ${error}`);
+    return res.status(500).json({
+      success: false,
+      message: "Error looking up user in database.",
+      error: error,
     });
+  }
 });
 
 app.get("/getHomePosts", async (req, res) => {

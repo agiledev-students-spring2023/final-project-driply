@@ -9,6 +9,9 @@ import ChatBubbleIcon from "@mui/icons-material/ChatBubble"; // comment icon
 
 function Post({ post }) {
   const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
+  // const [ifBookmarked, setIfBookmarked] = useState(
+  //   localStorage.getItem(post._id) === "true" || post.bookmarked === true
+  // );
   const [ifLiked, setIfLiked] = useState(post.liked);
   const [pfp, setPfp] = useState();
   const [postUsername, setPostUsername] = useState();
@@ -67,31 +70,31 @@ function Post({ post }) {
     }
 
     getDetails();
-  }, []);
+    //console.log(post.bookmarked);
+  }, [post]);
 
   const handleBookmarkClick = (e) => {
     if (user) {
       // only bookmark post if logged in
       e.stopPropagation();
+
       async function addBookmark() {
-        const response = await fetch(
-          `http://localhost:4000/bookmark/${post._id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // body: JSON.stringify({
-            //     "postId": id,
-            //     "comment": comment
-            // })
-          }
-        );
+        const response = await fetch(`http://localhost:4000/bookmark`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postID: post._id,
+            userID: user.id,
+          }),
+        });
         let json = await response.json();
         if (response.status === 200) {
           console.log(json);
           if (json.message === "success") {
-            post.bookmarked = !ifBookmarked;
+            setIfBookmarked(true);
+            post.bookmarked = true;
           }
         } else {
           //setPostError(response.status);
@@ -99,24 +102,22 @@ function Post({ post }) {
         }
       }
       async function removeBookmark() {
-        const response = await fetch(
-          `http://localhost:4000/unbookmark/${post._id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // body: JSON.stringify({
-            //     "postId": id,
-            //     "comment": comment
-            // })
-          }
-        );
+        const response = await fetch(`http://localhost:4000/unbookmark`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postID: post._id,
+            userID: user.id,
+          }),
+        });
         let json = await response.json();
         if (response.status === 200) {
           console.log(json);
           if (json.message === "success") {
-            post.bookmarked = !ifBookmarked;
+            setIfBookmarked(false);
+            post.bookmarked = false;
           }
         } else {
           // setPostError(response.status);
@@ -128,7 +129,6 @@ function Post({ post }) {
       } else {
         addBookmark();
       }
-      setIfBookmarked(!ifBookmarked);
     } else {
       // navigate user to login page
       navigate("/login");
@@ -226,38 +226,36 @@ function Post({ post }) {
         {/* <img src={post.post_picture} alt="post img"/> */}
 
         <Link to={`/post/${post._id}`}>
-          <img
-            src={postImage}
-            alt="postpic"
-          />
-
+          <img src={postImage} alt="postpic" />
         </Link>
-        <div className="postBookmarkIcon">
-          {ifBookmarked ? (
-            <BookmarkIcon
-              onClick={handleBookmarkClick}
-              sx={{ height: "50px", width: "50px", color: "white" }}
-            />
-          ) : (
-            <BookmarkBorderIcon
-              onClick={handleBookmarkClick}
-              sx={{ height: "50px", width: "50px" }}
-            />
-          )}
-        </div>
-        {/* post likes, comments */}
+
         <div className="postDetails">
-          <div>
-            {ifLiked ? (
-              <FavoriteIcon onClick={handlePostLike} sx={{ color: "pink" }} />
+          <div className="postBookmarkIcon">
+            {ifBookmarked ? (
+              <BookmarkIcon
+                onClick={handleBookmarkClick}
+                sx={{ height: "40px", width: "40px", color: "white" }}
+              />
             ) : (
-              <FavoriteBorderIcon onClick={handlePostLike} />
+              <BookmarkBorderIcon
+                onClick={handleBookmarkClick}
+                sx={{ height: "40px", width: "40px" }}
+              />
             )}
-            <p>{post.likes.length}</p>
           </div>
           <div>
-            <ChatBubbleIcon onClick={handleCommentClick} />
-            <p>{post.comments.length}</p>
+            <div>
+              <ChatBubbleIcon onClick={handleCommentClick} />
+              <p>{post.comments.length}</p>
+            </div>
+            <div>
+              {ifLiked ? (
+                <FavoriteIcon onClick={handlePostLike} sx={{ color: "pink" }} />
+              ) : (
+                <FavoriteBorderIcon onClick={handlePostLike} />
+              )}
+              <p>{post.likes.length}</p>
+            </div>
           </div>
         </div>
       </div>
