@@ -11,8 +11,6 @@ function Bookmarks() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const handlePostClick = () => navigate("/post/0");
-
   const { user } = useAuthContext();
 
   async function fetchPostImage(file) {
@@ -74,6 +72,7 @@ function Bookmarks() {
   function BookmarkItem({ bookmark }) {
 
     const [bookmarked, setBookmarked] = useState(true);
+    const handlePostClick = () => navigate(`/post/${bookmark._id}`);
 
     return (
       <div onClick={handlePostClick} className="bookmarkItem">
