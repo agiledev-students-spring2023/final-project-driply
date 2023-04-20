@@ -10,7 +10,7 @@ import ChatBubbleIcon from "@mui/icons-material/ChatBubble"; // comment icon
 function Post({ post }) {
   //const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
   const [ifBookmarked, setIfBookmarked] = useState(
-    localStorage.getItem(post._id) === "true" || post.bookmarked
+    localStorage.getItem(post._id) === "true" || post.bookmarked === true
   );
   const [ifLiked, setIfLiked] = useState(post.liked);
   const [pfp, setPfp] = useState();
@@ -229,32 +229,34 @@ function Post({ post }) {
         <Link to={`/post/${post._id}`}>
           <img src={postImage} alt="postpic" />
         </Link>
-        <div className="postBookmarkIcon">
-          {ifBookmarked ? (
-            <BookmarkIcon
-              onClick={handleBookmarkClick}
-              sx={{ height: "50px", width: "50px", color: "white" }}
-            />
-          ) : (
-            <BookmarkBorderIcon
-              onClick={handleBookmarkClick}
-              sx={{ height: "50px", width: "50px" }}
-            />
-          )}
-        </div>
-        {/* post likes, comments */}
+
         <div className="postDetails">
-          <div>
-            {ifLiked ? (
-              <FavoriteIcon onClick={handlePostLike} sx={{ color: "pink" }} />
+          <div className="postBookmarkIcon">
+            {ifBookmarked ? (
+              <BookmarkIcon
+                onClick={handleBookmarkClick}
+                sx={{ height: "40px", width: "40px", color: "white" }}
+              />
             ) : (
-              <FavoriteBorderIcon onClick={handlePostLike} />
+              <BookmarkBorderIcon
+                onClick={handleBookmarkClick}
+                sx={{ height: "40px", width: "40px" }}
+              />
             )}
-            <p>{post.likes.length}</p>
           </div>
           <div>
-            <ChatBubbleIcon onClick={handleCommentClick} />
-            <p>{post.comments.length}</p>
+            <div>
+              <ChatBubbleIcon onClick={handleCommentClick} />
+              <p>{post.comments.length}</p>
+            </div>
+            <div>
+              {ifLiked ? (
+                <FavoriteIcon onClick={handlePostLike} sx={{ color: "pink" }} />
+              ) : (
+                <FavoriteBorderIcon onClick={handlePostLike} />
+              )}
+              <p>{post.likes.length}</p>
+            </div>
           </div>
         </div>
       </div>

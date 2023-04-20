@@ -33,6 +33,7 @@ function BookMarkItem({
         console.log(json);
         if (json.message === "success") {
           setBookmarked(true);
+          post.bookmarked = true;
         }
       } else {
         // setPostError(response.status);
@@ -62,6 +63,7 @@ function BookMarkItem({
         if (json.message === "success") {
           setBookmarked(false);
           setRemovedBookmark(post._id);
+          post.bookmarked = false;
         }
       } else {
         //setPostError(response.status);

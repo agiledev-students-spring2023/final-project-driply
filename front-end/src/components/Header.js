@@ -5,11 +5,10 @@ import { DarkModeContext } from "../context/DarkModeContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useLogout } from "../hooks/useLogout";
 import { useScrollDirection } from "../hooks/useScrollDirection";
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { io } from "socket.io-client";
 
 function Header(props) {
-
   const socket = useRef();
   const [unseenMessages, setUnseenMessages] = useState([]);
   const { ifDarkMode } = useContext(DarkModeContext);
@@ -20,7 +19,11 @@ function Header(props) {
   let location = useLocation();
   let splitPath = location.pathname.split("/");
   let ifHide;
-  if (splitPath.includes("chatroom") || splitPath.includes("editprofile") || splitPath.includes("aboutus")) {
+  if (
+    splitPath.includes("chatroom") ||
+    splitPath.includes("editprofile") ||
+    splitPath.includes("aboutus")
+  ) {
     ifHide = true;
     if (splitPath.includes("chatroom")) {
     }
@@ -81,7 +84,6 @@ function Header(props) {
         }
       });
     }
-
   }, []);
   useEffect(() => {
     if (location.pathname === "/chats") {
@@ -99,9 +101,12 @@ function Header(props) {
             direction === "down" ? "header-hide" : "header-show"
           } ${ifDarkMode && "header-Dark"}`}
         >
-          <div className="logo" onClick={handleLogoClick}>
-            Logo
-          </div>
+          <img
+            className="dlogo"
+            algt="logo"
+            src={ifDarkMode ? "/Driply-2.png" : "/Driply-1.png"}
+            onClick={handleLogoClick}
+          />
           <Menu
             noOverlay
             right={true}
@@ -132,11 +137,13 @@ function Header(props) {
               Log Out
             </Link>
           </Menu>
-          {(unseenMessages.length > 0) ? (
+          {unseenMessages.length > 0 ? (
             <div className="menuNotifications">
               <NotificationsIcon sx={{ fontSize: "30px" }} />
             </div>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
         </div>
       ) : (
         <div className="header">
