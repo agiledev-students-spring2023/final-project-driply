@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"; // not bookmarked
 import BookmarkIcon from "@mui/icons-material/Bookmark"; // bookmarked
 
-function BookMarkItem({ post }) {
+function BookMarkItem({ post, bookmarked, setBookmarked }) {
   const navigate = useNavigate();
   const { user } = useAuthContext();
-  const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
 
-  const handleBookmarkClick = (e) => {
+  const handleBookmarkClick = async (e) => {
     if (user) {
       // only bookmark post if logged in
       e.stopPropagation();
       async function addBookmark() {
         const getUser = JSON.parse(localStorage.getItem("user"));
+
         const response = await fetch(
           `http://localhost:4000/bookmark/${user.id}`,
           {
@@ -32,7 +32,7 @@ function BookMarkItem({ post }) {
         if (response.status === 200) {
           console.log(json);
           if (json.message === "success") {
-            post.bookmarked = !ifBookmarked;
+            setBookmarked(true);
           }
         } else {
           // setPostError(response.status);
@@ -40,9 +40,8 @@ function BookMarkItem({ post }) {
         }
       }
       async function removeBookmark() {
-        const getUser = JSON.parse(localStorage.getItem("user"));
         const response = await fetch(
-          `http://localhost:4000/unbookmar/${user.id}`,
+          `http://localhost:4000/unbookmark/${user.id}`,
           {
             method: "POST",
             headers: {
@@ -79,15 +78,15 @@ function BookMarkItem({ post }) {
 
   return (
     <div className="postBookmarkIcon">
-      {ifBookmarked ? (
+      {bookmarked ? (
         <BookmarkIcon
-          onClick={handleBookmarkClick}
-          sx={{ height: "50px", width: "50px", color: "white" }}
+          onClick={removeBookmark}
+          sx={{ height: "40px", width: "40px", color: "white" }}
         />
       ) : (
         <BookmarkBorderIcon
           onClick={handleBookmarkClick}
-          sx={{ height: "50px", width: "50px" }}
+          sx={{ height: "40px", width: "40px" }}
         />
       )}
     </div>
