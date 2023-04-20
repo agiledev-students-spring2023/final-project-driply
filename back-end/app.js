@@ -462,6 +462,84 @@ app.get("/following/:id", async (req, res) => {
   }
 });
 
+app.post("/follow", async (req, res) => {
+  try {
+    const u = await User.findOne({ _id: req.body.userID }).exec();
+    // update following array
+    u.following.push(new mongoose.Types.ObjectId(req.body.followedID));
+    u.save();
+    if (!u) {
+      console.error("User was not found");
+      return res.status(401).json({
+        success: false,
+        message: "User was not found in db",
+      });
+    }
+
+    const f = await User.findOne({ _id: req.body.followedID }).exec();
+    // update follower array
+    f.followers.push(new mongoose.Types.ObjectId(req.body.userID));
+    f.save();
+    if (!f) {
+      console.error("User was not found");
+      return res.status(401).json({
+        success: false,
+        message: "User was not found in db",
+      });
+    }
+    const body = {
+      success: true,
+      message: "success",
+    };
+  } catch (error) {
+    console.log(`Err looking up user: ${error}`);
+    return res.status(500).json({
+      success: false,
+      message: "Error looking up user in database.",
+      error: error,
+    });
+  }
+});
+
+app.post("/unfollow", async (req, res) => {
+  try {
+    const u = await User.findOne({ _id: req.body.userID }).exec();
+    // update following array
+    u.following.pull(new mongoose.Types.ObjectId(req.body.followedID));
+    u.save();
+    if (!u) {
+      console.error("User was not found");
+      return res.status(401).json({
+        success: false,
+        message: "User was not found in db",
+      });
+    }
+
+    const f = await User.findOne({ _id: req.body.followedID }).exec();
+    // update follower array
+    f.followers.pull(new mongoose.Types.ObjectId(req.body.userID));
+    f.save();
+    if (!f) {
+      console.error("User was not found");
+      return res.status(401).json({
+        success: false,
+        message: "User was not found in db",
+      });
+    }
+    const body = {
+      success: true,
+      message: "success",
+    };
+  } catch (error) {
+    console.log(`Err looking up user: ${error}`);
+    return res.status(500).json({
+      success: false,
+      message: "Error looking up user in database.",
+      error: error,
+    });
+  }
+});
+
 app.get("/getTrendingPosts", async (req, res) => {
   Post.find({})
     .then((posts) => {
