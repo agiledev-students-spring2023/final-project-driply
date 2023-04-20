@@ -1,19 +1,17 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"; // not bookmarked
 import BookmarkIcon from "@mui/icons-material/Bookmark"; // bookmarked
 
-function BookMarkItem({ post }) {
+function BookMarkItem({ post, bookmarked, setBookmarked }) {
   const navigate = useNavigate();
   const { user } = useAuthContext();
-  const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
 
-  const handleBookmarkClick = (e) => {
+  const handleBookmarkClick = async (e) => {
     if (user) {
       // only bookmark post if logged in
       e.stopPropagation();
-      async function addBookmark() {
         const response = await fetch(
           `http://localhost:4000/bookmark/${post._id}`,
           {
@@ -31,61 +29,59 @@ function BookMarkItem({ post }) {
         if (response.status === 200) {
           console.log(json);
           if (json.message === "success") {
-            post.bookmarked = !ifBookmarked;
+            setBookmarked(true);
           }
         } else {
           // setPostError(response.status);
           // setLoading(false);
         }
-      }
-      async function removeBookmark() {
-        const response = await fetch(
-          `http://localhost:4000/unbookmar/${post._id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // body: JSON.stringify({
-            //     "postId": id,
-            //     "comment": comment
-            // })
-          }
-        );
-        let json = await response.json();
-        if (response.status === 200) {
-          console.log(json);
-          if (json.message === "success") {
-            post.bookmarked = !ifBookmarked;
-          }
-        } else {
-          //setPostError(response.status);
-          //setLoading(false);
-        }
-      }
-      if (ifBookmarked) {
-        removeBookmark();
-      } else {
-        addBookmark();
-      }
-      setIfBookmarked(!ifBookmarked);
     } else {
-      // navigate user to login page
       navigate("/login");
     }
   };
 
+  const removeBookmark = async (e) => {
+    if (user) {
+      e.stopPropagation();
+      const response = await fetch(
+        `http://localhost:4000/unbookmar/${post._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // body: JSON.stringify({
+          //     "postId": id,
+          //     "comment": comment
+          // })
+        }
+      );
+      let json = await response.json();
+      if (response.status === 200) {
+        console.log(json);
+        if (json.message === "success") {
+          setBookmarked(true);
+        }
+      } else {
+        //setPostError(response.status);
+        //setLoading(false);
+      }
+    } else {
+      navigate("/login");
+    }
+}
+
   return (
     <div className="postBookmarkIcon">
-      {ifBookmarked ? (
+      {bookmarked ? (
         <BookmarkIcon
-          onClick={handleBookmarkClick}
-          sx={{ height: "50px", width: "50px", color: "white" }}
+          onClick={removeBookmark}
+          sx={{ height: "40px", width: "40px", color: "white" }}
         />
       ) : (
         <BookmarkBorderIcon
           onClick={handleBookmarkClick}
-          sx={{ height: "50px", width: "50px" }}
+          sx={{ height: "40px", width: "40px" }}
         />
       )}
     </div>
