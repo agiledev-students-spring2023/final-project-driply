@@ -65,6 +65,7 @@ app.post("/post-form", upload.single("image"), (req, res) => {
           price: req.body.price,
           comments: [],
           likes: [],
+          bookmarked: false,
         });
         newPost
           .save()
@@ -320,6 +321,10 @@ app.post("/bookmark", async (req, res) => {
       });
     }
 
+    // update post bookmarked field to true
+    p.bookmarked = true;
+    p.save();
+
     const body = {
       success: true,
       message: "success",
@@ -359,6 +364,9 @@ app.post("/unbookmark", async (req, res) => {
         message: "User was not found in db",
       });
     }
+
+    p.bookmarked = false;
+    p.save();
 
     const body = {
       success: true,
