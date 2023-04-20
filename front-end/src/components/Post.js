@@ -70,7 +70,7 @@ function Post({ post }) {
     }
 
     getDetails();
-    console.log(post.bookmarked);
+    //console.log(post.bookmarked);
   }, [post]);
 
   const handleBookmarkClick = (e) => {
