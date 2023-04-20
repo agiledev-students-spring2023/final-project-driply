@@ -75,7 +75,7 @@ function BookMarkItem({
   };
 
   return (
-    <div className="postBookmarkIcon">
+    <div className="postBookmarkIconBMpage">
       {bookmarked ? (
         <BookmarkIcon
           onClick={removeBookmark}
