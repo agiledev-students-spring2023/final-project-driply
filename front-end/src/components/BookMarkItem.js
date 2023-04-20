@@ -4,7 +4,13 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"; // not bookmarked
 import BookmarkIcon from "@mui/icons-material/Bookmark"; // bookmarked
 
-function BookMarkItem({ post, bookmarked, setBookmarked }) {
+function BookMarkItem({
+  post,
+  bookmarked,
+  setBookmarked,
+  removedBookmark,
+  setRemovedBookmark,
+}) {
   const navigate = useNavigate();
   const { user } = useAuthContext();
 
@@ -12,19 +18,16 @@ function BookMarkItem({ post, bookmarked, setBookmarked }) {
     if (user) {
       // only bookmark post if logged in
       e.stopPropagation();
-      const response = await fetch(
-        `http://localhost:4000/bookmark/${user.id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            postId: post._id,
-            comment: post.comments,
-          }),
-        }
-      );
+      const response = await fetch(`http://localhost:4000/bookmark`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postID: post._id,
+          userID: user.id,
+        }),
+      });
       let json = await response.json();
       if (response.status === 200) {
         console.log(json);
@@ -43,24 +46,22 @@ function BookMarkItem({ post, bookmarked, setBookmarked }) {
   const removeBookmark = async (e) => {
     if (user) {
       e.stopPropagation();
-      const response = await fetch(
-        `http://localhost:4000/unbookmar/${post._id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // body: JSON.stringify({
-          //     "postId": id,
-          //     "comment": comment
-          // })
-        }
-      );
+      const response = await fetch(`http://localhost:4000/unbookmark`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postID: post._id,
+          userID: user.id,
+        }),
+      });
       let json = await response.json();
       if (response.status === 200) {
         console.log(json);
         if (json.message === "success") {
-          setBookmarked(true);
+          setBookmarked(false);
+          setRemovedBookmark(post._id);
         }
       } else {
         //setPostError(response.status);

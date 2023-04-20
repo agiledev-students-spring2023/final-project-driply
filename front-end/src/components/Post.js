@@ -8,7 +8,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite"; // liked post
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble"; // comment icon
 
 function Post({ post }) {
-  const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
+  //const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
+  const [ifBookmarked, setIfBookmarked] = useState(
+    localStorage.getItem(post._id) === "true" || post.bookmarked
+  );
   const [ifLiked, setIfLiked] = useState(post.liked);
   const [pfp, setPfp] = useState();
   const [postUsername, setPostUsername] = useState();
@@ -67,32 +70,30 @@ function Post({ post }) {
     }
 
     getDetails();
-  }, []);
+  }, [post]);
 
   const handleBookmarkClick = (e) => {
     if (user) {
       // only bookmark post if logged in
       e.stopPropagation();
       async function addBookmark() {
-        const getUser = JSON.parse(localStorage.getItem("user"));
-        const response = await fetch(
-          `http://localhost:4000/bookmark/${user.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              postId: post._id,
-              comment: post.comments,
-            }),
-          }
-        );
+        const response = await fetch(`http://localhost:4000/bookmark`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postID: post._id,
+            userID: user.id,
+          }),
+        });
         let json = await response.json();
         if (response.status === 200) {
           console.log(json);
           if (json.message === "success") {
+            setIfBookmarked(!ifBookmarked);
             post.bookmarked = !ifBookmarked;
+            localStorage.setItem(post._id, "true");
           }
         } else {
           //setPostError(response.status);
@@ -100,25 +101,23 @@ function Post({ post }) {
         }
       }
       async function removeBookmark() {
-        const getUser = JSON.parse(localStorage.getItem("user"));
-        const response = await fetch(
-          `http://localhost:4000/unbookmark/${user.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              postId: post._id,
-              comment: post.comments,
-            }),
-          }
-        );
+        const response = await fetch(`http://localhost:4000/unbookmark`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postID: post._id,
+            userID: user.id,
+          }),
+        });
         let json = await response.json();
         if (response.status === 200) {
           console.log(json);
           if (json.message === "success") {
+            setIfBookmarked(!ifBookmarked);
             post.bookmarked = !ifBookmarked;
+            localStorage.setItem(post._id, "false");
           }
         } else {
           // setPostError(response.status);
