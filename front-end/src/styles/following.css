@@ -61,6 +61,11 @@
     padding: 10px;
     border-radius: 10px;
 }
+
 .unfollowBtn-dark {
     background-color: #262626;
+}
+
+.unfollowBtn:active {
+    transform: translateY(3px);
 }

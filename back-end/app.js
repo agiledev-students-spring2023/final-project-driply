@@ -520,6 +520,7 @@ app.post("/follow", async (req, res) => {
       success: true,
       message: "success",
     };
+    res.json(body);
   } catch (error) {
     console.log(`Err looking up user: ${error}`);
     return res.status(500).json({
@@ -559,6 +560,7 @@ app.post("/unfollow", async (req, res) => {
       success: true,
       message: "success",
     };
+    res.json(body);
   } catch (error) {
     console.log(`Err looking up user: ${error}`);
     return res.status(500).json({

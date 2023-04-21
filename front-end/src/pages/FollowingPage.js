@@ -6,6 +6,8 @@ function FollowingPage() {
   const [followingList, setFollowingList] = useState([]);
   const [followingData, setFollowingData] = useState([]);
   const [followingError, setFollowingError] = useState(null);
+  const [followedChanged, setFollowedChanged] = useState(false);
+  const [removedFollowed, setRemovedFollowed] = useState(null);
   const [loading, setLoading] = useState(true);
   const { ifDarkMode } = useContext(DarkModeContext);
   const params = useParams();
@@ -37,7 +39,15 @@ function FollowingPage() {
     }
 
     fetchFollowingList();
-  }, [userId]);
+  }, [userId, followedChanged]);
+
+  useEffect(() => {
+    if (followedChanged) {
+      setFollowingList((prevState) =>
+        prevState.filter((following) => following !== removedFollowed)
+      );
+    }
+  }, [followedChanged, userId, removedFollowed]);
 
   function LoadingFollowingList() {
     return Array.from({ length: followingList.length }).map((_, idx) => {
@@ -72,6 +82,31 @@ function FollowingPage() {
       fetchProfilePic();
     }, [id]);
 
+    const unfollow = async (e) => {
+      if (userId) {
+        e.stopPropagation();
+
+        const response = await fetch(`http://localhost:4000/unfollow`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: userId,
+            followedID: id,
+          }),
+        });
+        let json = await response.json();
+        if (response.status === 200) {
+          console.log(json);
+          if (json.success) {
+            setFollowedChanged(true);
+            setRemovedFollowed(id);
+          }
+        }
+      }
+    };
+
     return (
       <div className="eachFollowingDisplay">
         <div className="followingImg">
@@ -79,7 +114,10 @@ function FollowingPage() {
         </div>
         <div className="followingDetails">
           <p>{name}</p>
-          <div className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}>
+          <div
+            className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}
+            onClick={unfollow}
+          >
             Unfollow
           </div>
         </div>
