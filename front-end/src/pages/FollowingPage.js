@@ -47,6 +47,8 @@ function FollowingPage() {
         prevState.filter((following) => following !== removedFollowed)
       );
     }
+    setFollowedChanged(false);
+    setRemovedFollowed(null);
   }, [followedChanged, userId, removedFollowed]);
 
   function LoadingFollowingList() {

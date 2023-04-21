@@ -5,18 +5,38 @@ import { useNavigate } from "react-router-dom";
 function Follow(props) {
   const [followed, setFollowed] = useState(false);
   const [followedChanged, setFollowedChanged] = useState(false);
-  const [ownProfile, setOwnProfile] = useState(props.ownProfile);
+  const [ownProfile] = useState(props.ownProfile);
   const { user } = useAuthContext();
-  const [followingList, setFollowingList] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user && user.following && user.name) {
-      setFollowingList(user.following);
-      console.log(user.name);
+    async function fetchFollowingList() {
+      const response = await fetch(
+        `http://localhost:4000/following/${user.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      let json = await response.json();
+      if (json.success) {
+        if (json.following.includes(props.profileID)) {
+          setFollowed(true);
+        }
+        console.log(json);
+      } else {
+        console.log(json.error);
+      }
     }
-    console.log(followingList);
-  }, [followedChanged, followingList]);
+
+    fetchFollowingList();
+  }, [followedChanged, user.id, followed, props.profileID]);
+
+  useEffect(() => {
+    setFollowedChanged(false);
+  }, [followedChanged]);
 
   const handleFollow = (e) => {
     if (user) {
