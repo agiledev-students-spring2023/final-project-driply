@@ -36,8 +36,6 @@ function ProfilePage() {
       if (json.success) {
         console.log(json);
         setUserData(json.data);
-        // setDescription(json.description);
-        // setOwnProfile(json.ownProfile);
         setFetchError(null);
         setLoading(false);
       } else {
@@ -70,7 +68,7 @@ function ProfilePage() {
 
     fetchPfp();
     fetchProfileInfo();
-  }, [userData.profilepic]);
+  }, [userData.profilepic, userId]);
 
   useEffect(() => {
     async function getPictureUrls() {
@@ -95,7 +93,7 @@ function ProfilePage() {
       }
     }
     getPictureUrls();
-  }, [userData.allPosts]);
+  }, [userData.allPosts, userId]);
 
   const handleMessageBtn = async () => {
     const idsArr = [user.id, userId];
@@ -118,7 +116,7 @@ function ProfilePage() {
               <div onClick={handleMessageBtn} className="profilePageMsgBtn">
                 Message
               </div>
-              <Follow ownProfile={ownProfile} />
+              <Follow ownProfile={ownProfile} profileID={userId} />
             </div>
           )}
           <div className="pfpContainer">
