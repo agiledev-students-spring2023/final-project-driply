@@ -354,6 +354,10 @@
     border: solid black
 }
 
+.profilePageMsgBtn:active {
+    transform: translateY(3px);
+}
+
 .buttonPaddingRight {
     padding: 10px;
     top: 75px;
@@ -364,6 +368,10 @@
     text-align: center;
     background-color: white;
     border: solid black
+}
+
+.buttonPaddingRight:active {
+    transform: translateY(3px);
 }
 
 .pfpBtns {
