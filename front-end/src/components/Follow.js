@@ -68,19 +68,13 @@ function Follow(props) {
   function FollowButton() {
     if (!followed) {
       return (
-        <button
-          onClick={() => handleFollow()}
-          className="btn btn-secondary buttonPaddingRight"
-        >
+        <button onClick={() => handleFollow()} className="buttonPaddingRight">
           Follow
         </button>
       );
     } else {
       return (
-        <button
-          onClick={() => handleFollow()}
-          className="btn btn-primary buttonPaddingRight"
-        >
+        <button onClick={() => handleFollow()} className="buttonPaddingRight">
           Followed
         </button>
       );

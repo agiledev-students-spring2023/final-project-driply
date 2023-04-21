@@ -21,51 +21,49 @@ function ProfilePage() {
 
   useEffect(() => {
     async function fetchProfileInfo() {
-        setPostList([]);
-        setLoading(true);
-        const response = await fetch(`http://localhost:4000/profile`, {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "userId": userId
-            })
-        });
-        let json = await response.json();
-        if (json.success) {
-            console.log(json);
-            setUserData(json.data);
-            // setDescription(json.description);
-            // setOwnProfile(json.ownProfile);
-            setFetchError(null);
-            setLoading(false);
-        } else {
-            console.log();
-            setFetchError(json.message);
-            setLoading(false);
-        }
+      setPostList([]);
+      setLoading(true);
+      const response = await fetch(`http://localhost:4000/profile`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+        }),
+      });
+      let json = await response.json();
+      if (json.success) {
+        console.log(json);
+        setUserData(json.data);
+        // setDescription(json.description);
+        // setOwnProfile(json.ownProfile);
+        setFetchError(null);
         setLoading(false);
+      } else {
+        console.log();
+        setFetchError(json.message);
+        setLoading(false);
+      }
+      setLoading(false);
     }
 
     async function fetchPfp() {
       if (userData.profilepic) {
-        console.log(userData.profilepic)
-        const response = await fetch(
-            `http://localhost:4000/image`,{
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "filename": userData.profilepic
-                })
-            }
-        );
+        console.log(userData.profilepic);
+        const response = await fetch(`http://localhost:4000/image`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            filename: userData.profilepic,
+          }),
+        });
         if (response.status === 200) {
-            const imageBlob = await response.blob();
-            const imageObjectURL = URL.createObjectURL(imageBlob);
-            setPfp(imageObjectURL);
+          const imageBlob = await response.blob();
+          const imageObjectURL = URL.createObjectURL(imageBlob);
+          setPfp(imageObjectURL);
         }
       }
     }
@@ -78,17 +76,15 @@ function ProfilePage() {
     async function getPictureUrls() {
       if (userData?.allPosts?.length !== 0) {
         for (let i = 0; i < userData?.allPosts?.length; i++) {
-          const response = await fetch(
-            `http://localhost:4000/image`,{
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "filename": userData.allPosts[i].image
-                })
-            }
-          );
+          const response = await fetch(`http://localhost:4000/image`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              filename: userData.allPosts[i].image,
+            }),
+          });
           if (response.status === 200) {
             const imageBlob = await response.blob();
             const imageObjectURL = URL.createObjectURL(imageBlob);
@@ -108,8 +104,8 @@ function ProfilePage() {
     // create chat room in database
 
     navigate(`/chatroom/${sortedIds[0]}--${sortedIds[1]}`);
-  }
-  
+  };
+
   return (
     <div className={`profileContainer ${ifDarkMode && "darkTheme"}`}>
       {loading ? (
@@ -118,10 +114,12 @@ function ProfilePage() {
         <>
           {/* dont display message/follow btn on ur own account */}
           {user?.id !== userId && (
-            <>
-              <div onClick={handleMessageBtn} className="profilePageMsgBtn btn btn-secondary">Message</div> 
-              <Follow ownProfile={ownProfile}/>
-            </>
+            <div className="pfpBtns">
+              <div onClick={handleMessageBtn} className="profilePageMsgBtn">
+                Message
+              </div>
+              <Follow ownProfile={ownProfile} />
+            </div>
           )}
           <div className="pfpContainer">
             <div className="pfp">
@@ -132,9 +130,7 @@ function ProfilePage() {
             <p>{userData?.name}</p>
           </div>
           <div className="pf-bio">
-            <p>
-              {description}
-            </p>
+            <p>{description}</p>
           </div>
           <div className="profileInfo">
             <div
@@ -166,7 +162,9 @@ function ProfilePage() {
           </div>
 
           <div
-            className={`${ifDarkMode ? "postsContainer-dark" : "postsContainer"}`}
+            className={`${
+              ifDarkMode ? "postsContainer-dark" : "postsContainer"
+            }`}
           >
             {postList?.map((post) => {
               return (
