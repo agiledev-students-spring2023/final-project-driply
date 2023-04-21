@@ -18,8 +18,12 @@ function ProfilePage() {
   const { ifDarkMode } = useContext(DarkModeContext);
   const [pfp, setPfp] = useState("");
   const [postList, setPostList] = useState([]);
+  const [followingList, setFollowingList] = useState([]);
 
   useEffect(() => {
+    if (user && user.following) {
+      setFollowingList(user.following);
+    }
     async function fetchProfileInfo() {
       setPostList([]);
       setLoading(true);
@@ -68,7 +72,7 @@ function ProfilePage() {
 
     fetchPfp();
     fetchProfileInfo();
-  }, [userData.profilepic, userId]);
+  }, [userData.profilepic, userId, followingList]);
 
   useEffect(() => {
     async function getPictureUrls() {

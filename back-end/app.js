@@ -446,11 +446,26 @@ app.get("/following/:id", async (req, res) => {
         message: "User was not found in db",
       });
     }
+    const followingIDs = user.following.map(
+      (id) => new mongoose.Types.ObjectId(id)
+    );
+    const followingUsers = await User.find({
+      _id: { $in: followingIDs },
+    }).exec();
+    const followingInfo = followingUsers.map((u) => {
+      return {
+        id: u._id,
+        name: u.name,
+        profilePic: u.profilepic,
+      };
+    });
     // send user data if user exists
     const { following } = user;
-    res.json({
+    res.status(200).json({
       success: true,
+      message: "User following info retrieved successfully",
       following: following,
+      followingData: followingInfo,
     });
   } catch (error) {
     console.log(`Err looking up user: ${error}`);

@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Follow(props) {
   const [followed, setFollowed] = useState(false);
   const [followedChanged, setFollowedChanged] = useState(false);
   const [ownProfile, setOwnProfile] = useState(props.ownProfile);
   const { user } = useAuthContext();
+  const [followingList, setFollowingList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setFollowedChanged(false);
-  }, [followedChanged]);
+    if (user && user.following && user.name) {
+      setFollowingList(user.following);
+      console.log(user.name);
+    }
+    console.log(followingList);
+  }, [followedChanged, followingList]);
 
   const handleFollow = (e) => {
     if (user) {
@@ -22,8 +29,8 @@ function Follow(props) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userID: user._id,
-            followedID: props.id,
+            userID: user.id,
+            followedID: props.profileID,
           }),
         });
         let json = await response.json();
@@ -43,8 +50,8 @@ function Follow(props) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userID: user._id,
-            followedID: props.id,
+            userID: user.id,
+            followedID: props.profileID,
           }),
         });
         let json = await response.json();
@@ -56,19 +63,21 @@ function Follow(props) {
           }
         }
       }
-      if (!followed) {
-        follow();
-      } else {
+      // follow if profileID is not in user.following
+      if (followed) {
         unfollow();
+      } else {
+        follow();
       }
-      console.log(followed);
+    } else {
+      navigate("/login");
     }
   };
 
   function FollowButton() {
     if (!followed) {
       return (
-        <button onClick={() => handleFollow()} className="buttonPaddingRight">
+        <button onClick={handleFollow} className="buttonPaddingRight">
           Follow
         </button>
       );
