@@ -80,6 +80,7 @@
     background-color: #262626;
     color: white;
     border-radius: 10px;
+    border: 0;
 }
 
 .unfollowBtn:active {
