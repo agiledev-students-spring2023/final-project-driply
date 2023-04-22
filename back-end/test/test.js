@@ -1,4 +1,5 @@
 process.env.NODE_ENV = "test";
+require("dotenv").config({ silent: true });
 
 const chai = require("chai");
 const chaiHttp = require("chai-http");
@@ -18,7 +19,17 @@ const Comment = require("../models/Comment.js");
 chai.use(chaiHttp);
 
 describe("/GET request to /getTrendingPosts", () => {
-  it("should return all posts", (done) => {
+  before((done) => {
+    mongoose.connect(
+      "mongodb+srv://" +
+        process.env.MONGO_USERNAME +
+        ":" +
+        process.env.MONGO_PASSWORD +
+        "@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority"
+    );
+    done();
+  });
+  it("should return all trending posts", (done) => {
     chai
       .request(app)
       .get("/getTrendingPosts")
@@ -28,8 +39,29 @@ describe("/GET request to /getTrendingPosts", () => {
         done();
       });
   });
-  after(async () => {
-    await mongoose.connection.close();
+});
+
+describe("/GET request to /getHomePosts", () => {
+  before((done) => {
+    mongoose.connect(
+      "mongodb+srv://" +
+        process.env.MONGO_USERNAME +
+        ":" +
+        process.env.MONGO_PASSWORD +
+        "@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority"
+    );
+    done();
+  });
+
+  it("should return all home posts", (done) => {
+    chai
+      .request(app)
+      .get("/getHomePosts")
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.data).to.be.an("array");
+        done();
+      });
   });
 });
 
@@ -553,3 +585,7 @@ describe("/GET request to /getTrendingPosts", () => {
 //       });
 //   });
 // });
+
+after(async () => {
+  await mongoose.connection.close();
+});
