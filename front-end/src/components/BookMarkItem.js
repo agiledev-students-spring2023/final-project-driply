@@ -65,9 +65,6 @@ function BookMarkItem({
           setRemovedBookmark(post._id);
           post.bookmarked = false;
         }
-      } else {
-        //setPostError(response.status);
-        //setLoading(false);
       }
     } else {
       navigate("/login");

@@ -1,26 +1,35 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { useParams } from "react-router-dom";
+import Follow from "../components/Follow";
 
 function FollowingPage() {
   const [followingList, setFollowingList] = useState([]);
+  const [followingData, setFollowingData] = useState([]);
   const [followingError, setFollowingError] = useState(null);
+  const [followedChanged, setFollowedChanged] = useState(false);
+  const [removedFollowed, setRemovedFollowed] = useState(null);
   const [loading, setLoading] = useState(true);
   const { ifDarkMode } = useContext(DarkModeContext);
   const params = useParams();
   const { userId } = params;
+  const [ownProfile] = useState(false);
 
   useEffect(() => {
     async function fetchFollowingList() {
-      const response = await fetch(`http://localhost:4000/following/${userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `http://localhost:4000/following/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       let json = await response.json();
       if (json.success) {
         setFollowingList(json.following);
+        setFollowingData(json.followingData);
         setFollowingError(null);
         setLoading(false);
         console.log(json);
@@ -32,40 +41,20 @@ function FollowingPage() {
     }
 
     fetchFollowingList();
-  }, [userId]);
+  }, [userId, followedChanged]);
 
-// function FollowingPage() {
-//   const [followingList, setFollowingList] = useState([]);
-//   const [followingError, setFollowingError] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const { ifDarkMode } = useContext(DarkModeContext);
-
-//   useEffect(() => {
-//     async function fetchFollowingList() {
-//       const response = await fetch(`http://localhost:5000/following`, {
-//         method: "GET",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       });
-//       let json = await response.json();
-//       if (json.status === 200) {
-//         setFollowingList(json.data);
-//         setFollowingError(null);
-//         setLoading(false);
-//         console.log(json);
-//       } else {
-//         console.log(json.error);
-//         setFollowingError({ error: json.error, status: json.status });
-//         setLoading(false);
-//       }
-//     }
-
-//     fetchFollowingList();
-//   }, []);
+  useEffect(() => {
+    if (followedChanged) {
+      setFollowingList((prevState) =>
+        prevState.filter((following) => following !== removedFollowed)
+      );
+    }
+    setFollowedChanged(false);
+    setRemovedFollowed(null);
+  }, [followedChanged, userId, removedFollowed]);
 
   function LoadingFollowingList() {
-    return Array.from({ length: 6 }).map((_, idx) => {
+    return Array.from({ length: followingList.length }).map((_, idx) => {
       return (
         <div key={idx} className="eachFollowingDisplay">
           <div className="followingImgLoading"></div>
@@ -76,14 +65,63 @@ function FollowingPage() {
   }
 
   function Following({ following }) {
+    const { name, id } = following;
+    const [profilePic, setProfilePic] = useState(null);
+
+    useEffect(() => {
+      async function fetchProfilePic() {
+        const response = await fetch(`http://localhost:4000/getUserPfp`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: id,
+          }),
+        });
+        const blob = await response.blob();
+        setProfilePic(URL.createObjectURL(blob));
+      }
+
+      fetchProfilePic();
+    }, [id]);
+
+    const unfollow = async (e) => {
+      if (userId) {
+        e.stopPropagation();
+
+        const response = await fetch(`http://localhost:4000/unfollow`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userID: userId,
+            followedID: id,
+          }),
+        });
+        let json = await response.json();
+        if (response.status === 200) {
+          console.log(json);
+          if (json.success) {
+            setFollowedChanged(true);
+            setRemovedFollowed(id);
+          }
+        }
+      }
+    };
+
     return (
       <div className="eachFollowingDisplay">
         <div className="followingImg">
-          <img src={following.user_img} alt="user img" />
+          <img src={profilePic} alt="user img" />
         </div>
         <div className="followingDetails">
-          <p>{following.username}</p>
-          <div className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}>
+          <p>{name}</p>
+          <div
+            className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}
+            onClick={unfollow}
+          >
             Unfollow
           </div>
         </div>
@@ -94,8 +132,8 @@ function FollowingPage() {
   function DisplayFollowingList() {
     return (
       <div className="followingContainer">
-        {followingList?.map((following) => (
-          <Following key={following.id} following={following} />
+        {followingData.map((following, index) => (
+          <Following key={index} following={following} />
         ))}
       </div>
     );
@@ -105,7 +143,8 @@ function FollowingPage() {
     <div className={ifDarkMode && "darkTheme"}>
       {/* header */}
       <div className="chatPageHeader">
-        <h1>Following {followingList?.length}</h1>
+        <h1 className="followHeadline">Following </h1>
+        <h1 className="followCount">{followingList?.length}</h1>
       </div>
 
       {loading ? <LoadingFollowingList /> : <DisplayFollowingList />}
@@ -120,5 +159,3 @@ function FollowingPage() {
 }
 
 export default FollowingPage;
-
-

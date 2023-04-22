@@ -14,12 +14,17 @@ function ProfilePage() {
   const [description, setDescription] = useState("");
   const [fetchError, setFetchError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [ownProfile, setOwnProfile] = useState(false);
+  const [ownProfile] = useState(false);
   const { ifDarkMode } = useContext(DarkModeContext);
   const [pfp, setPfp] = useState("");
   const [postList, setPostList] = useState([]);
+  const [followingList, setFollowingList] = useState([]);
+  const [followedChangedSuccess, setFollowedChangedSuccess] = useState(false);
 
   useEffect(() => {
+    if (user && user.following) {
+      setFollowingList(user.following);
+    }
     async function fetchProfileInfo() {
       setPostList([]);
       setLoading(true);
@@ -36,8 +41,6 @@ function ProfilePage() {
       if (json.success) {
         console.log(json);
         setUserData(json.data);
-        // setDescription(json.description);
-        // setOwnProfile(json.ownProfile);
         setFetchError(null);
         setLoading(false);
       } else {
@@ -70,7 +73,13 @@ function ProfilePage() {
 
     fetchPfp();
     fetchProfileInfo();
-  }, [userData.profilepic]);
+  }, [
+    userData.profilepic,
+    userId,
+    followingList,
+    followedChangedSuccess,
+    user,
+  ]);
 
   useEffect(() => {
     async function getPictureUrls() {
@@ -95,7 +104,7 @@ function ProfilePage() {
       }
     }
     getPictureUrls();
-  }, [userData.allPosts]);
+  }, [userData.allPosts, userId]);
 
   const handleMessageBtn = async () => {
     const idsArr = [user.id, userId];
@@ -115,10 +124,22 @@ function ProfilePage() {
           {/* dont display message/follow btn on ur own account */}
           {user?.id !== userId && (
             <div className="pfpBtns">
-              <div onClick={handleMessageBtn} className="profilePageMsgBtn">
+              <div
+                onClick={handleMessageBtn}
+                className={`profilePageMsgBtn ${
+                  ifDarkMode && "unfollowBtn-dark"
+                }`}
+              >
                 Message
               </div>
-              <Follow ownProfile={ownProfile} />
+              <div className="followBtnContainer">
+                <Follow
+                  ownProfile={ownProfile}
+                  profileID={userId}
+                  followedChangedSuccess={followedChangedSuccess}
+                  setFollowedChangedSuccess={setFollowedChangedSuccess}
+                />
+              </div>
             </div>
           )}
           <div className="pfpContainer">
