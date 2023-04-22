@@ -186,7 +186,10 @@ const PostPage = () => {
               className="row align-items-center"
             >
               <div className="col-auto px-0">
-                <div onClick={() => navigate("/profile")} className="postpfp">
+                <div
+                  onClick={() => navigate(`/profile/${user.id}`)}
+                  className="postpfp"
+                >
                   {loggedInPfp && <img src={loggedInPfp} alt="user img" />}
                 </div>
               </div>
