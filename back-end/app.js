@@ -597,8 +597,9 @@ app.post("/unfollow", async (req, res) => {
 
 app.get("/getTrendingPosts", async (req, res) => {
   Post.find({})
+    .sort({ likes: -1 }) // sort by likes in descending order
     .then((posts) => {
-      //process this array later to find the trending posts
+      // process this array later to find the trending posts
       res.json({ data: posts });
     })
     .catch((err) => {
