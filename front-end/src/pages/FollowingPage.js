@@ -13,7 +13,6 @@ function FollowingPage() {
   const { ifDarkMode } = useContext(DarkModeContext);
   const params = useParams();
   const { userId } = params;
-  const [ownProfile] = useState(false);
 
   useEffect(() => {
     async function fetchFollowingList() {

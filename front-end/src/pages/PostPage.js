@@ -3,13 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { DarkModeContext } from "../context/DarkModeContext";
 import Comment from "../components/Comment";
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
+import Like from "../components/Like";
 
 const PostPage = () => {
-  //const { user } = useAuthContext();
+  const { user } = useAuthContext();
   const { ifDarkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
-  //const [comment, setComment] = useState("");
-  //const [commentList, setCommentList] = useState([]);
+  const [comment, setComment] = useState("");
+  const [commentList, setCommentList] = useState([]);
   const [likes, setLikes] = useState([]);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -19,9 +22,8 @@ const PostPage = () => {
   const { postId } = useParams();
   const [userID, setUserID] = useState(0);
   const [loading, setLoading] = useState(true);
-
   const [name, setName] = useState(""); // remove after sprint 1, only used to randomize displayed username using mockaroo
-
+  const form = useRef();
   // this is just temp to get different imgs and sizes
   const randomProfileSize = [
     350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380,
@@ -71,13 +73,13 @@ const PostPage = () => {
           const imageObjectURL = URL.createObjectURL(imageBlob);
           setImg(imageObjectURL);
         }
-        const response2 = await fetch(`http://localhost:4000/image`, {
+        const response2 = await fetch(`http://localhost:4000/getUserPfp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            filename: json.pfp,
+            userId: json.user,
           }),
         });
         if (response2.status === 200) {
@@ -99,6 +101,38 @@ const PostPage = () => {
     navigate(`/profile/${userID}`);
   }
 
+  const onChangeComment = (e) => {
+    setComment(e.target.value);
+  };
+
+  const handleComment = (e) => {
+    e.preventDefault();
+    async function addComment() {
+      const response = await fetch(`http://localhost:4000/createComment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: postId,
+          comment: comment,
+          userId: user.id,
+        }),
+      });
+      let json = await response.json();
+      if (response.status === 200) {
+        if (json.message === "success") {
+          setCommentList([json.newComment, ...commentList]);
+          setComment("");
+        }
+      } else {
+        setPostError(response.status);
+        setLoading(false);
+      }
+    }
+
+    addComment();
+  };
 
   return (
     <div
@@ -117,9 +151,50 @@ const PostPage = () => {
           <span className="mr-3">${price}</span>
       </div>
       <img className="center-block img-responsive" src={img} alt="pic" />
-      {description}
+      <div className="description-block">
+        <div className="name-in-des"> {name + ": "}</div>
+        {description}
+      </div>
+
+      {user && (
+        <div>
+          <Like likes={likes} postId={postId} />
+          <div class="container">
+            <Form
+              onSubmit={handleComment}
+              ref={form}
+              class="row align-items-center"
+            >
+              <div className="col-auto px-0">
+                <div onClick={() => navigate("/profile")} className="postpfp">
+                  {pfp && <img src={pfp} alt="user img" />}
+                </div>
+              </div>
+              <div class="col px-0">
+                <Input
+                  type="text"
+                  value={comment}
+                  className="form-control search-query"
+                  name="comment"
+                  onChange={onChangeComment}
+                  required
+                />
+              </div>
+              <div class="col-auto">
+                <button className="btn btn-success btn-block">Send</button>
+              </div>
+            </Form>
+          </div>
+        </div>
+      )}
+
       <br />
-      <Comment postId={postId} likes={likes} />
+      <Comment
+        postId={postId}
+        likes={likes}
+        commentList={commentList}
+        setCommentList={setCommentList}
+      />
     </div>
   );
 };
