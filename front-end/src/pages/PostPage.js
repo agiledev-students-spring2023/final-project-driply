@@ -24,19 +24,8 @@ const PostPage = () => {
   const { postId } = useParams();
   const [userID, setUserID] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState(""); // remove after sprint 1, only used to randomize displayed username using mockaroo
+  const [name, setName] = useState("");
   const form = useRef();
-  // this is just temp to get different imgs and sizes
-  const randomProfileSize = [
-    350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380,
-  ];
-  const randomProfileIndex = Math.floor(
-    Math.random() * randomProfileSize.length
-  );
-  const randomPostSize = [
-    350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380,
-  ];
-  const randomPostIndex = Math.floor(Math.random() * randomPostSize.length);
 
   useEffect(() => {
     async function fetchPostInfo() {

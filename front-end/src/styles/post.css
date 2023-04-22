@@ -30,11 +30,19 @@
 
 .row.align-items-center {
     padding: 10px;
+    padding-right: 0;
     border-bottom: 1px gray solid;
 }
 
 .name-in-des {
     font-weight: bold;
+}
+
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.likeIconPostpage.css-i4bv87-MuiSvgIcon-root {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    margin-left: 5px;
 }
 
 #root {
