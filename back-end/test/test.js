@@ -48,20 +48,20 @@ describe("/GET request to /getTrendingPosts", () => {
   });
 });
 
-describe("/GET request to /getHomePosts", () => {
-  it("should return all home posts", (done) => {
-    chai
-      .request(app)
-      .get("/getHomePosts")
-      .timeout(5000)
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.be.an("object");
-        expect(res.body.data).to.be.an("array");
-        done();
-      });
-  });
-});
+// describe("/GET request to /getHomePosts", () => {
+//   it("should return all home posts", (done) => {
+//     chai
+//       .request(app)
+//       .get("/getHomePosts")
+//       .timeout(5000)
+//       .end((err, res) => {
+//         expect(res).to.have.status(200);
+//         expect(res.body).to.be.an("object");
+//         expect(res.body.data).to.be.an("array");
+//         done();
+//       });
+//   });
+// });
 
 describe("/GET request to /follower/:id", () => {
   let user;

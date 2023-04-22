@@ -34,7 +34,7 @@ function Follow(props) {
     }
 
     fetchFollowingList();
-  }, [followedChanged, user.id, followed, props.profileID]);
+  }, [followedChanged, user, followed, props.profileID]);
 
   const handleFollow = (e) => {
     if (user) {
