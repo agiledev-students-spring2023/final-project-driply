@@ -103,7 +103,7 @@ function Follow(props) {
       );
     } else {
       return (
-        <button onClick={() => handleFollow()} className="buttonPaddingRight">
+        <button onClick={handleFollow} className="buttonPaddingRight">
           Followed
         </button>
       );
