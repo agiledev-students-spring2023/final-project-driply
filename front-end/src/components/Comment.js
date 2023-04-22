@@ -1,17 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
 
 function Comment(prop) {
-  const [comment, setComment] = useState("");
   const { commentList, setCommentList } = prop;
-  const [info, setInfo] = useState(null);
-  const { user } = useAuthContext();
-  const [postError, setPostError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [img, setImg] = useState();
+  const { newComment, setNewComment } = prop;
+
   const navigate = useNavigate();
-  const form = useRef();
 
   useEffect(() => {
     async function fetchComment() {
@@ -52,15 +46,18 @@ function Comment(prop) {
       } else {
       }
     }
-    fetchComment();
-  }, []);
+    if (newComment) {
+      fetchComment();
+      setNewComment(false);
+    }
+  }, [newComment]);
 
   return (
     <div>
       {commentList.map((c) => (
         <div className="row align-items-center mx-auto">
           <div className="col-12 d-flex align-items-center px-0 mx-0">
-            <div onClick={() => navigate("/profile")}>
+            <div onClick={() => navigate(`/profile"/${c.user._id}`)}>
               <img src={c.pfp} alt="user img" className="postpfp" />
             </div>
             <div className="d-flex flex-column align-items-left mx-2">

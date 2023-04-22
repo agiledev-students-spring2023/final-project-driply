@@ -13,6 +13,7 @@ const PostPage = () => {
   const navigate = useNavigate();
   const [comment, setComment] = useState("");
   const [commentList, setCommentList] = useState([]);
+  const [newComment, setNewComment] = useState(true);
   const [likes, setLikes] = useState([]);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -122,6 +123,7 @@ const PostPage = () => {
         if (json.message === "success") {
           setCommentList([json.newComment, ...commentList]);
           setComment("");
+          setNewComment(true);
         }
       } else {
         setPostError(response.status);
@@ -193,6 +195,8 @@ const PostPage = () => {
         likes={likes}
         commentList={commentList}
         setCommentList={setCommentList}
+        newComment={newComment}
+        setNewComment={setNewComment}
       />
     </div>
   );
