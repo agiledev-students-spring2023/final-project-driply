@@ -34,6 +34,7 @@ const PostPage = () => {
   ];
   const randomPostIndex = Math.floor(Math.random() * randomPostSize.length);
 
+
   useEffect(() => {
     async function fetchPostInfo() {
       const response = await fetch(`http://localhost:4000/getPost`, {
@@ -83,6 +84,7 @@ const PostPage = () => {
           const imageBlob = await response2.blob();
           const imageObjectURL = URL.createObjectURL(imageBlob);
           setPfp(imageObjectURL);
+
         }
       } else {
         setPostError(response.status);
@@ -96,6 +98,7 @@ const PostPage = () => {
   function navigateProfile() {
     navigate(`/profile/${userID}`);
   }
+
 
   return (
     <div
@@ -112,7 +115,6 @@ const PostPage = () => {
         </div>
         <div className="col-4 d-flex justify-content-end px-0 mx-auto">
           <span className="mr-3">${price}</span>
-        </div>
       </div>
       <img className="center-block img-responsive" src={img} alt="pic" />
       {description}

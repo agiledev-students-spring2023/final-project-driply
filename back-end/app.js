@@ -161,6 +161,7 @@ app.post("/getPost", (req, res, next) => {
         .then((u) => {
           res.json({
             username: u.name,
+            userId: p.user,
             description: p.description,
             price: p.price,
             likes: p.likes,
@@ -382,15 +383,28 @@ app.post("/unbookmark", async (req, res) => {
   }
 });
 
-app.get("/getHomePosts", async (req, res) => {
-  Post.find({})
+app.post("/getHomePosts", async (req, res) => {
+  if (req.body.userId){
+    User.findOne({_id: req.body.userId})
+    .then((u) => {
+      Post.find({ user: { "$in" : u.following} })
+      .then((posts) => {
+        res.json({ data: posts });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    })
+  }
+  else{
+    Post.find({})
     .then((posts) => {
-      //console.log(posts); //process this array later to find the trending posts
       res.json({ data: posts });
     })
     .catch((err) => {
       console.log(err);
     });
+  }
 });
 
 app.get("/chats", async (req, res) => {

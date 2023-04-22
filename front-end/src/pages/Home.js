@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import Post from "../components/Post";
+import { useAuthContext } from "../hooks/useAuthContext";
 import { DarkModeContext } from "../context/DarkModeContext";
 
 function Home() {
   const [postList, setPostList] = useState([]);
   const [postListError, setPostListError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuthContext();
   const { ifDarkMode } = useContext(DarkModeContext);
 
   function sortPosts(posts) {
@@ -21,12 +23,17 @@ function Home() {
   }
 
   useEffect(() => {
+    let u = null;
+
     async function fetchPostList() {
       const response = await fetch(`http://localhost:4000/getHomePosts`, {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          userId: u
+        })
       });
       let json = await response.json();
       if (response.status === 200) {
@@ -39,6 +46,9 @@ function Home() {
       setLoading(false);
     }
 
+    if (user){
+      u = user.id;
+    }
     fetchPostList();
   }, []);
 
