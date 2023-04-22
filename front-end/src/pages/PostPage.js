@@ -19,6 +19,7 @@ const PostPage = () => {
   const [price, setPrice] = useState(0);
   const [img, setImg] = useState();
   const [pfp, setPfp] = useState();
+  const [loggedInPfp, setLoggedInPfp] = useState();
   const [postError, setPostError] = useState(null);
   const { postId } = useParams();
   const [userID, setUserID] = useState(0);
@@ -93,8 +94,26 @@ const PostPage = () => {
       }
     }
 
+    async function fetchLoggedInUserPfP() {
+      const response = await fetch(`http://localhost:4000/getUserPfp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+        }),
+      });
+      if (response.status === 200) {
+        const imageBlob = await response.blob();
+        const imageObjectURL = URL.createObjectURL(imageBlob);
+        setLoggedInPfp(imageObjectURL);
+      }
+    }
+
     fetchPostInfo();
-  }, []);
+    fetchLoggedInUserPfP();
+  }, [user]);
 
   function navigateProfile() {
     navigate(`/profile/${userID}`);
@@ -168,7 +187,7 @@ const PostPage = () => {
             >
               <div className="col-auto px-0">
                 <div onClick={() => navigate("/profile")} className="postpfp">
-                  {pfp && <img src={pfp} alt="user img" />}
+                  {loggedInPfp && <img src={loggedInPfp} alt="user img" />}
                 </div>
               </div>
               <div className="col px-0">
