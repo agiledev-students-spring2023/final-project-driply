@@ -383,27 +383,42 @@ app.post("/unbookmark", async (req, res) => {
   }
 });
 
+function sortPosts(posts) {
+  return posts.sort((a, b) => {
+    const aDate = new Date(
+      parseInt(a._id.toString().substring(0, 8), 16) * 1000
+    );
+    const bDate = new Date(
+      parseInt(b._id.toString().substring(0, 8), 16) * 1000
+    );
+    return bDate - aDate;
+  });
+}
+
 app.post("/getHomePosts", async (req, res) => {
-  if (req.body.userId){
-    User.findOne({_id: req.body.userId})
-    .then((u) => {
-      Post.find({ user: { "$in" : u.following} })
-      .then((posts) => {
-        res.json({ data: posts });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    })
-  }
-  else{
-    Post.find({})
-    .then((posts) => {
-      res.json({ data: posts });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  try {
+    if (req.body.userId) {
+      const user = await User.findOne({ _id: req.body.userId });
+      const followingPosts = await Post.find({
+        user: { $in: user.following },
+      }).sort({ _id: -1 });
+      const strangerPosts = await Post.find({
+        user: { $nin: user.following },
+      }).sort({ _id: -1 });
+      const sortedPosts = [...followingPosts, ...strangerPosts].sort(
+        (a, b) => b._id.getTimestamp() - a._id.getTimestamp()
+      );
+      res.json({ data: sortedPosts });
+    } else {
+      const posts = await Post.find({}).sort({ _id: -1 });
+      const sortedPosts = posts.sort(
+        (a, b) => b._id.getTimestamp() - a._id.getTimestamp()
+      );
+      res.json({ data: sortedPosts });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

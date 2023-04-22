@@ -23,7 +23,11 @@ function Home() {
   }
 
   useEffect(() => {
-    let u = null;
+    let u;
+    if (user) {
+      u = user.id;
+    }
+    console.log(u);
 
     async function fetchPostList() {
       const response = await fetch(`http://localhost:4000/getHomePosts`, {
@@ -32,8 +36,8 @@ function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: u
-        })
+          userId: u,
+        }),
       });
       let json = await response.json();
       if (response.status === 200) {
@@ -46,7 +50,7 @@ function Home() {
       setLoading(false);
     }
 
-    if (user){
+    if (user) {
       u = user.id;
     }
     fetchPostList();

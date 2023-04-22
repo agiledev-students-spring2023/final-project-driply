@@ -6,6 +6,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    margin-right: 10px;
 }
 
 .postpfp img {
@@ -19,9 +20,25 @@
     text-align: right;
 }
 
+.description-block {
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.row.align-items-center {
+    padding: 10px;
+    border-bottom: 1px gray solid;
+}
+
+.name-in-des {
+    font-weight: bold;
+}
+
 #root {
-    overflow-y: auto; 
+    overflow-y: auto;
     height: 100%;
     max-height: calc(100vh - 0px);
 }
-
