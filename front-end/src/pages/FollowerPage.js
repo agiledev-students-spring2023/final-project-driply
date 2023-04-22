@@ -145,7 +145,8 @@ function FollowerPage() {
     <div className={ifDarkMode && "darkTheme"}>
       {/* header */}
       <div className="chatPageHeader">
-        <h1>Followers {followerList?.length}</h1>
+        <h1 className="followHeadline">Followers</h1>
+        <h1 className="followCount">{followerList?.length}</h1>
       </div>
 
       {loading ? <LoadFollowerList /> : <DisplayFollowerList />}
