@@ -117,7 +117,12 @@ function ProfilePage() {
           {/* dont display message/follow btn on ur own account */}
           {user?.id !== userId && (
             <div className="pfpBtns">
-              <div onClick={handleMessageBtn} className="profilePageMsgBtn">
+              <div
+                onClick={handleMessageBtn}
+                className={`profilePageMsgBtn ${
+                  ifDarkMode && "unfollowBtn-dark"
+                }`}
+              >
                 Message
               </div>
               <div className="followBtnContainer">

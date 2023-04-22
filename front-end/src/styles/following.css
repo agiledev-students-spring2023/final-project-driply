@@ -64,8 +64,18 @@
 
 .unfollowBtn-dark {
     background-color: #262626;
+    color: white;
+    border-radius: 10px;
 }
 
 .unfollowBtn:active {
     transform: translateY(3px);
+}
+
+.unfollowBtn-dark:active {
+    transform: translateY(3px);
+}
+
+.right-dark {
+    background-color: black;
 }

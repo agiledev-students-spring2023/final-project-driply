@@ -113,7 +113,7 @@ function FollowerPage() {
         <div className="followerDetails">
           <p>{name}</p>
           {!isCurrentUser && (
-            <div>
+            <div className={`${ifDarkMode && "unfollowBtn-dark"}`}>
               <Follow ownProfile={ownProfile} profileID={id} />
             </div>
           )}

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
+import { DarkModeContext } from "../context/DarkModeContext";
 
 function Follow(props) {
   const [followed, setFollowed] = useState(false);
@@ -8,6 +9,7 @@ function Follow(props) {
   const [ownProfile] = useState(props.ownProfile);
   const { user } = useAuthContext();
   const navigate = useNavigate();
+  const { ifDarkMode } = useContext(DarkModeContext);
 
   useEffect(() => {
     async function fetchFollowingList() {
@@ -93,13 +95,19 @@ function Follow(props) {
   function FollowButton() {
     if (!followed) {
       return (
-        <button onClick={handleFollow} className="buttonPaddingRight">
+        <button
+          onClick={handleFollow}
+          className={`buttonPaddingRight ${ifDarkMode && "unfollowBtn-dark"}`}
+        >
           Follow
         </button>
       );
     } else {
       return (
-        <button onClick={handleFollow} className="buttonPaddingRight">
+        <button
+          onClick={handleFollow}
+          className={`buttonPaddingRight ${ifDarkMode && "unfollowBtn-dark"}`}
+        >
           Followed
         </button>
       );
@@ -111,7 +119,9 @@ function Follow(props) {
       {ownProfile ? (
         <div></div>
       ) : (
-        <div className="right">{user ? <FollowButton /> : <div></div>}</div>
+        <div className={`right ${ifDarkMode && "right-dark"}`}>
+          {user ? <FollowButton /> : <div></div>}
+        </div>
       )}
     </>
   );

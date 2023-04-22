@@ -380,3 +380,7 @@
     padding-right: 20px;
     padding-top: 15px;
 }
+
+.right {
+    border-radius: 10px;
+}
