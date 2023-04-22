@@ -34,10 +34,6 @@ function Follow(props) {
     fetchFollowingList();
   }, [followedChanged, user.id, followed, props.profileID]);
 
-  useEffect(() => {
-    setFollowedChanged(false);
-  }, [followedChanged]);
-
   const handleFollow = (e) => {
     if (user) {
       e.stopPropagation();
