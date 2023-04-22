@@ -14,7 +14,7 @@ function ProfilePage() {
   const [description, setDescription] = useState("");
   const [fetchError, setFetchError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [ownProfile, setOwnProfile] = useState(false);
+  const [ownProfile] = useState(false);
   const { ifDarkMode } = useContext(DarkModeContext);
   const [pfp, setPfp] = useState("");
   const [postList, setPostList] = useState([]);
@@ -120,7 +120,9 @@ function ProfilePage() {
               <div onClick={handleMessageBtn} className="profilePageMsgBtn">
                 Message
               </div>
-              <Follow ownProfile={ownProfile} profileID={userId} />
+              <div className="followBtnContainer">
+                <Follow ownProfile={ownProfile} profileID={userId} />
+              </div>
             </div>
           )}
           <div className="pfpContainer">

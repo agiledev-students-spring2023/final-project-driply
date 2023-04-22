@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
+import Follow from "../components/Follow";
 
 function FollowerPage() {
   const [followerList, setFollowerList] = useState([]);
@@ -15,6 +16,7 @@ function FollowerPage() {
   const params = useParams();
   const { userId } = params;
   const { user } = useAuthContext();
+  const [ownProfile] = useState(false);
 
   useEffect(() => {
     async function fetchFollowerList() {
@@ -112,7 +114,7 @@ function FollowerPage() {
           <p>{name}</p>
           {!isCurrentUser && (
             <div className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}>
-              Follow
+              <Follow ownProfile={ownProfile} profileID={id} />
             </div>
           )}
         </div>
