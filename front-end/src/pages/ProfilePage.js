@@ -122,7 +122,7 @@ function ProfilePage() {
       ) : (
         <>
           {/* dont display message/follow btn on ur own account */}
-          {user?.id !== userId && (
+          {user && user?.id !== userId && (
             <div className="pfpBtns">
               <div
                 onClick={handleMessageBtn}

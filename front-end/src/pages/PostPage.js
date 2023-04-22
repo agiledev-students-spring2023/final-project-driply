@@ -16,6 +16,7 @@ const PostPage = () => {
     const [price, setPrice] = useState(0);
     const [img, setImg] = useState();
     const [pfp, setPfp] = useState();
+    const [poster, setPoster] = useState();
     const [postError, setPostError] = useState(null);
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
@@ -44,6 +45,7 @@ const PostPage = () => {
                 console.log(json);
                 let arr = [...json.likes];
                 setLikes(arr);
+                setPoster(json.userId);
                 setName(json.username);
                 setDescription(json.description);
                 setPrice(json.price);
@@ -95,10 +97,10 @@ const PostPage = () => {
         <div className={`mb-100 postContainer overflow-auto ${ifDarkMode && "darkTheme"} postPage`}>
             <div className="row align-items-center mx-auto">
                 <div className="col-8 d-flex align-items-center px-0 mx-auto">
-                    <div onClick={() => navigate("/profile")} className="postpfp">
+                    <div onClick={() => navigate(`/profile/${poster}`)} className="postpfp">
                         <img src={pfp} alt="user img"/>
                     </div>
-                    <span onClick={() => navigate("/profile")}>{name}</span>
+                    <span onClick={() => navigate(`/profile/${poster}`)}>{name}</span>
                 </div>
                 <div className="col-4 d-flex justify-content-end px-0 mx-auto">
                     <span className="mr-3">${price}</span>
