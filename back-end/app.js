@@ -452,7 +452,6 @@ app.get("/following/:id", async (req, res) => {
     const user = await User.findOne({ _id: id }).exec();
     // check if user was found
     if (!user) {
-      console.error("User was not found");
       return res.status(401).json({
         success: false,
         message: "User was not found in db",
@@ -480,7 +479,6 @@ app.get("/following/:id", async (req, res) => {
       followingData: followingInfo,
     });
   } catch (error) {
-    console.log(`Err looking up user: ${error}`);
     return res.status(500).json({
       success: false,
       message: "Error looking up user in database.",

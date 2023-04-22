@@ -38,6 +38,7 @@ describe("/GET request to /getTrendingPosts", () => {
     chai
       .request(app)
       .get("/getTrendingPosts")
+      .timeout(5000)
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("object");
@@ -52,6 +53,7 @@ describe("/GET request to /getHomePosts", () => {
     chai
       .request(app)
       .get("/getHomePosts")
+      .timeout(5000)
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body).to.be.an("object");
@@ -63,21 +65,27 @@ describe("/GET request to /getHomePosts", () => {
 
 describe("/GET request to /follower/:id", () => {
   let user;
-
-  it("should return follower info for a valid user ID", (done) => {
+  before(async () => {
     // create a user to test with
     user = new User({
       name: "Test User",
       followers: ["123456789012345678901234", "234567890123456789012345"],
     });
-    user.save();
+    await user.save();
+  });
 
+  after(() => {
+    User.deleteOne({ _id: user._id }).exec();
+  });
+
+  it("should return follower info for a valid user ID", (done) => {
     chai
       .request(app)
       .get(`/follower/${user._id}`)
       .timeout(5000)
       .end((err, res) => {
         res.should.have.status(200);
+        res.should.be.json;
         res.body.success.should.be.true;
         res.body.followers.should.be.an("array");
         res.body.followersData.should.be.an("array");
@@ -89,29 +97,47 @@ describe("/GET request to /follower/:id", () => {
     chai
       .request(app)
       .get("/follower/invalidID")
+      .timeout(5000)
       .end((err, res) => {
         res.should.have.status(500);
+        res.should.be.json;
         res.body.success.should.be.false;
         res.body.message.should.equal("Error looking up user in database.");
         done();
       });
   });
-  after(() => {
-    User.deleteOne({ _id: user._id }).exec();
+
+  it("should return a 401 error for a user ID that does not exist", (done) => {
+    chai
+      .request(app)
+      .get("/follower/123456789012345678901234")
+      .timeout(5000)
+      .end((err, res) => {
+        res.should.have.status(401);
+        res.should.be.json;
+        res.body.success.should.be.false;
+        res.body.message.should.equal("User was not found in db");
+        done();
+      });
   });
 });
 
 describe("/GET request to /following/:id", () => {
   let user;
-
-  it("should return following info for a valid user ID", (done) => {
+  before(async () => {
     // create a user to test with
     user = new User({
       name: "Test User",
       following: ["123456789012345678901234", "234567890123456789012345"],
     });
-    user.save();
+    await user.save();
+  });
 
+  after(async () => {
+    User.deleteOne({ _id: user._id }).exec();
+  });
+
+  it("should return following info for a valid user ID", (done) => {
     chai
       .request(app)
       .get(`/following/${user._id}`)
@@ -119,6 +145,7 @@ describe("/GET request to /following/:id", () => {
       .end((err, res) => {
         res.should.have.status(200);
         res.body.success.should.be.true;
+        res.should.be.json;
         res.body.following.should.be.an("array");
         res.body.followingData.should.be.an("array");
         done();
@@ -129,15 +156,28 @@ describe("/GET request to /following/:id", () => {
     chai
       .request(app)
       .get("/following/invalidID")
+      .timeout(5000)
       .end((err, res) => {
         res.should.have.status(500);
+        res.should.be.json;
         res.body.success.should.be.false;
         res.body.message.should.equal("Error looking up user in database.");
         done();
       });
   });
-  after(() => {
-    User.deleteOne({ _id: user._id }).exec();
+
+  it("should return a 401 error for a user ID that does not exist", (done) => {
+    chai
+      .request(app)
+      .get("/follower/123456789012345678901234")
+      .timeout(5000)
+      .end((err, res) => {
+        res.should.have.status(401);
+        res.should.be.json;
+        res.body.success.should.be.false;
+        res.body.message.should.equal("User was not found in db");
+        done();
+      });
   });
 });
 
