@@ -45,6 +45,13 @@
     margin-left: 5px;
 }
 
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.likeIconPostpage.css-2z2hz5-MuiSvgIcon-root {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    margin-left: 5px;
+}
+
 #root {
     overflow-y: auto;
     height: 100%;

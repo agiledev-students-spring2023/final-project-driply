@@ -102,7 +102,7 @@ const PostPage = () => {
 
     fetchPostInfo();
     fetchLoggedInUserPfP();
-  }, [user]);
+  }, [user, postId]);
 
   function navigateProfile() {
     navigate(`/profile/${userID}`);
