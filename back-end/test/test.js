@@ -15,7 +15,7 @@ const sinon = require("sinon");
 const Post = require("../models/Post.js");
 const User = require("../models/User.js");
 const Comment = require("../models/Comment.js");
-
+chai.should();
 chai.use(chaiHttp);
 
 describe("/GET request to /getTrendingPosts", () => {
@@ -35,6 +35,7 @@ describe("/GET request to /getTrendingPosts", () => {
       .get("/getTrendingPosts")
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object");
         expect(res.body.data).to.be.an("array");
         done();
       });
@@ -59,26 +60,66 @@ describe("/GET request to /getHomePosts", () => {
       .get("/getHomePosts")
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body).to.be.an("object");
         expect(res.body.data).to.be.an("array");
         done();
       });
   });
 });
 
-// describe("GET request to /getHomePosts route", () => {
-//   it("it should respond with an HTTP 200 status code and an object in the response body", (done) => {
-//     chai
-//       .request(server)
-//       .get("/getHomePosts")
-//       .end((err, res) => {
-//         res.should.have.status(200);
-//         res.body.should.be.a("object");
-//         res.body.should.have.property("data");
-//         res.body.data.should.be.an("array");
-//         done();
-//       });
-//   });
-// });
+describe("/GET request to /follower/:id", () => {
+  let user;
+
+  before(async () => {
+    await mongoose.connect(
+      "mongodb+srv://" +
+        process.env.MONGO_USERNAME +
+        ":" +
+        process.env.MONGO_PASSWORD +
+        "@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority",
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    );
+  });
+
+  it("should return follower info for a valid user ID", (done) => {
+    // create a user to test with
+    user = new User({
+      name: "Test User",
+      followers: ["123456789012345678901234", "234567890123456789012345"],
+    });
+    user.save();
+
+    chai
+      .request(app)
+      .get(`/follower/${user._id}`)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.success.should.be.true;
+        res.body.followers.should.be.an("array");
+        res.body.followersData.should.be.an("array");
+        done();
+      });
+  });
+
+  it("should return a 500 error for an invalid user ID", (done) => {
+    chai
+      .request(app)
+      .get("/follower/invalidID")
+      .end((err, res) => {
+        res.should.have.status(500);
+        res.body.success.should.be.false;
+        res.body.message.should.equal("Error looking up user in database.");
+        done();
+      });
+  });
+
+  after(async () => {
+    await User.deleteOne({ _id: user.id });
+  });
+});
 
 // describe("POST request to /profile route", () => {
 //   it("it should respond with an HTTP 200 status code and an object in the response body", (done) => {
@@ -414,64 +455,6 @@ describe("/GET request to /getHomePosts", () => {
 //   });
 // });
 
-// describe("GET request to /getTrendingPosts route", () => {
-//   let axiosGetStub;
-
-//   beforeEach(() => {
-//     axiosGetStub = sinon.stub(axios, "get");
-//   });
-
-//   afterEach(() => {
-//     axiosGetStub.restore();
-//   });
-
-//   it("should return trending posts with 200 status code", (done) => {
-//     // mock the response data for this test
-//     axiosGetStub.resolves({
-//       data: [
-//         { id: 1, title: "Post 1", likes: 10 },
-//         { id: 2, title: "Post 2", likes: 20 },
-//         { id: 3, title: "Post 3", likes: 30 },
-//       ],
-//       status: 200,
-//     });
-
-//     request(server)
-//       .get("/getTrendingPosts")
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
-//         assert.deepStrictEqual(res.body, {
-//           data: [
-//             { id: 1, title: "Post 1", likes: 10 },
-//             { id: 2, title: "Post 2", likes: 20 },
-//             { id: 3, title: "Post 3", likes: 30 },
-//           ],
-//         });
-//         done();
-//       });
-//   });
-
-//   it("should handle errors with an error message and status code", (done) => {
-//     axiosGetStub.rejects({
-//       message: "API is down",
-//       response: { status: 500 },
-//     });
-
-//     request(server)
-//       .get("/getTrendingPosts")
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
-//         assert.deepStrictEqual(res.body, {
-//           error: "API is down",
-//           status: 500,
-//         });
-//         done();
-//       });
-//   });
-// });
-
 // describe("GET request to /bookmarks route", () => {
 //   let axiosGetStub;
 
@@ -586,6 +569,7 @@ describe("/GET request to /getHomePosts", () => {
 //   });
 // });
 
+// Close the mongoose connection after all tests are complete
 after(async () => {
   await mongoose.connection.close();
 });
