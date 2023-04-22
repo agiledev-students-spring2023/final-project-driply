@@ -274,7 +274,6 @@ app.get("/bookmarks/:id", async (req, res) => {
     const user = await User.find({ _id: id }).populate("bookmark").exec();
     // check if user was found
     if (!user[0]) {
-      console.error("User was not found");
       return res.status(401).json({
         success: false,
         message: "User was not found in db",
@@ -287,7 +286,6 @@ app.get("/bookmarks/:id", async (req, res) => {
       bookmarks: bookmark,
     });
   } catch (error) {
-    console.log(`Err looking up user: ${error}`);
     return res.status(500).json({
       success: false,
       message: "Error looking up user in database.",
@@ -412,7 +410,6 @@ app.get("/follower/:id", async (req, res) => {
     const user = await User.findOne({ _id: id }).exec();
     // check if user was found
     if (!user) {
-      console.error("User was not found");
       return res.status(401).json({
         success: false,
         message: "User was not found in db",
@@ -439,7 +436,6 @@ app.get("/follower/:id", async (req, res) => {
       followersData: followerInfo,
     });
   } catch (error) {
-    console.log(`Err looking up user: ${error}`);
     return res.status(500).json({
       success: false,
       message: "Error looking up user in database.",
@@ -454,7 +450,6 @@ app.get("/following/:id", async (req, res) => {
     const user = await User.findOne({ _id: id }).exec();
     // check if user was found
     if (!user) {
-      console.error("User was not found");
       return res.status(401).json({
         success: false,
         message: "User was not found in db",
@@ -482,7 +477,6 @@ app.get("/following/:id", async (req, res) => {
       followingData: followingInfo,
     });
   } catch (error) {
-    console.log(`Err looking up user: ${error}`);
     return res.status(500).json({
       success: false,
       message: "Error looking up user in database.",
@@ -574,7 +568,7 @@ app.post("/unfollow", async (req, res) => {
 app.get("/getTrendingPosts", async (req, res) => {
   Post.find({})
     .then((posts) => {
-      //console.log(posts); //process this array later to find the trending posts
+      //process this array later to find the trending posts
       res.json({ data: posts });
     })
     .catch((err) => {

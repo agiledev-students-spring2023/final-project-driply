@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from '../hooks/useAuthContext';
+import { useAuthContext } from "../hooks/useAuthContext";
 
 function PostForm() {
   const [image, setImage] = useState(null);
@@ -29,15 +29,15 @@ function PostForm() {
 
     const response = await fetch(`http://localhost:4000/post-form`, {
       method: "POST",
-      body: formData
+      body: formData,
     });
     let json = await response.json();
     if (response.status === 200) {
-        console.log(json);
-        setImage(null);
-        setPrice(null);
+      console.log(json);
+      setImage(null);
+      setPrice(null);
+      navigate("/");
     } else {
-
     }
   }
 
