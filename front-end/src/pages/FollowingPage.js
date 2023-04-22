@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { useParams } from "react-router-dom";
+import Follow from "../components/Follow";
 
 function FollowingPage() {
   const [followingList, setFollowingList] = useState([]);
@@ -12,6 +13,7 @@ function FollowingPage() {
   const { ifDarkMode } = useContext(DarkModeContext);
   const params = useParams();
   const { userId } = params;
+  const [ownProfile] = useState(false);
 
   useEffect(() => {
     async function fetchFollowingList() {

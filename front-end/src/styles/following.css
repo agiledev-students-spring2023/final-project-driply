@@ -55,3 +55,17 @@
     font-size: large;
 }
 
+.unfollowBtn {
+    font-weight: 500;
+    border: 2px solid grey;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.unfollowBtn-dark {
+    background-color: #262626;
+}
+
+.unfollowBtn:active {
+    transform: translateY(3px);
+}
