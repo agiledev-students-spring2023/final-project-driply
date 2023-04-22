@@ -36,7 +36,6 @@ const PostPage = () => {
   ];
   const randomPostIndex = Math.floor(Math.random() * randomPostSize.length);
 
-
   useEffect(() => {
     async function fetchPostInfo() {
       const response = await fetch(`http://localhost:4000/getPost`, {
@@ -86,7 +85,6 @@ const PostPage = () => {
           const imageBlob = await response2.blob();
           const imageObjectURL = URL.createObjectURL(imageBlob);
           setPfp(imageObjectURL);
-
         }
       } else {
         setPostError(response.status);
@@ -137,7 +135,7 @@ const PostPage = () => {
   return (
     <div
       className={`mb-100 postContainer overflow-auto ${
-        ifDarkMode && "darkTheme"
+        ifDarkMode ? "darkTheme" : ""
       } postPage`}
     >
       <div className="row align-items-center mx-auto">
@@ -149,28 +147,29 @@ const PostPage = () => {
         </div>
         <div className="col-4 d-flex justify-content-end px-0 mx-auto">
           <span className="mr-3">${price}</span>
+        </div>
       </div>
       <img className="center-block img-responsive" src={img} alt="pic" />
       <div className="description-block">
-        <div className="name-in-des"> {name + ": "}</div>
+        <div className="name-in-des">{name + ": "}</div>
         {description}
       </div>
 
       {user && (
         <div>
           <Like likes={likes} postId={postId} />
-          <div class="container">
+          <div className="container">
             <Form
               onSubmit={handleComment}
               ref={form}
-              class="row align-items-center"
+              className="row align-items-center"
             >
               <div className="col-auto px-0">
                 <div onClick={() => navigate("/profile")} className="postpfp">
                   {pfp && <img src={pfp} alt="user img" />}
                 </div>
               </div>
-              <div class="col px-0">
+              <div className="col px-0">
                 <Input
                   type="text"
                   value={comment}
@@ -180,7 +179,7 @@ const PostPage = () => {
                   required
                 />
               </div>
-              <div class="col-auto">
+              <div className="col-auto">
                 <button className="btn btn-success btn-block">Send</button>
               </div>
             </Form>
