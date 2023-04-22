@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { useParams } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 function FollowerPage() {
   const [followerList, setFollowerList] = useState([]);
   const [followersData, setFollowerData] = useState([]);
   const [followerError, setFollowerError] = useState(null);
+  const [followingList, setFollowingList] = useState([]);
+  const [followingData, setFollowingData] = useState([]);
+  const [followingError, setFollowingError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { ifDarkMode } = useContext(DarkModeContext);
   const params = useParams();
   const { userId } = params;
+  const { user } = useAuthContext();
 
   useEffect(() => {
     async function fetchFollowerList() {
@@ -33,6 +38,31 @@ function FollowerPage() {
       }
     }
 
+    async function fetchFollowingList() {
+      const response = await fetch(
+        `http://localhost:4000/following/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      let json = await response.json();
+      if (json.success) {
+        setFollowingList(json.following);
+        setFollowingData(json.followingData);
+        setFollowingError(null);
+        setLoading(false);
+        console.log(json);
+      } else {
+        console.log(json.error);
+        setFollowingError({ error: json.error.message, message: json.message });
+        setLoading(false);
+      }
+    }
+
+    fetchFollowingList();
     fetchFollowerList();
   }, [userId]);
 
@@ -50,6 +80,8 @@ function FollowerPage() {
   function Follower({ follower }) {
     const { name, id } = follower;
     const [profilePic, setProfilePic] = useState(null);
+    const params = useParams();
+    const { userId } = params;
 
     useEffect(() => {
       async function fetchProfilePic() {
@@ -69,6 +101,8 @@ function FollowerPage() {
       fetchProfilePic();
     }, [id]);
 
+    const isCurrentUser = user.id === id;
+
     return (
       <div className="eachFollowerDisplay">
         <div className="followerImg">
@@ -76,18 +110,29 @@ function FollowerPage() {
         </div>
         <div className="followerDetails">
           <p>{name}</p>
-          <div className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}>
-            Follow
-          </div>
+          {!isCurrentUser && (
+            <div className={`unfollowBtn ${ifDarkMode && "unfollowBtn-dark"}`}>
+              Follow
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
   function DisplayFollowerList() {
+    const isFollowing = (followerId) => followingList.includes(followerId);
+
+    // display logged in user on top
+    const sortedFollowers = [...followersData].sort((a, b) => {
+      if (a.id === user.id) return -1;
+      if (b.id === user.id) return 1;
+      return 0;
+    });
+
     return (
       <div className="followerContainer">
-        {followersData.map((follower, index) => (
+        {sortedFollowers.map((follower, index) => (
           <Follower key={index} follower={follower} />
         ))}
       </div>
