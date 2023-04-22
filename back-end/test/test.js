@@ -181,6 +181,64 @@ describe("/GET request to /following/:id", () => {
   });
 });
 
+describe("/GET request to /bookmark/:id", () => {
+  let user;
+  before(async () => {
+    // create a user to test with
+    user = new User({
+      name: "Test User",
+      bookmark: ["123456789012345678901234", "234567890123456789012345"],
+    });
+    await user.save();
+  });
+
+  after(async () => {
+    User.deleteOne({ _id: user._id }).exec();
+  });
+
+  it("should return bookmark info for a valid user ID", (done) => {
+    chai
+      .request(app)
+      .get(`/bookmarks/${user._id}`)
+      .timeout(5000)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.should.be.json;
+        res.body.success.should.be.true;
+        res.body.bookmarks.should.be.an("array");
+        done();
+      });
+  });
+
+  it("should return a 401 error for a user ID that does not exist", (done) => {
+    chai
+      .request(app)
+      .get("/bookmarks/123456789012345678901234")
+      .timeout(5000)
+      .end((err, res) => {
+        res.should.have.status(401);
+        res.should.be.json;
+        res.body.success.should.be.false;
+        res.body.message.should.equal("User was not found in db");
+        done();
+      });
+  });
+
+  it("should return a 500 error for an invalid user ID", (done) => {
+    chai
+      .request(app)
+      .get("/bookmarks/invalidID")
+      .timeout(5000)
+      .end((err, res) => {
+        res.should.have.status(500);
+        res.should.be.json;
+        res.body.success.should.be.false;
+        res.body.message.should.equal("Error looking up user in database.");
+        done();
+      });
+  });
+});
+
 // describe("POST request to /profile route", () => {
 //   it("it should respond with an HTTP 200 status code and an object in the response body", (done) => {
 //     var body = {
@@ -235,62 +293,6 @@ describe("/GET request to /following/:id", () => {
 //         res.should.have.status(200);
 //         res.body.should.be.a("object");
 //         res.body.should.have.property("message").eql("success");
-//         done();
-//       });
-//   });
-// });
-
-// describe("GET request to /following route", () => {
-//   let axiosGetStub;
-
-//   beforeEach(() => {
-//     axiosGetStub = sinon.stub(axios, "get");
-//   });
-
-//   afterEach(() => {
-//     axiosGetStub.restore();
-//   });
-
-//   it("should return an array of following data with 200 status code", (done) => {
-//     const mockData = [
-//       { id: 1, user: "testuser1", following: "testuser2" },
-//       { id: 2, user: "testuser1", following: "testuser3" },
-//     ];
-
-//     axiosGetStub.resolves({
-//       data: mockData,
-//       status: 200,
-//     });
-
-//     request(server)
-//       .get("/following")
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
-//         expect(res.body).to.be.an("object");
-//         expect(res.body).to.have.property("data");
-//         expect(res.body.data).to.deep.equal(mockData);
-//         expect(res.body).to.have.property("status", 200);
-//         done();
-//       });
-//   });
-
-//   it("should return an error message and status code when API is down", (done) => {
-//     const errorMessage = "API is down";
-
-//     axiosGetStub.rejects({
-//       message: errorMessage,
-//       response: { status: 500 },
-//     });
-
-//     request(server)
-//       .get("/following")
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
-//         expect(res.body).to.be.an("object");
-//         expect(res.body).to.have.property("error", errorMessage);
-//         expect(res.body).to.have.property("status", 500);
 //         done();
 //       });
 //   });
