@@ -19,6 +19,7 @@ function ProfilePage() {
   const [pfp, setPfp] = useState("");
   const [postList, setPostList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
+  const [followedChangedSuccess, setFollowedChangedSuccess] = useState(false);
 
   useEffect(() => {
     if (user && user.following) {
@@ -72,7 +73,13 @@ function ProfilePage() {
 
     fetchPfp();
     fetchProfileInfo();
-  }, [userData.profilepic, userId, followingList]);
+  }, [
+    userData.profilepic,
+    userId,
+    followingList,
+    followedChangedSuccess,
+    user,
+  ]);
 
   useEffect(() => {
     async function getPictureUrls() {
@@ -126,7 +133,12 @@ function ProfilePage() {
                 Message
               </div>
               <div className="followBtnContainer">
-                <Follow ownProfile={ownProfile} profileID={userId} />
+                <Follow
+                  ownProfile={ownProfile}
+                  profileID={userId}
+                  followedChangedSuccess={followedChangedSuccess}
+                  setFollowedChangedSuccess={setFollowedChangedSuccess}
+                />
               </div>
             </div>
           )}

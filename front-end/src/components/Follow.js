@@ -57,6 +57,7 @@ function Follow(props) {
           if (json.message === "success") {
             setFollowed(true);
             setFollowedChanged(true);
+            props.setFollowedChangedSuccess(true);
           }
         }
       }
@@ -78,6 +79,7 @@ function Follow(props) {
           if (json.message === "success") {
             setFollowed(false);
             setFollowedChanged(true);
+            props.setFollowedChangedSuccess(true);
           }
         }
       }
@@ -87,6 +89,7 @@ function Follow(props) {
       } else {
         follow();
       }
+      props.setFollowedChangedSuccess(false);
     } else {
       navigate("/login");
     }
