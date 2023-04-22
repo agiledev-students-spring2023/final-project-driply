@@ -574,7 +574,7 @@ app.post("/unfollow", async (req, res) => {
 app.get("/getTrendingPosts", async (req, res) => {
   Post.find({})
     .then((posts) => {
-      //console.log(posts); //process this array later to find the trending posts
+      //process this array later to find the trending posts
       res.json({ data: posts });
     })
     .catch((err) => {
