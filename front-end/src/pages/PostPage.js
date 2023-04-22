@@ -211,6 +211,7 @@ const PostPage = () => {
       <br />
       <Comment
         postId={postId}
+        loggedInID={user.id}
         likes={likes}
         commentList={commentList}
         setCommentList={setCommentList}

@@ -52,12 +52,16 @@ function Comment(prop) {
     }
   }, [newComment]);
 
+  function navigateProfile() {
+    navigate(`/profile/${prop.loggedInID}`);
+  }
+
   return (
     <div>
       {commentList.map((c) => (
         <div className="row align-items-center mx-auto">
           <div className="col-12 d-flex align-items-center px-0 mx-0">
-            <div onClick={() => navigate(`/profile"/${c.user._id}`)}>
+            <div onClick={navigateProfile}>
               <img src={c.pfp} alt="user img" className="postpfp" />
             </div>
             <div className="d-flex flex-column align-items-left mx-2">
