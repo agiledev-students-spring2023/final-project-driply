@@ -15,20 +15,25 @@ const sinon = require("sinon");
 const Post = require("../models/Post.js");
 const User = require("../models/User.js");
 const Comment = require("../models/Comment.js");
-chai.should();
+
+const should = chai.should();
 chai.use(chaiHttp);
 
+before(async () => {
+  mongoose.connect(
+    "mongodb+srv://" +
+      process.env.MONGO_USERNAME +
+      ":" +
+      process.env.MONGO_PASSWORD +
+      "@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  );
+});
+
 describe("/GET request to /getTrendingPosts", () => {
-  before((done) => {
-    mongoose.connect(
-      "mongodb+srv://" +
-        process.env.MONGO_USERNAME +
-        ":" +
-        process.env.MONGO_PASSWORD +
-        "@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority"
-    );
-    done();
-  });
   it("should return all trending posts", (done) => {
     chai
       .request(app)
@@ -43,17 +48,6 @@ describe("/GET request to /getTrendingPosts", () => {
 });
 
 describe("/GET request to /getHomePosts", () => {
-  before((done) => {
-    mongoose.connect(
-      "mongodb+srv://" +
-        process.env.MONGO_USERNAME +
-        ":" +
-        process.env.MONGO_PASSWORD +
-        "@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority"
-    );
-    done();
-  });
-
   it("should return all home posts", (done) => {
     chai
       .request(app)
@@ -70,20 +64,6 @@ describe("/GET request to /getHomePosts", () => {
 describe("/GET request to /follower/:id", () => {
   let user;
 
-  before(async () => {
-    await mongoose.connect(
-      "mongodb+srv://" +
-        process.env.MONGO_USERNAME +
-        ":" +
-        process.env.MONGO_PASSWORD +
-        "@driply.rdngwwf.mongodb.net/driply?retryWrites=true&w=majority",
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-    );
-  });
-
   it("should return follower info for a valid user ID", (done) => {
     // create a user to test with
     user = new User({
@@ -95,6 +75,7 @@ describe("/GET request to /follower/:id", () => {
     chai
       .request(app)
       .get(`/follower/${user._id}`)
+      .timeout(5000)
       .end((err, res) => {
         res.should.have.status(200);
         res.body.success.should.be.true;
@@ -115,9 +96,48 @@ describe("/GET request to /follower/:id", () => {
         done();
       });
   });
+  after(() => {
+    User.deleteOne({ _id: user._id }).exec();
+  });
+});
 
-  after(async () => {
-    await User.deleteOne({ _id: user.id });
+describe("/GET request to /following/:id", () => {
+  let user;
+
+  it("should return following info for a valid user ID", (done) => {
+    // create a user to test with
+    user = new User({
+      name: "Test User",
+      following: ["123456789012345678901234", "234567890123456789012345"],
+    });
+    user.save();
+
+    chai
+      .request(app)
+      .get(`/following/${user._id}`)
+      .timeout(5000)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.success.should.be.true;
+        res.body.following.should.be.an("array");
+        res.body.followingData.should.be.an("array");
+        done();
+      });
+  });
+
+  it("should return a 500 error for an invalid user ID", (done) => {
+    chai
+      .request(app)
+      .get("/following/invalidID")
+      .end((err, res) => {
+        res.should.have.status(500);
+        res.body.success.should.be.false;
+        res.body.message.should.equal("Error looking up user in database.");
+        done();
+      });
+  });
+  after(() => {
+    User.deleteOne({ _id: user._id }).exec();
   });
 });
 
@@ -225,62 +245,6 @@ describe("/GET request to /follower/:id", () => {
 
 //     request(server)
 //       .get("/following")
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
-//         expect(res.body).to.be.an("object");
-//         expect(res.body).to.have.property("error", errorMessage);
-//         expect(res.body).to.have.property("status", 500);
-//         done();
-//       });
-//   });
-// });
-
-// describe("GET request to /follower route", () => {
-//   let axiosGetStub;
-
-//   beforeEach(() => {
-//     axiosGetStub = sinon.stub(axios, "get");
-//   });
-
-//   afterEach(() => {
-//     axiosGetStub.restore();
-//   });
-
-//   it("should return an array of following data with 200 status code", (done) => {
-//     const mockData = [
-//       { id: 1, user: "testuser1", following: "testuser2" },
-//       { id: 2, user: "testuser1", following: "testuser3" },
-//     ];
-
-//     axiosGetStub.resolves({
-//       data: mockData,
-//       status: 200,
-//     });
-
-//     request(server)
-//       .get("/follower")
-//       .expect(200)
-//       .end((err, res) => {
-//         if (err) return done(err);
-//         expect(res.body).to.be.an("object");
-//         expect(res.body).to.have.property("data");
-//         expect(res.body.data).to.deep.equal(mockData);
-//         expect(res.body).to.have.property("status", 200);
-//         done();
-//       });
-//   });
-
-//   it("should return an error message and status code when API is down", (done) => {
-//     const errorMessage = "API is down";
-
-//     axiosGetStub.rejects({
-//       message: errorMessage,
-//       response: { status: 500 },
-//     });
-
-//     request(server)
-//       .get("/follower")
 //       .expect(200)
 //       .end((err, res) => {
 //         if (err) return done(err);
