@@ -1,3 +1,7 @@
+.row.align-items-center.mx-auto {
+    padding: 10px;
+}
+
 .postpfp {
     width: 60px;
     height: 60px;

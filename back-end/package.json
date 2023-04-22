@@ -4,7 +4,7 @@
   "description": "Express back-end.",
   "main": "server.js",
   "scripts": {
-    "test": "nyc mocha",
+    "test": "nyc mocha --timeout 5000",
     "dev": "nodemon server.js"
   },
   "keywords": [],

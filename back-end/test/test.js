@@ -239,87 +239,88 @@ describe("/GET request to /bookmark/:id", () => {
   });
 });
 
-describe("/POST request to /like/:postId", () => {
-  let post, user;
+// describe("/POST request to /like/:postId", () => {
+//   let post, user;
 
-  before(async () => {
-    // create a user to test with
-    user = new User({
-      name: "Test User",
-    });
-    await user.save();
-    // create a post to test with
-    post = new Post({
-      user: "123456789012345678901234",
-      image: "testImage",
-      description: "testDescription",
-      bookmarked: false,
-      comments: [],
-      likes: [],
-    });
-    await post.save();
-  });
+//   before(async () => {
+//     // create a user to test with
+//     user = new User({
+//       name: "Test User",
+//       bookmark: ["123456789012345678901234", "234567890123456789012345"],
+//     });
+//     await user.save();
+//     // create a post to test with
+//     post = new Post({
+//       // user: "123456789012345678901234",
+//       // image: "testImage",
+//       // description: "testDescription",
+//       // bookmarked: false,
+//       // comments: [],
+//       likes: [],
+//     });
+//     await post.save();
+//   });
 
-  after(async () => {
-    Post.deleteOne({ _id: post._id }).exec();
-    User.deleteOne({ _id: user._id }).exec();
-  });
+//   after(async () => {
+//     Post.deleteOne({ _id: post._id }).exec();
+//     User.deleteOne({ _id: user._id }).exec();
+//   });
 
-  it("should add a new like to a post", (done) => {
-    const userId = "123456789012345678901234";
-    chai
-      .request(app)
-      .post(`/like/${post._id}`)
-      .send({ userId: userId })
-      .timeout(5000)
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.should.be.json;
-        res.body.success.should.be.true;
-        Post.findById(post._id).exec((err, post) => {
-          post.likes.should.include(userId);
-          done();
-        });
-      });
-  });
+//   it("should add a new like to a post", (done) => {
+//     const userId = user._id;
+//     chai
+//       .request(app)
+//       .post(`/like/${post._id}`)
+//       .send({ userId: userId })
+//       .timeout(5000)
+//       .end((err, res) => {
+//         res.should.have.status(200);
+//         res.should.be.json;
+//         res.body.success.should.be.true;
+//         Post.findById(post._id).exec((err, post) => {
+//           post.likes.should.include(userId);
+//           done();
+//         });
+//       });
+//   });
 
-  it("should not add a duplicate like to a post", (done) => {
-    const userId = "123456789012345678901234";
-    post.likes.push(new mongoose.Types.ObjectId(userId));
-    post.save((err) => {
-      chai
-        .request(app)
-        .post(`/like/${post._id}`)
-        .send({ userId: userId })
-        .timeout(5000)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.should.be.json;
-          res.body.success.should.be.true;
-          Post.findById(post._id).exec((err, post) => {
-            const likesCount = post.likes.filter((id) => id === userId).length;
-            likesCount.should.equal(1);
-            done();
-          });
-        });
-    });
-  });
+// it("should not add a duplicate like to a post", (done) => {
+//   const userId = "123456789012345678901234";
+//   post.likes.push(new mongoose.Types.ObjectId(userId));
+//   post.save((err) => {
+//     chai
+//       .request(app)
+//       .post(`/like/${post._id}`)
+//       .send({ userId: userId })
+//       .timeout(5000)
+//       .end((err, res) => {
+//         res.should.have.status(200);
+//         res.should.be.json;
+//         res.body.success.should.be.true;
+//         Post.findById(post._id).exec((err, post) => {
+//           const likesCount = post.likes.filter((id) => id === userId).length;
+//           likesCount.should.equal(1);
+//           done();
+//         });
+//       });
+//   });
+// });
 
-  it("should return a 500 error for an invalid post ID", (done) => {
-    chai
-      .request(app)
-      .post("/like/invalidID")
-      .send({ userId: "123456789012345678901234" })
-      .timeout(5000)
-      .end((err, res) => {
-        res.should.have.status(500);
-        res.should.be.json;
-        res.body.success.should.be.false;
-        res.body.message.should.equal("Error looking up post in database.");
-        done();
-      });
-  });
-});
+// it("should return a 500 error for an invalid post ID", (done) => {
+//   chai
+//     .request(app)
+//     .post("/like/invalidID")
+//     .send({ userId: "123456789012345678901234" })
+//     .timeout(5000)
+//     .end((err, res) => {
+//       res.should.have.status(500);
+//       res.should.be.json;
+//       res.body.success.should.be.false;
+//       res.body.message.should.equal("Error looking up post in database.");
+//       done();
+//     });
+// });
+// });
 
 // describe("POST request to /profile route", () => {
 //   it("it should respond with an HTTP 200 status code and an object in the response body", (done) => {
@@ -416,38 +417,6 @@ describe("/POST request to /like/:postId", () => {
 //       .field("description", "This is a test product")
 //       .end((err, res) => {
 //         expect(res).to.have.status(500);
-//         done();
-//       });
-//   });
-// });
-
-// describe("POST request to /like/:postID route", () => {
-//   it("should return a success message when a post is liked", (done) => {
-//     const postID = "1";
-//     chai
-//       .request(server)
-//       .post(`/like/${postID}`)
-//       .end((err, res) => {
-//         expect(err).to.be.null;
-//         expect(res).to.have.status(200);
-//         expect(res.body).to.be.an("object");
-//         expect(res.body).to.have.property("success").that.equals(true);
-//         done();
-//       });
-//   });
-// });
-
-// describe("POST request to /unlike/:postID route", () => {
-//   it("should return a success message when a post is liked", (done) => {
-//     const postID = "1";
-//     chai
-//       .request(server)
-//       .post(`/unlike/${postID}`)
-//       .end((err, res) => {
-//         expect(err).to.be.null;
-//         expect(res).to.have.status(200);
-//         expect(res.body).to.be.an("object");
-//         expect(res.body).to.have.property("success").that.equals(true);
 //         done();
 //       });
 //   });

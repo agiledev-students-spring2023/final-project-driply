@@ -167,6 +167,7 @@ app.post("/getPost", (req, res, next) => {
             likes: p.likes,
             image: p.image,
             pfp: u.profilepic,
+            user: u._id,
           });
         })
         .catch((err) => {
