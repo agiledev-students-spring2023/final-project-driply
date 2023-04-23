@@ -1,4 +1,5 @@
 const express = require("express") // CommonJS import style!
+const { body, validationResult } = require('express-validator');
 
 // mongoose models for MongoDB data manipulation
 const mongoose = require("mongoose")
@@ -10,7 +11,14 @@ const authenticationRouter = () => {
   const router = express.Router()
 
   // a route to handle user signup requests to /auth/signup
-  router.post("/signup", async (req, res) => {
+  router.post("/signup", [
+    body('name').notEmpty().withMessage('name is required'),
+    body('password').notEmpty().withMessage('password is required')
+  ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     // console.log(`Incoming signup data: ${JSON.stringify(req.body, null, 0)}`)
     // grab the username and password from the POST body
     const name = req.body.name
