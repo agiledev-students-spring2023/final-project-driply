@@ -52,6 +52,10 @@
     margin-left: 5px;
 }
 
+.username.username-each-comment {
+    font-weight: bold;
+}
+
 #root {
     overflow-y: auto;
     height: 100%;

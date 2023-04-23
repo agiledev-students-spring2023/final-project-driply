@@ -99,10 +99,10 @@ const PostPage = () => {
         setLoggedInPfp(imageObjectURL);
       }
     }
-
+    console.log(user);
     fetchPostInfo();
     fetchLoggedInUserPfP();
-  }, [user, postId]);
+  }, [user.id, postId]);
 
   function navigateProfile() {
     navigate(`/profile/${userID}`);

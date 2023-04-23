@@ -10,17 +10,17 @@ function Home() {
   const { user } = useAuthContext();
   const { ifDarkMode } = useContext(DarkModeContext);
 
-  function sortPosts(posts) {
-    return posts.sort((a, b) => {
-      const aDate = new Date(
-        parseInt(a._id.toString().substring(0, 8), 16) * 1000
-      );
-      const bDate = new Date(
-        parseInt(b._id.toString().substring(0, 8), 16) * 1000
-      );
-      return bDate - aDate;
-    });
-  }
+  // function sortPosts(posts) {
+  //   return posts.sort((a, b) => {
+  //     const aDate = new Date(
+  //       parseInt(a._id.toString().substring(0, 8), 16) * 1000
+  //     );
+  //     const bDate = new Date(
+  //       parseInt(b._id.toString().substring(0, 8), 16) * 1000
+  //     );
+  //     return bDate - aDate;
+  //   });
+  // }
 
   useEffect(() => {
     let u;
@@ -42,7 +42,7 @@ function Home() {
       let json = await response.json();
       if (response.status === 200) {
         // setPostList((oldArray) => [...oldArray, ...json.data]);
-        setPostList(sortPosts(json.data));
+        setPostList(json.data);
         setPostListError(null);
       } else {
         setPostListError({ error: json.error, status: response.status });
