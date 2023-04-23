@@ -190,7 +190,7 @@ function Post({ post }) {
 
   const handleCommentClick = () => {
     if (user) {
-      navigate("/post/0");
+      navigate(`/post/${post._id}`);
     } else {
       navigate("/login");
     }
