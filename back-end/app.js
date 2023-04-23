@@ -581,9 +581,20 @@ app.post("/unfollow", async (req, res) => {
 });
 
 app.get("/getTrendingPosts", async (req, res) => {
-  Post.find({})
+  function objectIdWithTimestamp() {
+    let timestamp = new Date();
+    timestamp.setMonth(timestamp.getMonth() - 1);
+
+    var hexSeconds = Math.floor(timestamp/1000).toString(16);
+
+    var constructedObjectId = new mongoose.Types.ObjectId(hexSeconds + "0000000000000000");
+    return constructedObjectId
+  }
+
+  Post.find({ _id: { $gte: objectIdWithTimestamp() }})
+    .sort({ 'likes.length': 1 })
+    .limit(100)
     .then((posts) => {
-      //process this array later to find the trending posts
       res.json({ data: posts });
     })
     .catch((err) => {
