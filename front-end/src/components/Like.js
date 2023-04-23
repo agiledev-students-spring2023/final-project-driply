@@ -99,7 +99,7 @@ function Like(prop) {
       ) : (
         <FavoriteIcon
           onClick={() => handleLike()}
-          sx={{ color: "pink" }}
+          sx={{ color: "#cba2e2" }}
           className="likeIconPostpage"
         />
       )}

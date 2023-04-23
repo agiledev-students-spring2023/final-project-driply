@@ -241,7 +241,10 @@ function Post({ post }) {
             </div>
             <div>
               {ifLiked ? (
-                <FavoriteIcon onClick={handlePostLike} sx={{ color: "pink" }} />
+                <FavoriteIcon
+                  onClick={handlePostLike}
+                  sx={{ color: "#cba2e2" }}
+                />
               ) : (
                 <FavoriteBorderIcon onClick={handlePostLike} />
               )}
