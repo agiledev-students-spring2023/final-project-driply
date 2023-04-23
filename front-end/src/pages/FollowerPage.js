@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../context/DarkModeContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import Follow from "../components/Follow";
 
@@ -17,6 +17,7 @@ function FollowerPage() {
   const { userId } = params;
   const { user } = useAuthContext();
   const [ownProfile] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchFollowerList() {
@@ -108,10 +109,14 @@ function FollowerPage() {
     return (
       <div className="eachFollowerDisplay">
         <div className="followerImg">
-          <img src={profilePic} alt="user img" />
+          <img
+            src={profilePic}
+            alt="user img"
+            onClick={() => navigate(`/profile/${id}`)}
+          />
         </div>
         <div className="followerDetails">
-          <p>{name}</p>
+          <p onClick={() => navigate(`/profile/${id}`)}>{name}</p>
           {!isCurrentUser && (
             <div className={`${ifDarkMode && "unfollowBtn-dark"}`}>
               <Follow ownProfile={ownProfile} profileID={id} />
