@@ -42,22 +42,6 @@ function Home() {
     fetchPostList();
   }, []);
 
-  function LoadingPosts() {
-    return Array.from({ length: 6 }).map((_, idx) => {
-      return (
-        <div key={idx} className="post">
-          {/* header */}
-          <div className="postHeader">
-            <div className="loadingUserImg"></div>
-          </div>
-
-          {/* post pictures */}
-          <div className="loadingPostBody"></div>
-        </div>
-      );
-    });
-  }
-
   function DisplayPostLists() {
     return (
       <>
@@ -77,7 +61,15 @@ function Home() {
         </div>
       )}
 
-      {loading ? <LoadingPosts /> : <DisplayPostLists />}
+      {loading ? (
+        <img
+          src={ifDarkMode ? "/Driply-load-dark.png" : "/Driply-load-light.png"}
+          alt="loading"
+          className="loadingSpinner"
+        />
+      ) : (
+        <DisplayPostLists />
+      )}
     </div>
   );
 }

@@ -148,68 +148,79 @@ const PostPage = () => {
         ifDarkMode ? "darkTheme" : ""
       } postPage`}
     >
-      <div className="row align-items-center mx-auto">
-        <div className="col-8 d-flex align-items-center px-0 mx-auto">
-          <div onClick={navigateProfile} className="postpfp">
-            <img src={pfp} alt="user img" />
+      {loading ? (
+        <img
+          src={ifDarkMode ? "/Driply-load-dark.png" : "/Driply-load-light.png"}
+          alt="loading"
+          className="loadingSpinner"
+        />
+      ) : (
+        <>
+          <div className="row align-items-center mx-auto">
+            <div className="col-8 d-flex align-items-center px-0 mx-auto">
+              <div onClick={navigateProfile} className="postpfp">
+                <img src={pfp} alt="user img" />
+              </div>
+              <span onClick={navigateProfile}>{name}</span>
+            </div>
+            <div className="col-4 d-flex justify-content-end px-0 mx-auto">
+              <span className="mr-3">${price}</span>
+            </div>
           </div>
-          <span onClick={navigateProfile}>{name}</span>
-        </div>
-        <div className="col-4 d-flex justify-content-end px-0 mx-auto">
-          <span className="mr-3">${price}</span>
-        </div>
-      </div>
-      <img className="center-block img-responsive" src={img} alt="pic" />
-      <div className="description-block">
-        <div className="name-in-des">{name + ": "}</div>
-        {description}
-      </div>
+          <img className="center-block img-responsive" src={img} alt="pic" />
+          <div className="description-block">
+            <div className="name-in-des">{name + ": "}</div>
+            {description}
+          </div>
 
-      {user && (
-        <div>
-          <Like likes={likes} postId={postId} />
-          <div className="container">
-            <Form
-              onSubmit={handleComment}
-              ref={form}
-              className="row align-items-center"
-            >
-              <div className="col-auto px-0">
-                <div
-                  onClick={() => navigate(`/profile/${user.id}`)}
-                  className="postpfp"
+          {user && (
+            <div>
+              <Like likes={likes} postId={postId} />
+              <div className="container">
+                <Form
+                  onSubmit={handleComment}
+                  ref={form}
+                  className="row align-items-center"
                 >
-                  {loggedInPfp && <img src={loggedInPfp} alt="user img" />}
-                </div>
+                  <div className="col-auto px-0">
+                    <div
+                      onClick={() => navigate(`/profile/${user.id}`)}
+                      className="postpfp"
+                    >
+                      {loggedInPfp && <img src={loggedInPfp} alt="user img" />}
+                    </div>
+                  </div>
+                  <div className="col px-0">
+                    <Input
+                      type="text"
+                      value={comment}
+                      className="form-control search-query"
+                      name="comment"
+                      onChange={onChangeComment}
+                    />
+                  </div>
+                  <div className="col-auto">
+                    <button className="btn btn-success btn-block">
+                      &#10148;
+                    </button>
+                  </div>
+                </Form>
               </div>
-              <div className="col px-0">
-                <Input
-                  type="text"
-                  value={comment}
-                  className="form-control search-query"
-                  name="comment"
-                  onChange={onChangeComment}
-                  required
-                />
-              </div>
-              <div className="col-auto">
-                <button className="btn btn-success btn-block">&#10148;</button>
-              </div>
-            </Form>
-          </div>
-        </div>
-      )}
+            </div>
+          )}
 
-      <br />
-      <Comment
-        postId={postId}
-        loggedInID={user.id}
-        likes={likes}
-        commentList={commentList}
-        setCommentList={setCommentList}
-        newComment={newComment}
-        setNewComment={setNewComment}
-      />
+          <br />
+          <Comment
+            postId={postId}
+            loggedInID={user.id}
+            likes={likes}
+            commentList={commentList}
+            setCommentList={setCommentList}
+            newComment={newComment}
+            setNewComment={setNewComment}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from "react";
 import TrendingCard from "../components/TrendingCard";
-import { DarkModeContext } from '../context/DarkModeContext';
-import { useAuthContext } from '../hooks/useAuthContext';
+import { DarkModeContext } from "../context/DarkModeContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 function TrendingPage() {
   const { user } = useAuthContext();
@@ -12,13 +12,11 @@ function TrendingPage() {
 
   useEffect(() => {
     async function fetchPostList() {
-      const response = await fetch(
-        `http://localhost:4000/getTrendingPosts`
-      );
+      const response = await fetch(`http://localhost:4000/getTrendingPosts`);
       let json = await response.json();
       if (response.status === 200) {
         console.log(json);
-        setPostList(oldArray => [...oldArray, ...json.data]);
+        setPostList((oldArray) => [...oldArray, ...json.data]);
         console.log(postList);
         setPostListError(null);
       } else {
@@ -30,30 +28,11 @@ function TrendingPage() {
     fetchPostList();
   }, []);
 
-
-  function LoadingPosts() {
-    return Array.from({ length: 4 }).map((_, idx) => {
-      return (
-        <div key={idx} className="post">
-          {/* header */}
-          <div className="postHeader">
-            <div className="loadingUserImg"></div>
-          </div>
-
-          {/* post pictures */}
-          <div className="loadingPostBody"></div>
-        </div>
-      );
-    });
-  }
-
-  
-
   function quickSort(arr) {
     if (arr.length <= 1) {
       return arr;
     }
-  
+
     const pivot = arr[Math.floor(arr.length / 2)];
     const less = [];
     const greater = [];
@@ -68,19 +47,18 @@ function TrendingPage() {
     console.log(greater);
     return [...quickSort(greater), pivot, ...quickSort(less)];
   }
-  
+
   function DisplayPostLists() {
     const sortedPostList = quickSort([...postList]); // create a new array
     console.log(sortedPostList);
     return (
-      <div className='galleryContainer'>
+      <div className="galleryContainer">
         {sortedPostList?.map((post) => (
           <TrendingCard key={post._id} post={post} />
         ))}
       </div>
     );
   }
-
 
   return (
     <div className={`trendingPage ${ifDarkMode && "darkTheme"}`}>
@@ -91,9 +69,17 @@ function TrendingPage() {
         </div>
       )}
 
-      {loading ? <LoadingPosts /> : <DisplayPostLists />}
+      {loading ? (
+        <img
+          src={ifDarkMode ? "/Driply-load-dark.png" : "/Driply-load-light.png"}
+          alt="loading"
+          className="loadingSpinner"
+        />
+      ) : (
+        <DisplayPostLists />
+      )}
     </div>
   );
 }
 
-export default TrendingPage
+export default TrendingPage;
