@@ -30,6 +30,7 @@
 
 .row.align-items-center {
     padding: 10px;
+    padding-right: 0;
     border-bottom: 1px gray solid;
 }
 
@@ -37,8 +38,31 @@
     font-weight: bold;
 }
 
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.likeIconPostpage.css-i4bv87-MuiSvgIcon-root {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    margin-left: 5px;
+}
+
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.likeIconPostpage.css-2z2hz5-MuiSvgIcon-root {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    margin-left: 5px;
+}
+
+.username.username-each-comment {
+    font-weight: bold;
+}
+
 #root {
     overflow-y: auto;
     height: 100%;
     max-height: calc(100vh - 0px);
+}
+
+.btn.btn-success.btn-block {
+    background-color: #cba2e2;
+    border: 0;
 }

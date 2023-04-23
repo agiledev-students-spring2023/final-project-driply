@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"; // unliked post
+import FavoriteIcon from "@mui/icons-material/Favorite"; // liked post
 
 function Like(prop) {
   const [likes, setLikes] = useState([...prop.likes]);
@@ -9,20 +11,19 @@ function Like(prop) {
   useEffect(() => {
     async function fetchLikes() {
       const response = await fetch(`http://localhost:4000/getPost`, {
-          method: "POST",
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              "postId": prop.postId
-          })
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: prop.postId,
+        }),
       });
       let json = await response.json();
       if (response.status === 200) {
         let arr = [...json.likes];
         setLikes(arr);
       } else {
-
       }
     }
 
@@ -32,18 +33,21 @@ function Like(prop) {
 
   const handleLike = () => {
     async function like() {
-      const response = await fetch(`http://localhost:4000/like/${prop.postId}`, {
+      const response = await fetch(
+        `http://localhost:4000/like/${prop.postId}`,
+        {
           method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            "userId": user.id
-          })
-      });
+            userId: user.id,
+          }),
+        }
+      );
       let json = await response.json();
       if (response.status === 200) {
-        if (json.success){
+        if (json.success) {
           likes.push(user.id);
           setLikeChanged(true);
         }
@@ -53,18 +57,21 @@ function Like(prop) {
       }
     }
     async function unlike() {
-      const response = await fetch(`http://localhost:4000/unlike/${prop.postId}`, {
+      const response = await fetch(
+        `http://localhost:4000/unlike/${prop.postId}`,
+        {
           method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            "userId": user.id
-          })
-      });
+            userId: user.id,
+          }),
+        }
+      );
       let json = await response.json();
       if (response.status === 200) {
-        if (json.success){
+        if (json.success) {
           const index = likes.indexOf(user.id);
           likes.splice(index, 1);
           setLikeChanged(true);
@@ -76,8 +83,7 @@ function Like(prop) {
     }
     if (likes.filter((e) => e.localeCompare(user.id) === 0).length === 0) {
       like();
-    } 
-    else {
+    } else {
       unlike();
     }
   };
@@ -85,16 +91,17 @@ function Like(prop) {
   return (
     <div className="right">
       {likes.length}
-      {likes.filter((e) => e.localeCompare(user.id) === 0).length ===
-        0 && (
-        <button onClick={() => handleLike()} className="btn btn-secondary mx-2">
-          Like
-        </button>
-      )}
-      {likes.filter((e) => e.localeCompare(user.id) === 0).length > 0 && (
-        <button onClick={() => handleLike()} className="btn btn-primary mx-2">
-          Liked
-        </button>
+      {likes.filter((e) => e.localeCompare(user.id) === 0).length === 0 ? (
+        <FavoriteBorderIcon
+          onClick={() => handleLike()}
+          className="likeIconPostpage"
+        />
+      ) : (
+        <FavoriteIcon
+          onClick={() => handleLike()}
+          sx={{ color: "pink" }}
+          className="likeIconPostpage"
+        />
       )}
     </div>
   );
