@@ -9,9 +9,6 @@ import ChatBubbleIcon from "@mui/icons-material/ChatBubble"; // comment icon
 
 function Post({ post }) {
   const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
-  // const [ifBookmarked, setIfBookmarked] = useState(
-  //   localStorage.getItem(post._id) === "true" || post.bookmarked === true
-  // );
   const [ifLiked, setIfLiked] = useState(post.liked);
   const [pfp, setPfp] = useState();
   const [postUsername, setPostUsername] = useState();
@@ -70,7 +67,6 @@ function Post({ post }) {
     }
 
     getDetails();
-    //console.log(post.bookmarked);
   }, [post]);
 
   const handleBookmarkClick = (e) => {
@@ -130,7 +126,6 @@ function Post({ post }) {
         addBookmark();
       }
     } else {
-      // navigate user to login page
       navigate("/login");
     }
   };
@@ -201,10 +196,6 @@ function Post({ post }) {
     }
   };
 
-  // this is just temp. to get different imgs and sizes
-  const randomSize = [350, 300, 250, 200, 230, 240, 310, 320, 330, 360, 380];
-  const randomIndex = Math.floor(Math.random() * randomSize.length);
-
   return (
     <div className="post">
       {/* header */}
@@ -250,7 +241,10 @@ function Post({ post }) {
             </div>
             <div>
               {ifLiked ? (
-                <FavoriteIcon onClick={handlePostLike} sx={{ color: "pink" }} />
+                <FavoriteIcon
+                  onClick={handlePostLike}
+                  sx={{ color: "#cba2e2" }}
+                />
               ) : (
                 <FavoriteBorderIcon onClick={handlePostLike} />
               )}
