@@ -102,7 +102,7 @@ const PostPage = () => {
     console.log(user);
     fetchPostInfo();
     fetchLoggedInUserPfP();
-  }, [user.id, postId]);
+  }, [user, postId]);
 
   function navigateProfile() {
     navigate(`/profile/${userID}`);
@@ -212,7 +212,6 @@ const PostPage = () => {
           <br />
           <Comment
             postId={postId}
-            loggedInID={user.id}
             likes={likes}
             commentList={commentList}
             setCommentList={setCommentList}
