@@ -39,8 +39,7 @@ io.on("connection", async (socket) => {
     }
   }
 
-  if (userId) {
-
+  if (userId !== "undefined"){
     const chat = await Chat.find({ members: userId }).populate('members', 'name profilepic').exec();
     if (!chat) {
       socket.emit('chatHistory', { chatList: [] });

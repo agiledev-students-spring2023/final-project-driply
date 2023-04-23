@@ -11,6 +11,7 @@ const Post = require("./models/Post.js");
 const User = require("./models/User.js");
 const Comment = require("./models/Comment.js");
 const bcrypt = require("bcryptjs");
+const { body, validationResult } = require('express-validator');
 
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
@@ -54,44 +55,62 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.post("/post-form", upload.single("image"), (req, res) => {
-  if (req.file) {
-    User.findOne({ name: req.body.user })
-      .then((u) => {
-        const newPost = new Post({
-          user: u._id,
-          image: req.file.filename,
-          description: req.body.description,
-          price: req.body.price,
-          comments: [],
-          likes: [],
-          bookmarked: false,
-        });
-        newPost
-          .save()
-          .then((savedImg) => {
-            res.json({ message: "success" });
-          })
-          .catch((err) => {
-            res.json({ message: "Error creating post " + err });
+app.post("/post-form", upload.single("image"), [
+    body('user').notEmpty().withMessage('User is required'),
+    body('description').notEmpty().withMessage('Description is required'),
+    body('price').notEmpty().withMessage('Price is required')
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    if (req.file) {
+      User.findOne({ name: req.body.user })
+        .then((u) => {
+          const newPost = new Post({
+            user: u._id,
+            image: req.file.filename,
+            description: req.body.description,
+            price: req.body.price,
+            comments: [],
+            likes: [],
+            bookmarked: false,
           });
-      })
-      .catch((err) => {
-        console.log(err);
+          newPost
+            .save()
+            .then((savedImg) => {
+              res.json({ message: "success" });
+            })
+            .catch((err) => {
+              res.json({ message: "Error creating post " + err });
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.json({ message: "Error creating post " + err });
+        });
+    } else {
+      res.json({
+        message: "invalid file",
       });
-  } else {
-    res.json({
-      message: "invalid file",
-    });
+    }
   }
-});
+);
 
-app.post("/changePfp", upload.single("image"), (req, res) => {
-  User.findOneAndUpdate(
-    { _id: new mongoose.Types.ObjectId(req.body.userId) },
-    { profilepic: req.file.filename },
-    { new: true }
-  )
+app.post("/changePfp", upload.single("image"), [
+    body('userId').notEmpty().withMessage('User is required')
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    User.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(req.body.userId) },
+      { profilepic: req.file.filename },
+      { new: true }
+    )
     .then((u) => {
       Comment.updateMany(
         { user: new mongoose.Types.ObjectId(req.body.userId) },
@@ -179,8 +198,14 @@ app.post("/getPost", (req, res, next) => {
     });
 });
 
-app.post("/like/:postId", (req, res) => {
+app.post("/like/:postId", [
+    body('userId').notEmpty().withMessage('UserID is required')
+  ],(req, res) => {
   const id = req.params.postId;
+  const errors = validationResult(req);
+  if (!errors.isEmpty() || id === null) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   Post.findById(new mongoose.Types.ObjectId(id))
     .then((p) => {
       let isInArray = p.likes.some(function (element) {
@@ -201,8 +226,14 @@ app.post("/like/:postId", (req, res) => {
     });
 });
 
-app.post("/unlike/:postId", (req, res) => {
+app.post("/unlike/:postId", [
+    body('userId').notEmpty().withMessage('UserID is required')
+  ],(req, res) => {
   const id = req.params.postId;
+  const errors = validationResult(req);
+  if (!errors.isEmpty() || id === null) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   Post.findById(new mongoose.Types.ObjectId(id))
     .then((p) => {
       let isInArray = p.likes.some(function (element) {
@@ -238,7 +269,15 @@ app.post("/fetchComment", (req, res, next) => {
     });
 });
 
-app.post("/createComment", (req, res) => {
+app.post("/createComment", [
+    body('postId').notEmpty().withMessage('PostId is required'),
+    body('userId').notEmpty().withMessage('UserId is required'),
+    body('comment').notEmpty().withMessage('Comment is required')
+  ], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   Post.findById(new mongoose.Types.ObjectId(req.body.postId))
     .then((p) => {
       User.findById(new mongoose.Types.ObjectId(req.body.userId))
@@ -296,92 +335,108 @@ app.get("/bookmarks/:id", async (req, res) => {
   }
 });
 
-app.post("/bookmark", async (req, res) => {
-  try {
-    const p = await Post.findOne(
-      new mongoose.Types.ObjectId(req.body.postID)
-    ).exec();
-    if (!p) {
-      console.error("Post was not found");
-      return res.status(401).json({
+app.post("/bookmark", [
+    body('postID').notEmpty().withMessage('PostId is required'),
+    body('userID').notEmpty().withMessage('UserId is required')
+  ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+      const p = await Post.findOne(
+        new mongoose.Types.ObjectId(req.body.postID)
+      ).exec();
+      if (!p) {
+        console.error("Post was not found");
+        return res.status(401).json({
+          success: false,
+          message: "Post was not found in db",
+        });
+      }
+
+      const u = await User.findOne({ _id: req.body.userID }).exec();
+      // update bookmark array
+      u.bookmark.push(new mongoose.Types.ObjectId(req.body.postID));
+      u.save();
+      if (!u) {
+        console.error("User was not found");
+        return res.status(401).json({
+          success: false,
+          message: "User was not found in db",
+        });
+      }
+
+      // update post bookmarked field to true
+      p.bookmarked = true;
+      p.save();
+
+      const body = {
+        success: true,
+        message: "success",
+      };
+      res.json(body);
+    } catch (error) {
+      console.log(`Err looking up user: ${error}`);
+      return res.status(500).json({
         success: false,
-        message: "Post was not found in db",
+        message: "Error looking up user in database.",
+        error: error,
       });
     }
-
-    const u = await User.findOne({ _id: req.body.userID }).exec();
-    // update bookmark array
-    u.bookmark.push(new mongoose.Types.ObjectId(req.body.postID));
-    u.save();
-    if (!u) {
-      console.error("User was not found");
-      return res.status(401).json({
-        success: false,
-        message: "User was not found in db",
-      });
-    }
-
-    // update post bookmarked field to true
-    p.bookmarked = true;
-    p.save();
-
-    const body = {
-      success: true,
-      message: "success",
-    };
-    res.json(body);
-  } catch (error) {
-    console.log(`Err looking up user: ${error}`);
-    return res.status(500).json({
-      success: false,
-      message: "Error looking up user in database.",
-      error: error,
-    });
   }
-});
+);
 
-app.post("/unbookmark", async (req, res) => {
-  try {
-    const p = await Post.findOne(
-      new mongoose.Types.ObjectId(req.body.postID)
-    ).exec();
-    if (!p) {
-      console.error("Post was not found");
-      return res.status(401).json({
+app.post("/unbookmark", [
+    body('postID').notEmpty().withMessage('PostId is required'),
+    body('userID').notEmpty().withMessage('UserId is required')
+  ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+      const p = await Post.findOne(
+        new mongoose.Types.ObjectId(req.body.postID)
+      ).exec();
+      if (!p) {
+        console.error("Post was not found");
+        return res.status(401).json({
+          success: false,
+          message: "Post was not found in db",
+        });
+      }
+
+      const u = await User.findOne({ _id: req.body.userID }).exec();
+      // update bookmark array
+      u.bookmark.pull(new mongoose.Types.ObjectId(req.body.postID));
+      u.save();
+      if (!u) {
+        console.error("User was not found");
+        return res.status(401).json({
+          success: false,
+          message: "User was not found in db",
+        });
+      }
+
+      p.bookmarked = false;
+      p.save();
+
+      const body = {
+        success: true,
+        message: "success",
+      };
+      res.json(body);
+    } catch (error) {
+      console.log(`Err looking up user: ${error}`);
+      return res.status(500).json({
         success: false,
-        message: "Post was not found in db",
+        message: "Error looking up user in database.",
+        error: error,
       });
     }
-
-    const u = await User.findOne({ _id: req.body.userID }).exec();
-    // update bookmark array
-    u.bookmark.pull(new mongoose.Types.ObjectId(req.body.postID));
-    u.save();
-    if (!u) {
-      console.error("User was not found");
-      return res.status(401).json({
-        success: false,
-        message: "User was not found in db",
-      });
-    }
-
-    p.bookmarked = false;
-    p.save();
-
-    const body = {
-      success: true,
-      message: "success",
-    };
-    res.json(body);
-  } catch (error) {
-    console.log(`Err looking up user: ${error}`);
-    return res.status(500).json({
-      success: false,
-      message: "Error looking up user in database.",
-      error: error,
-    });
   }
-});
+);
 
 function sortPosts(posts) {
   return posts.sort((a, b) => {
@@ -515,91 +570,116 @@ app.get("/following/:id", async (req, res) => {
   }
 });
 
-app.post("/follow", async (req, res) => {
-  try {
-    const u = await User.findOne({ _id: req.body.userID }).exec();
-    // update following array
-    u.following.push(new mongoose.Types.ObjectId(req.body.followedID));
-    u.save();
-    if (!u) {
-      console.error("User was not found");
-      return res.status(401).json({
-        success: false,
-        message: "User was not found in db",
-      });
+app.post("/follow", [
+    body('userID').notEmpty().withMessage('userID is required'),
+    body('followedID').notEmpty().withMessage('followedID is required')
+  ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
+    try {
+      const u = await User.findOne({ _id: req.body.userID }).exec();
+      // update following array
+      u.following.push(new mongoose.Types.ObjectId(req.body.followedID));
+      u.save();
+      if (!u) {
+        console.error("User was not found");
+        return res.status(401).json({
+          success: false,
+          message: "User was not found in db",
+        });
+      }
 
-    const f = await User.findOne({ _id: req.body.followedID }).exec();
-    // update follower array
-    f.followers.push(new mongoose.Types.ObjectId(req.body.userID));
-    f.save();
-    if (!f) {
-      console.error("User was not found");
-      return res.status(401).json({
+      const f = await User.findOne({ _id: req.body.followedID }).exec();
+      // update follower array
+      f.followers.push(new mongoose.Types.ObjectId(req.body.userID));
+      f.save();
+      if (!f) {
+        console.error("User was not found");
+        return res.status(401).json({
+          success: false,
+          message: "User was not found in db",
+        });
+      }
+      const body = {
+        success: true,
+        message: "success",
+      };
+      res.json(body);
+    } catch (error) {
+      console.log(`Err looking up user: ${error}`);
+      return res.status(500).json({
         success: false,
-        message: "User was not found in db",
+        message: "Error looking up user in database.",
+        error: error,
       });
     }
-    const body = {
-      success: true,
-      message: "success",
-    };
-    res.json(body);
-  } catch (error) {
-    console.log(`Err looking up user: ${error}`);
-    return res.status(500).json({
-      success: false,
-      message: "Error looking up user in database.",
-      error: error,
-    });
   }
-});
+);
 
-app.post("/unfollow", async (req, res) => {
-  try {
-    const u = await User.findOne({ _id: req.body.userID }).exec();
-    // update following array
-    u.following.pull(new mongoose.Types.ObjectId(req.body.followedID));
-    u.save();
-    if (!u) {
-      console.error("User was not found");
-      return res.status(401).json({
+app.post("/unfollow", [
+    body('userID').notEmpty().withMessage('userID is required'),
+    body('followedID').notEmpty().withMessage('followedID is required')
+  ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+      const u = await User.findOne({ _id: req.body.userID }).exec();
+      // update following array
+      u.following.pull(new mongoose.Types.ObjectId(req.body.followedID));
+      u.save();
+      if (!u) {
+        console.error("User was not found");
+        return res.status(401).json({
+          success: false,
+          message: "User was not found in db",
+        });
+      }
+
+      const f = await User.findOne({ _id: req.body.followedID }).exec();
+      // update follower array
+      f.followers.pull(new mongoose.Types.ObjectId(req.body.userID));
+      f.save();
+      if (!f) {
+        console.error("User was not found");
+        return res.status(401).json({
+          success: false,
+          message: "User was not found in db",
+        });
+      }
+      const body = {
+        success: true,
+        message: "success",
+      };
+      res.json(body);
+    } catch (error) {
+      console.log(`Err looking up user: ${error}`);
+      return res.status(500).json({
         success: false,
-        message: "User was not found in db",
+        message: "Error looking up user in database.",
+        error: error,
       });
     }
-
-    const f = await User.findOne({ _id: req.body.followedID }).exec();
-    // update follower array
-    f.followers.pull(new mongoose.Types.ObjectId(req.body.userID));
-    f.save();
-    if (!f) {
-      console.error("User was not found");
-      return res.status(401).json({
-        success: false,
-        message: "User was not found in db",
-      });
-    }
-    const body = {
-      success: true,
-      message: "success",
-    };
-    res.json(body);
-  } catch (error) {
-    console.log(`Err looking up user: ${error}`);
-    return res.status(500).json({
-      success: false,
-      message: "Error looking up user in database.",
-      error: error,
-    });
   }
-});
+);
 
 app.get("/getTrendingPosts", async (req, res) => {
-  Post.find({})
+  function objectIdWithTimestamp() {
+    let timestamp = new Date();
+    timestamp.setMonth(timestamp.getMonth() - 1);
+
+    var hexSeconds = Math.floor(timestamp/1000).toString(16);
+
+    var constructedObjectId = new mongoose.Types.ObjectId(hexSeconds + "0000000000000000");
+    return constructedObjectId
+  }
+
+  Post.find({ _id: { $gte: objectIdWithTimestamp() }})
     .sort({ likes: -1 }) // sort by likes in descending order
     .then((posts) => {
-      // process this array later to find the trending posts
       res.json({ data: posts });
     })
     .catch((err) => {
@@ -611,12 +691,18 @@ app.post("/image", async (req, res) => {
   res.sendFile(__dirname + "/public/uploads/" + req.body.filename);
 });
 
-app.post("/editProfile", async (req, res) => {
+app.post("/editProfile", [
+    body('userId').notEmpty().withMessage('userId is required')
+  ], async (req, res) => {
   // api route is receiving a username and password to save but doesn't have to update both.
   // User can just save username or password only
 
   try {
     console.log(`updating user profile (userId: ${req.body.userId}) `);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     const { userId } = req.body;
 
     const update = {};
