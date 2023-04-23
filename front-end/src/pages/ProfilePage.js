@@ -118,7 +118,12 @@ function ProfilePage() {
   return (
     <div className={`profileContainer ${ifDarkMode && "darkTheme"}`}>
       {loading ? (
-        <div className="loadingSpinner"></div>
+        /* <div className="loadingSpinner"></div> */
+        <img
+          src={ifDarkMode ? "/Driply-load-dark.png" : "/Driply-load-light.png"}
+          alt="loading"
+          className="loadingSpinner"
+        />
       ) : (
         <>
           {/* dont display message/follow btn on ur own account */}

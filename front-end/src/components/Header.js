@@ -41,8 +41,7 @@ function Header(props) {
 
   const logOut = (e) => {
     e.preventDefault();
-    // setUser('');
-    // setAuth(false);
+
     setIsMenuOpen(false);
     logout();
     navigate("trending");
