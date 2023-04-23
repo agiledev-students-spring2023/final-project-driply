@@ -193,7 +193,7 @@ const PostPage = () => {
                 />
               </div>
               <div className="col-auto">
-                <button className="btn btn-success btn-block">Send</button>
+                <button className="btn btn-success btn-block">&#10148;</button>
               </div>
             </Form>
           </div>

@@ -61,3 +61,8 @@
     height: 100%;
     max-height: calc(100vh - 0px);
 }
+
+.btn.btn-success.btn-block {
+    background-color: #cba2e2;
+    border: 0;
+}
