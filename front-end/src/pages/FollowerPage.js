@@ -12,6 +12,7 @@ function FollowerPage() {
   const [followingData, setFollowingData] = useState([]);
   const [followingError, setFollowingError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [followedChangedSuccess, setFollowedChangedSuccess] = useState(false);
   const { ifDarkMode } = useContext(DarkModeContext);
   const params = useParams();
   const { userId } = params;
@@ -102,7 +103,7 @@ function FollowerPage() {
       }
 
       fetchProfilePic();
-    }, [id]);
+    }, [id, userId]);
 
     const isCurrentUser = user.id === id;
 
@@ -119,7 +120,12 @@ function FollowerPage() {
           <p onClick={() => navigate(`/profile/${id}`)}>{name}</p>
           {!isCurrentUser && (
             <div className={`${ifDarkMode && "unfollowBtn-dark"}`}>
-              <Follow ownProfile={ownProfile} profileID={id} />
+              <Follow
+                ownProfile={ownProfile}
+                profileID={id}
+                followedChangedSuccess={followedChangedSuccess}
+                setFollowedChangedSuccess={setFollowedChangedSuccess}
+              />
             </div>
           )}
         </div>
