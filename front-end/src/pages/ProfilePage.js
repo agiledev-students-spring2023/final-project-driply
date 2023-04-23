@@ -118,7 +118,6 @@ function ProfilePage() {
   return (
     <div className={`profileContainer ${ifDarkMode && "darkTheme"}`}>
       {loading ? (
-        /* <div className="loadingSpinner"></div> */
         <img
           src={ifDarkMode ? "/Driply-load-dark.png" : "/Driply-load-light.png"}
           alt="loading"
