@@ -140,7 +140,7 @@ function FollowingPage() {
   }
 
   return (
-    <div className={ifDarkMode && "darkTheme"}>
+    <div className={`allFollowContainer ${ifDarkMode && "darkTheme"}`}>
       {/* header */}
       <div className="chatPageHeader">
         <h1 className="followHeadline">Following </h1>
