@@ -40,13 +40,13 @@ Driply is a fashion social networking app where users can share their outfits as
 
 ### Build and launch the back end
 
-1. Navigate into the back-end directory
+1. Run ```cd back-end``` to navigate into the back-end directory
 2. Run ```npm install``` to install all dependencies listed in the package.json file.
 3. Run ```npm start``` to launch the back-end server
 
 ### Build and launch the front end
 
-1. Navigate into the front-end directory
+1. Run ```cd front-end``` to navigate into the front-end directory
 2. Run ```npm install``` to install all dependencies listed in the package.json file.
 3. Run ```npm start``` to launch the React.js server
 
