@@ -101,7 +101,7 @@ const PostPage = () => {
     }
     console.log(user);
     fetchPostInfo();
-    fetchLoggedInUserPfP();
+    if (user) fetchLoggedInUserPfP();
   }, [user, postId]);
 
   function navigateProfile() {
