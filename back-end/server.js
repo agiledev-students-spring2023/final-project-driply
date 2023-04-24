@@ -11,6 +11,10 @@ const Chat = require("./models/Chat.js");
 const port = process.env.PORT || 4000;
 
 // call a function to start listening to the port
+// const listener = server.listen(port, function () {
+//   console.log(`Server running on port: ${port}`);
+// });
+
 const listener = server.listen(port, function () {
   console.log(`Server running on port: ${port}`);
 });
