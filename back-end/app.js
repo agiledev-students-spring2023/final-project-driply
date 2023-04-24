@@ -666,6 +666,39 @@ app.post("/unfollow", [
   }
 );
 
+app.get("/search/:query/:type", (req, res) => {
+  const query = req.params.query;
+  const type = req.params.type;
+  //console.log(query);
+  //console.log(type);
+  if (type !== "user" && type !== "content"){
+    res.status(400).json({ error: "invalid query type" });
+  }
+  if (type === "user"){
+    Post.find()
+    .populate('user')
+    .exec()
+    .then(posts => {
+      //console.log(posts);
+      const filteredPosts = posts.filter(post => post.user.name.toLowerCase() === query.toLowerCase());
+      //console.log(filteredPosts)
+      res.json({data : filteredPosts});
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
+  if (type === "content"){
+    Post.find({ description: { $regex: query, $options: 'i' }})
+    .then(posts => {
+      res.json({data : posts});
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
+})
+
 app.get("/getTrendingPosts", async (req, res) => {
   function objectIdWithTimestamp() {
     let timestamp = new Date();
