@@ -24,7 +24,6 @@
 - [Part 1](https://docs.google.com/drawings/d/14-hLOWZkmxGu3JMO_Y3raz-O4OfDSxh1C6yRuGgld0Q/edit?usp=sharing)
 - [Part 2](https://docs.google.com/drawings/d/1gqDCBqP189jqCQjhEp1CHdnBSOKUufvdRqq94aBiC-E/edit?usp=sharing)
 - [Part 3](https://docs.google.com/drawings/d/1K5De_d6yqVGIhSOuChqhQ65jc2Fl5kMRcT8xGg17s18/edit?usp=sharing)
-- [Part 4]
 
 ### Coding Standards
 - Visual Studio Code as IDE
