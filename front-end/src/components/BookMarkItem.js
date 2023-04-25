@@ -31,10 +31,6 @@ function BookMarkItem({
       let json = await response.json();
       if (response.status === 200) {
         console.log(json);
-        if (json.message === "success") {
-          setBookmarked(true);
-          post.bookmarked = true;
-        }
       } else {
         // setPostError(response.status);
         // setLoading(false);
@@ -61,9 +57,7 @@ function BookMarkItem({
       if (response.status === 200) {
         console.log(json);
         if (json.message === "success") {
-          setBookmarked(false);
           setRemovedBookmark(post._id);
-          post.bookmarked = false;
         }
       }
     } else {
@@ -73,7 +67,7 @@ function BookMarkItem({
 
   return (
     <div className="postBookmarkIconBMpage">
-      {bookmarked ? (
+      {bookmarked.includes(user.id) ? (
         <BookmarkIcon
           onClick={removeBookmark}
           sx={{ height: "40px", width: "40px", color: "white" }}

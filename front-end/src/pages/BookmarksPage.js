@@ -82,7 +82,7 @@ function Bookmarks() {
   }
 
   function BookmarkItem({ bookmark }) {
-    const [bookmarked, setBookmarked] = useState(true);
+    const [bookmarked, setBookmarked] = useState(bookmark.bookmarked);
     const handlePostClick = () => navigate(`/post/${bookmark._id}`);
 
     return (

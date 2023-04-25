@@ -15,7 +15,7 @@ const PostSchema = new mongoose.Schema({
   image: String, //tbd
   description: String,
   price: Number,
-  bookmarked: Boolean,
+  bookmarked: [],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });

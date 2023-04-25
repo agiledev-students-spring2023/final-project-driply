@@ -11,7 +11,7 @@ const Post = require("./models/Post.js");
 const User = require("./models/User.js");
 const Comment = require("./models/Comment.js");
 const bcrypt = require("bcryptjs");
-const { body, validationResult } = require('express-validator');
+const { body, validationResult } = require("express-validator");
 
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
@@ -55,10 +55,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.post("/post-form", upload.single("image"), [
-    body('user').notEmpty().withMessage('User is required'),
-    body('description').notEmpty().withMessage('Description is required'),
-    body('price').notEmpty().withMessage('Price is required')
+app.post(
+  "/post-form",
+  upload.single("image"),
+  [
+    body("user").notEmpty().withMessage("User is required"),
+    body("description").notEmpty().withMessage("Description is required"),
+    body("price").notEmpty().withMessage("Price is required"),
   ],
   (req, res) => {
     const errors = validationResult(req);
@@ -98,9 +101,10 @@ app.post("/post-form", upload.single("image"), [
   }
 );
 
-app.post("/changePfp", upload.single("image"), [
-    body('userId').notEmpty().withMessage('User is required')
-  ],
+app.post(
+  "/changePfp",
+  upload.single("image"),
+  [body("userId").notEmpty().withMessage("User is required")],
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -111,18 +115,19 @@ app.post("/changePfp", upload.single("image"), [
       { profilepic: req.file.filename },
       { new: true }
     )
-    .then((u) => {
-      Comment.updateMany(
-        { user: new mongoose.Types.ObjectId(req.body.userId) },
-        { profilepic: req.file.filename }
-      ).then((c) => {
-        res.json({ message: "success" });
+      .then((u) => {
+        Comment.updateMany(
+          { user: new mongoose.Types.ObjectId(req.body.userId) },
+          { profilepic: req.file.filename }
+        ).then((c) => {
+          res.json({ message: "success" });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+  }
+);
 
 app.post("/profile", async (req, res, next) => {
   console.log("fetching profile of user with id " + req.body.userId);
@@ -198,61 +203,65 @@ app.post("/getPost", (req, res, next) => {
     });
 });
 
-app.post("/like/:postId", [
-    body('userId').notEmpty().withMessage('UserID is required')
-  ],(req, res) => {
-  const id = req.params.postId;
-  const errors = validationResult(req);
-  if (!errors.isEmpty() || id === null) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  Post.findById(new mongoose.Types.ObjectId(id))
-    .then((p) => {
-      let isInArray = p.likes.some(function (element) {
-        return element.equals(req.body.userId);
-      });
+app.post(
+  "/like/:postId",
+  [body("userId").notEmpty().withMessage("UserID is required")],
+  (req, res) => {
+    const id = req.params.postId;
+    const errors = validationResult(req);
+    if (!errors.isEmpty() || id === null) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    Post.findById(new mongoose.Types.ObjectId(id))
+      .then((p) => {
+        let isInArray = p.likes.some(function (element) {
+          return element.equals(req.body.userId);
+        });
 
-      if (!isInArray) {
-        p.likes.push(new mongoose.Types.ObjectId(req.body.userId));
-        p.save();
-      }
-      const data = {
-        success: true,
-      };
-      res.json(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-app.post("/unlike/:postId", [
-    body('userId').notEmpty().withMessage('UserID is required')
-  ],(req, res) => {
-  const id = req.params.postId;
-  const errors = validationResult(req);
-  if (!errors.isEmpty() || id === null) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  Post.findById(new mongoose.Types.ObjectId(id))
-    .then((p) => {
-      let isInArray = p.likes.some(function (element) {
-        return element.equals(req.body.userId);
+        if (!isInArray) {
+          p.likes.push(new mongoose.Types.ObjectId(req.body.userId));
+          p.save();
+        }
+        const data = {
+          success: true,
+        };
+        res.json(data);
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      //console.log(isInArray);
-      if (isInArray) {
-        p.likes.pull(new mongoose.Types.ObjectId(req.body.userId));
-        p.save();
-      }
-      const data = {
-        success: true,
-      };
-      res.json(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+  }
+);
+
+app.post(
+  "/unlike/:postId",
+  [body("userId").notEmpty().withMessage("UserID is required")],
+  (req, res) => {
+    const id = req.params.postId;
+    const errors = validationResult(req);
+    if (!errors.isEmpty() || id === null) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    Post.findById(new mongoose.Types.ObjectId(id))
+      .then((p) => {
+        let isInArray = p.likes.some(function (element) {
+          return element.equals(req.body.userId);
+        });
+        //console.log(isInArray);
+        if (isInArray) {
+          p.likes.pull(new mongoose.Types.ObjectId(req.body.userId));
+          p.save();
+        }
+        const data = {
+          success: true,
+        };
+        res.json(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+);
 
 app.post("/fetchComment", (req, res, next) => {
   Post.findById(new mongoose.Types.ObjectId(req.body.postId))
@@ -269,45 +278,49 @@ app.post("/fetchComment", (req, res, next) => {
     });
 });
 
-app.post("/createComment", [
-    body('postId').notEmpty().withMessage('PostId is required'),
-    body('userId').notEmpty().withMessage('UserId is required'),
-    body('comment').notEmpty().withMessage('Comment is required')
-  ], (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  Post.findById(new mongoose.Types.ObjectId(req.body.postId))
-    .then((p) => {
-      User.findById(new mongoose.Types.ObjectId(req.body.userId))
-        .then((u) => {
-          const newComment = new Comment({
-            user: new mongoose.Types.ObjectId(req.body.userId),
-            content: req.body.comment,
-            post: new mongoose.Types.ObjectId(req.body.postId),
-            profilepic: u.profilepic,
-          });
-          newComment
-            .save()
-            .then((savedComment) => {
-              p.comments.push(new mongoose.Types.ObjectId(savedComment._id));
-              p.save();
-              console.log(savedComment);
-              res.json({ message: "success", newComment: savedComment });
-            })
-            .catch((err) => {
-              res.json({ message: "Error creating comment " + err });
+app.post(
+  "/createComment",
+  [
+    body("postId").notEmpty().withMessage("PostId is required"),
+    body("userId").notEmpty().withMessage("UserId is required"),
+    body("comment").notEmpty().withMessage("Comment is required"),
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    Post.findById(new mongoose.Types.ObjectId(req.body.postId))
+      .then((p) => {
+        User.findById(new mongoose.Types.ObjectId(req.body.userId))
+          .then((u) => {
+            const newComment = new Comment({
+              user: new mongoose.Types.ObjectId(req.body.userId),
+              content: req.body.comment,
+              post: new mongoose.Types.ObjectId(req.body.postId),
+              profilepic: u.profilepic,
             });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+            newComment
+              .save()
+              .then((savedComment) => {
+                p.comments.push(new mongoose.Types.ObjectId(savedComment._id));
+                p.save();
+                console.log(savedComment);
+                res.json({ message: "success", newComment: savedComment });
+              })
+              .catch((err) => {
+                res.json({ message: "Error creating comment " + err });
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+);
 
 app.get("/bookmarks/:id", async (req, res) => {
   try {
@@ -335,10 +348,13 @@ app.get("/bookmarks/:id", async (req, res) => {
   }
 });
 
-app.post("/bookmark", [
-    body('postID').notEmpty().withMessage('PostId is required'),
-    body('userID').notEmpty().withMessage('UserId is required')
-  ], async (req, res) => {
+app.post(
+  "/bookmark",
+  [
+    body("postID").notEmpty().withMessage("PostId is required"),
+    body("userID").notEmpty().withMessage("UserId is required"),
+  ],
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -367,13 +383,14 @@ app.post("/bookmark", [
         });
       }
 
-      // update post bookmarked field to true
-      p.bookmarked = true;
+      // insert user into post's bookmark array
+      p.bookmarked.push(new mongoose.Types.ObjectId(req.body.userID));
       p.save();
 
       const body = {
         success: true,
         message: "success",
+        bookmarked: p.bookmarked,
       };
       res.json(body);
     } catch (error) {
@@ -387,10 +404,13 @@ app.post("/bookmark", [
   }
 );
 
-app.post("/unbookmark", [
-    body('postID').notEmpty().withMessage('PostId is required'),
-    body('userID').notEmpty().withMessage('UserId is required')
-  ], async (req, res) => {
+app.post(
+  "/unbookmark",
+  [
+    body("postID").notEmpty().withMessage("PostId is required"),
+    body("userID").notEmpty().withMessage("UserId is required"),
+  ],
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -419,12 +439,13 @@ app.post("/unbookmark", [
         });
       }
 
-      p.bookmarked = false;
+      p.bookmarked.pull(new mongoose.Types.ObjectId(req.body.userID));
       p.save();
 
       const body = {
         success: true,
         message: "success",
+        bookmarked: p.bookmarked,
       };
       res.json(body);
     } catch (error) {
@@ -570,10 +591,13 @@ app.get("/following/:id", async (req, res) => {
   }
 });
 
-app.post("/follow", [
-    body('userID').notEmpty().withMessage('userID is required'),
-    body('followedID').notEmpty().withMessage('followedID is required')
-  ], async (req, res) => {
+app.post(
+  "/follow",
+  [
+    body("userID").notEmpty().withMessage("userID is required"),
+    body("followedID").notEmpty().withMessage("followedID is required"),
+  ],
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -618,10 +642,13 @@ app.post("/follow", [
   }
 );
 
-app.post("/unfollow", [
-    body('userID').notEmpty().withMessage('userID is required'),
-    body('followedID').notEmpty().withMessage('followedID is required')
-  ], async (req, res) => {
+app.post(
+  "/unfollow",
+  [
+    body("userID").notEmpty().withMessage("userID is required"),
+    body("followedID").notEmpty().withMessage("followedID is required"),
+  ],
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -704,13 +731,15 @@ app.get("/getTrendingPosts", async (req, res) => {
     let timestamp = new Date();
     timestamp.setMonth(timestamp.getMonth() - 1);
 
-    var hexSeconds = Math.floor(timestamp/1000).toString(16);
+    var hexSeconds = Math.floor(timestamp / 1000).toString(16);
 
-    var constructedObjectId = new mongoose.Types.ObjectId(hexSeconds + "0000000000000000");
-    return constructedObjectId
+    var constructedObjectId = new mongoose.Types.ObjectId(
+      hexSeconds + "0000000000000000"
+    );
+    return constructedObjectId;
   }
 
-  Post.find({ _id: { $gte: objectIdWithTimestamp() }})
+  Post.find({ _id: { $gte: objectIdWithTimestamp() } })
     .sort({ likes: -1 }) // sort by likes in descending order
     .then((posts) => {
       res.json({ data: posts });
@@ -724,49 +753,51 @@ app.post("/image", async (req, res) => {
   res.sendFile(__dirname + "/public/uploads/" + req.body.filename);
 });
 
-app.post("/editProfile", [
-    body('userId').notEmpty().withMessage('userId is required')
-  ], async (req, res) => {
-  // api route is receiving a username and password to save but doesn't have to update both.
-  // User can just save username or password only
+app.post(
+  "/editProfile",
+  [body("userId").notEmpty().withMessage("userId is required")],
+  async (req, res) => {
+    // api route is receiving a username and password to save but doesn't have to update both.
+    // User can just save username or password only
 
-  try {
-    console.log(`updating user profile (userId: ${req.body.userId}) `);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    const { userId } = req.body;
+    try {
+      console.log(`updating user profile (userId: ${req.body.userId}) `);
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      const { userId } = req.body;
 
-    const update = {};
-    if (req.body.name) {
-      update.name = req.body.name;
+      const update = {};
+      if (req.body.name) {
+        update.name = req.body.name;
+      }
+      if (req.body.password) {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(req.body.password, salt);
+        update.password = hash;
+      }
+      const user = await User.findOneAndUpdate({ _id: userId }, update, {
+        new: true,
+      });
+      const token = user.generateJWT();
+      return res.json({
+        success: true,
+        message: "Updated user.",
+        token: token,
+        username: user.name,
+        id: user.id,
+        profilePic: user.profilepic,
+      });
+    } catch (error) {
+      res.json({
+        success: false,
+        status: 500,
+        message: "Err trying to update your info",
+      });
     }
-    if (req.body.password) {
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(req.body.password, salt);
-      update.password = hash;
-    }
-    const user = await User.findOneAndUpdate({ _id: userId }, update, {
-      new: true,
-    });
-    const token = user.generateJWT();
-    return res.json({
-      success: true,
-      message: "Updated user.",
-      token: token,
-      username: user.name,
-      id: user.id,
-      profilePic: user.profilepic,
-    });
-  } catch (error) {
-    res.json({
-      success: false,
-      status: 500,
-      message: "Err trying to update your info",
-    });
   }
-});
+);
 
 app.post("/getUserPfp", (req, res) => {
   User.findById(new mongoose.Types.ObjectId(req.body.userId))
