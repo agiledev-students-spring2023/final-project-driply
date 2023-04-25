@@ -8,7 +8,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite"; // liked post
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble"; // comment icon
 
 function Post({ post }) {
-  const [ifBookmarked, setIfBookmarked] = useState(post.bookmarked);
+  const [bookmarkedBy, setBookmarkedBy] = useState(post.bookmarked);
   const [ifLiked, setIfLiked] = useState(post.liked);
   const [pfp, setPfp] = useState();
   const [postUsername, setPostUsername] = useState();
@@ -67,7 +67,11 @@ function Post({ post }) {
     }
 
     getDetails();
-  }, [post]);
+  }, [post, user]);
+
+  // useEffect(() => {
+  //   console.log(bookmarkedBy);
+  // }, [bookmarkedBy]);
 
   const handleBookmarkClick = (e) => {
     if (user) {
@@ -89,8 +93,7 @@ function Post({ post }) {
         if (response.status === 200) {
           console.log(json);
           if (json.message === "success") {
-            setIfBookmarked(true);
-            post.bookmarked = true;
+            setBookmarkedBy(json.bookmarked);
           }
         } else {
           //setPostError(response.status);
@@ -112,15 +115,14 @@ function Post({ post }) {
         if (response.status === 200) {
           console.log(json);
           if (json.message === "success") {
-            setIfBookmarked(false);
-            post.bookmarked = false;
+            setBookmarkedBy(json.bookmarked);
           }
         } else {
           // setPostError(response.status);
           // setLoading(false);
         }
       }
-      if (ifBookmarked) {
+      if (bookmarkedBy.includes(user.id)) {
         removeBookmark();
       } else {
         addBookmark();
@@ -222,7 +224,7 @@ function Post({ post }) {
 
         <div className="postDetails">
           <div className="postBookmarkIcon">
-            {ifBookmarked ? (
+            {bookmarkedBy.includes(user?.id) ? (
               <BookmarkIcon
                 onClick={handleBookmarkClick}
                 sx={{ height: "40px", width: "40px", color: "white" }}
