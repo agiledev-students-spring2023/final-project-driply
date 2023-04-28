@@ -16,7 +16,7 @@ COPY back-end/ .
 # Set the environment variable
 ENV PORT=4000
 
-# Expose port 5000
+# Expose port 4000
 EXPOSE 4000
 
 # Run the start script
