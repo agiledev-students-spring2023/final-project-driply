@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { DarkModeContext } from '../context/DarkModeContext';
-import { useAuthContext } from '../hooks/useAuthContext';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { DarkModeContext } from "../context/DarkModeContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 import { io } from "socket.io-client";
 import moment from "moment";
 
@@ -18,11 +18,11 @@ function MainChatPage() {
     const response = await fetch(`http://localhost:4000/getUserPfp`, {
       method: "POST",
       headers: {
-          'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-          "userId": id,
-      })
+        userId: id,
+      }),
     });
 
     if (response.status === 200) {
@@ -31,7 +31,6 @@ function MainChatPage() {
       return imageObjectURL;
     }
   }
-  
 
   useEffect(() => {
     setLoading(true);
@@ -52,28 +51,30 @@ function MainChatPage() {
   }, []);
 
   function LoadingChat() {
-    return (
-      Array.from({length: 6}).map((_, idx) => {
-        return (
-          <div key={idx} className="eachChatDisplay">
-            <div className="chatImg chatImgLoading"></div>
-            <div className="chatDetails chatDetailsLoading"></div>
-          </div>
-        );
-      })
-    );
+    return Array.from({ length: 6 }).map((_, idx) => {
+      return (
+        <div
+          key={idx}
+          className="eachChatDisplay"
+        >
+          <div className="chatImg chatImgLoading"></div>
+          <div className="chatDetails chatDetailsLoading"></div>
+        </div>
+      );
+    });
   }
 
-
   function Chat({ chat }) {
-
+    const getUser = JSON.parse(localStorage.getItem("user"));
     const [unseenMessages, setUnseenMessages] = useState([]);
     const [lastMessage, setLastMessage] = useState("");
     const [formattedTime, setFormattedTime] = useState("");
+    const [userId1, userId2] = chat.chatId.split("--");
+    const userId = userId1 === getUser.id ? userId1 : userId2;
 
     useEffect(() => {
-      socket.current.on("updateChatHistory", (data) => {
-        console.log('new message!');
+      socket.current.on(`updateChatHistory-${userId}`, (data) => {
+        console.log("new message!");
         console.log(data.newMessage);
         if (data.newMessage.chatId === chat.chatId) {
           const id_from = data.newMessage.id_from;
@@ -83,10 +84,12 @@ function MainChatPage() {
           setLastMessage(message);
         }
       });
-    }, [chat.chatId]);
+    }, [chat.chatId, userId]);
 
-    const getUser = JSON.parse(localStorage.getItem("user"));
-    let receiver = (getUser.username !== chat.members[0].name) ? chat.members[0] : chat.members[1];
+    let receiver =
+      getUser.username !== chat.members[0].name
+        ? chat.members[0]
+        : chat.members[1];
 
     useEffect(() => {
       function displayChat() {
@@ -96,20 +99,22 @@ function MainChatPage() {
             return new Date(a.createdAt) - new Date(b.createdAt);
           });
           setLastMessage(copyMessages[copyMessages.length - 1].message);
-          const createdAt = moment(copyMessages[copyMessages.length - 1].createdAt);
+          const createdAt = moment(
+            copyMessages[copyMessages.length - 1].createdAt
+          );
           const now = moment();
-      
+
           // calculate the time difference in hours
-          const hoursDiff = now.diff(createdAt, 'hours');
-      
+          const hoursDiff = now.diff(createdAt, "hours");
+
           // determine the format based on the time difference
           let format;
           if (hoursDiff < 24) {
-            format = 'h:mm A'; // display the hour and minute
+            format = "h:mm A"; // display the hour and minute
           } else if (hoursDiff < 6 * 24) {
-            format = 'dddd'; // display the day of the week
+            format = "dddd"; // display the day of the week
           } else {
-            format = 'M/D/YYYY'; // display the date
+            format = "M/D/YYYY"; // display the date
           }
           setFormattedTime(createdAt.format(format));
         }
@@ -119,11 +124,23 @@ function MainChatPage() {
     }, [chat]);
 
     return (
-      <div onClick={() => {navigate(`/chatroom/${chat.chatId}`, {state: {name: chat?.first_name, senderImg: chat?.user_image}})}} className="eachChatDisplay">
-        
+      <div
+        onClick={() => {
+          navigate(`/chatroom/${chat.chatId}`, {
+            state: {
+              name: chat?.first_name,
+              senderImg: chat?.user_image,
+            },
+          });
+        }}
+        className="eachChatDisplay"
+      >
         {/* image */}
         <div className="chatImg">
-          <img src={receiver.profilepic} alt="username pic"/>
+          <img
+            src={receiver.profilepic}
+            alt="username pic"
+          />
         </div>
 
         {/* chat details */}
@@ -133,52 +150,56 @@ function MainChatPage() {
             <h4>{receiver.name}</h4>
 
             {unseenMessages.length !== 0 ? (
-                <p className="gray">{formattedTime}</p>
-              ) : (
-                <p>{formattedTime}</p>
-              )
-            }
+              <p className="gray">{formattedTime}</p>
+            ) : (
+              <p>{formattedTime}</p>
+            )}
             {/* <p className='gray'>{formattedTime}</p> */}
           </div>
 
           {/* last text and notifcations */}
           <div className="bottomChatDetails">
             {lastMessage.length < 24 ? (
-              <p className={ifDarkMode ? "lastMessage-dark" : "lastMessage"}>Text: {lastMessage}</p>
+              <p className={ifDarkMode ? "lastMessage-dark" : "lastMessage"}>
+                Text: {lastMessage}
+              </p>
             ) : (
-              <p className={ifDarkMode ? "lastMessage-dark" : "lastMessage"}>Text: {lastMessage.substring(0, 24)}...</p>
+              <p className={ifDarkMode ? "lastMessage-dark" : "lastMessage"}>
+                Text: {lastMessage.substring(0, 24)}...
+              </p>
             )}
-            {unseenMessages.length === 0 ? (null) : (<p>{unseenMessages.length}</p>)}
+            {unseenMessages.length === 0 ? null : (
+              <p>{unseenMessages.length}</p>
+            )}
           </div>
-
         </div>
       </div>
     );
   }
 
-
   function DisplayChats() {
     return (
       <>
         {/* {allChats?.slice(0).reverse().map((chat) => <Chat key={chat.id} chat={chat}/>)} */}
-        {chatsList?.map((chat, idx) => <Chat key={idx} chat={chat}/>)}
+        {chatsList?.map((chat, idx) => (
+          <Chat
+            key={idx}
+            chat={chat}
+          />
+        ))}
       </>
     );
   }
-
 
   function NotLoggedInDisplay() {
     return (
       <div className="notLoggedInBookmark">
         <h2>You are not logged in</h2>
 
-        <div className="displayLogInBtn">
-          Login
-        </div>
+        <div className="displayLogInBtn">Login</div>
       </div>
     );
   }
-
 
   return (
     <div className={`chatPage ${ifDarkMode && "darkTheme"}`}>
@@ -189,23 +210,18 @@ function MainChatPage() {
 
       {/* body */}
       <div className={`displayAllChats ${ifDarkMode && "darkTheme"}`}>
-
         {!user ? (
           <NotLoggedInDisplay />
-        ) : (loading) ? (
+        ) : loading ? (
           <LoadingChat />
-        ) : (chatsList.length === 0) ? (
+        ) : chatsList.length === 0 ? (
           <h3>No chats</h3>
         ) : (
           <DisplayChats />
         )}
-
       </div>
     </div>
   );
 }
 
-
 export default MainChatPage;
-
-

@@ -7,10 +7,12 @@ import { useLogout } from "../hooks/useLogout";
 import { useScrollDirection } from "../hooks/useScrollDirection";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { io } from "socket.io-client";
+import toast from "react-hot-toast";
 
 function Header(props) {
   const socket = useRef();
   const [unseenMessages, setUnseenMessages] = useState([]);
+  const [toastCount, setToastCount] = useState(0);
   const { ifDarkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
   const direction = useScrollDirection();
@@ -74,15 +76,74 @@ function Header(props) {
   useEffect(() => {
     const getUser = JSON.parse(localStorage.getItem("user"));
     if (getUser) {
-      socket.current.on("updateChatHistory", (data) => {
-        if (getUser.id !== data.newMessage.id_from) {
-          const message = data.newMessage.message;
-          const newMsgObj = { message };
-          setUnseenMessages((prev) => [...prev, newMsgObj]);
+      socket.current.on(`updateChatHistory-${getUser.id}`, (data) => {
+        const notification = JSON.parse(localStorage.getItem("notifications"));
+        if (
+          location.pathname !== `/chatroom/${data.newMessage.chatId}` &&
+          notification === "on"
+        ) {
+          if (getUser.id !== data.newMessage.id_from) {
+            if (toastCount > 0) {
+              // only have 1 toast noti show and have the new toast replace old toast
+              toast.dismiss();
+            }
+
+            // using css classes did not work. only worked with in line css or tailwind
+            toast(
+              (t) => (
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingLeft: "10px",
+                      paddingRight: "20px",
+                      maxWidth: "300px",
+                      minWidth: "150px",
+                    }}
+                    onClick={() => {
+                      navigate(`/chatroom/${data.newMessage.chatId}`);
+                      toast.dismiss(t.id);
+                    }}
+                  >
+                    <p style={{ fontWeight: 500 }}>
+                      {data.newMessage.userFromName}
+                    </p>
+                    <p>{data.newMessage.message}</p>
+                  </div>
+                  <div
+                    onClick={() => toast.dismiss(t.id)}
+                    style={{
+                      color: "rgb(79 70 229)",
+                      paddingLeft: "10px",
+                      paddingRight: "10px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderLeft: "1px solid gray",
+                    }}
+                  >
+                    Close
+                  </div>
+                </div>
+              ),
+              {
+                duration: 3000,
+              }
+            );
+            setToastCount((count) => count + 1);
+            const message = data.newMessage.message;
+            const newMsgObj = { message };
+            setUnseenMessages((prev) => [...prev, newMsgObj]);
+          }
         }
       });
     }
-  }, []);
+
+    return () => {
+      socket.current.off(`updateChatHistory-${getUser.id}`);
+    };
+  }, [toastCount]);
   useEffect(() => {
     if (location.pathname === "/chats") {
       setUnseenMessages([]);
@@ -101,7 +162,7 @@ function Header(props) {
         >
           <img
             className="dlogo"
-            algt="logo"
+            alt="logo"
             src={ifDarkMode ? "/Driply-2.png" : "/Driply-1.png"}
             onClick={handleLogoClick}
           />
@@ -116,22 +177,40 @@ function Header(props) {
             itemClassName={`${ifDarkMode && "menu-item-dark"}`}
             menuClassName={`${ifDarkMode && "menu-dark"}`}
           >
-            <Link to="/" onClick={handleMenuClose}>
+            <Link
+              to="/"
+              onClick={handleMenuClose}
+            >
               Home
             </Link>
-            <Link to="/chats" onClick={handleMenuClose}>
+            <Link
+              to="/chats"
+              onClick={handleMenuClose}
+            >
               Messages
             </Link>
-            <Link to="/trending" onClick={handleMenuClose}>
+            <Link
+              to="/trending"
+              onClick={handleMenuClose}
+            >
               Trending
             </Link>
-            <Link to="/bookmarks" onClick={handleMenuClose}>
+            <Link
+              to="/bookmarks"
+              onClick={handleMenuClose}
+            >
               Bookmarks
             </Link>
-            <Link to="/settings" onClick={handleMenuClose}>
+            <Link
+              to="/settings"
+              onClick={handleMenuClose}
+            >
               Settings
             </Link>
-            <Link to="/" onClick={logOut}>
+            <Link
+              to="/"
+              onClick={logOut}
+            >
               Log Out
             </Link>
           </Menu>
@@ -145,7 +224,10 @@ function Header(props) {
         </div>
       ) : (
         <div className="header">
-          <div className="logo" onClick={handleLogoClick}>
+          <div
+            className="logo"
+            onClick={handleLogoClick}
+          >
             Logo
           </div>
           <Menu
@@ -158,10 +240,16 @@ function Header(props) {
             burgerBarClassName={`${ifDarkMode && "bm-burger-bars-dark"}`}
             itemListClassName={`${ifDarkMode && "menu-item-dark"}`}
           >
-            <Link to="/login" onClick={handleMenuClose}>
+            <Link
+              to="/login"
+              onClick={handleMenuClose}
+            >
               Login
             </Link>
-            <Link to="/register" onClick={handleMenuClose}>
+            <Link
+              to="/register"
+              onClick={handleMenuClose}
+            >
               Register
             </Link>
           </Menu>
