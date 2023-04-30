@@ -77,58 +77,65 @@ function Header(props) {
     const getUser = JSON.parse(localStorage.getItem("user"));
     if (getUser) {
       socket.current.on(`updateChatHistory-${getUser.id}`, (data) => {
-        console.log(data.newMessage);
-        if (getUser.id !== data.newMessage.id_from) {
-          if (toastCount > 0) {
-            // only have 1 toast noti show and have the new toast replace old toast
-            toast.dismiss();
-          }
-          toast(
-            (t) => (
-              <div style={{ display: "flex" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    paddingLeft: "10px",
-                    paddingRight: "20px",
-                    maxWidth: "300px",
-                    minWidth: "150px",
-                  }}
-                  onClick={() => {
-                    navigate(`/chatroom/${data.newMessage.chatId}`);
-                    toast.dismiss(t.id);
-                  }}
-                >
-                  <p style={{ fontWeight: 500 }}>
-                    {data.newMessage.userFromName}
-                  </p>
-                  <p>{data.newMessage.message}</p>
-                </div>
-                <div
-                  onClick={() => toast.dismiss(t.id)}
-                  style={{
-                    color: "rgb(79 70 229)",
-                    paddingLeft: "10px",
-                    paddingRight: "10px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderLeft: "1px solid gray",
-                  }}
-                >
-                  Close
-                </div>
-              </div>
-            ),
-            {
-              duration: 3000,
+        const notification = JSON.parse(localStorage.getItem("notifications"));
+        if (
+          location.pathname !== `/chatroom/${data.newMessage.chatId}` &&
+          notification === "on"
+        ) {
+          if (getUser.id !== data.newMessage.id_from) {
+            if (toastCount > 0) {
+              // only have 1 toast noti show and have the new toast replace old toast
+              toast.dismiss();
             }
-          );
-          setToastCount((count) => count + 1);
-          const message = data.newMessage.message;
-          const newMsgObj = { message };
-          setUnseenMessages((prev) => [...prev, newMsgObj]);
+
+            // using css classes did not work. only worked with in line css or tailwind
+            toast(
+              (t) => (
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingLeft: "10px",
+                      paddingRight: "20px",
+                      maxWidth: "300px",
+                      minWidth: "150px",
+                    }}
+                    onClick={() => {
+                      navigate(`/chatroom/${data.newMessage.chatId}`);
+                      toast.dismiss(t.id);
+                    }}
+                  >
+                    <p style={{ fontWeight: 500 }}>
+                      {data.newMessage.userFromName}
+                    </p>
+                    <p>{data.newMessage.message}</p>
+                  </div>
+                  <div
+                    onClick={() => toast.dismiss(t.id)}
+                    style={{
+                      color: "rgb(79 70 229)",
+                      paddingLeft: "10px",
+                      paddingRight: "10px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderLeft: "1px solid gray",
+                    }}
+                  >
+                    Close
+                  </div>
+                </div>
+              ),
+              {
+                duration: 3000,
+              }
+            );
+            setToastCount((count) => count + 1);
+            const message = data.newMessage.message;
+            const newMsgObj = { message };
+            setUnseenMessages((prev) => [...prev, newMsgObj]);
+          }
         }
       });
     }

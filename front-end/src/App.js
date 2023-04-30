@@ -23,9 +23,14 @@ function App() {
   useEffect(() => {
     function checkDarkTheme() {
       const ifDarkTheme = JSON.parse(localStorage.getItem("darkTheme"));
+      const notification = JSON.parse(localStorage.getItem("notifications"));
       if (!ifDarkTheme) {
-        // if it exist in local storage set default value
+        // if it doesnt exist in local storage set default value
         localStorage.setItem("darkTheme", JSON.stringify(false)); // light mode as default value
+      }
+      if (!notification) {
+        // if it doesnt exist in local storage set default value
+        localStorage.setItem("notifications", JSON.stringify("on")); // notis on as default value
       }
     }
 
