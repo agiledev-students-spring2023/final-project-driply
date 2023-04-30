@@ -7,10 +7,12 @@ import { useLogout } from "../hooks/useLogout";
 import { useScrollDirection } from "../hooks/useScrollDirection";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { io } from "socket.io-client";
+import toast from "react-hot-toast";
 
 function Header(props) {
   const socket = useRef();
   const [unseenMessages, setUnseenMessages] = useState([]);
+  const [toastCount, setToastCount] = useState(0);
   const { ifDarkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
   const direction = useScrollDirection();
@@ -75,14 +77,66 @@ function Header(props) {
     const getUser = JSON.parse(localStorage.getItem("user"));
     if (getUser) {
       socket.current.on(`updateChatHistory-${getUser.id}`, (data) => {
+        console.log(data.newMessage);
         if (getUser.id !== data.newMessage.id_from) {
+          if (toastCount > 0) {
+            // only have 1 toast noti show and have the new toast replace old toast
+            toast.dismiss();
+          }
+          toast(
+            (t) => (
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    paddingLeft: "10px",
+                    paddingRight: "20px",
+                    maxWidth: "300px",
+                    minWidth: "150px",
+                  }}
+                  onClick={() => {
+                    navigate(`/chatroom/${data.newMessage.chatId}`);
+                    toast.dismiss(t.id);
+                  }}
+                >
+                  <p style={{ fontWeight: 500 }}>
+                    {data.newMessage.userFromName}
+                  </p>
+                  <p>{data.newMessage.message}</p>
+                </div>
+                <div
+                  onClick={() => toast.dismiss(t.id)}
+                  style={{
+                    color: "rgb(79 70 229)",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderLeft: "1px solid gray",
+                  }}
+                >
+                  Close
+                </div>
+              </div>
+            ),
+            {
+              duration: 3000,
+            }
+          );
+          setToastCount((count) => count + 1);
           const message = data.newMessage.message;
           const newMsgObj = { message };
           setUnseenMessages((prev) => [...prev, newMsgObj]);
         }
       });
     }
-  }, []);
+
+    return () => {
+      socket.current.off(`updateChatHistory-${getUser.id}`);
+    };
+  }, [toastCount]);
   useEffect(() => {
     if (location.pathname === "/chats") {
       setUnseenMessages([]);
@@ -101,7 +155,7 @@ function Header(props) {
         >
           <img
             className="dlogo"
-            algt="logo"
+            alt="logo"
             src={ifDarkMode ? "/Driply-2.png" : "/Driply-1.png"}
             onClick={handleLogoClick}
           />
