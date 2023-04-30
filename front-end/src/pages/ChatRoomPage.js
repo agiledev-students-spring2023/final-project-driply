@@ -145,6 +145,7 @@ function ChatRoomPage() {
 
    const handleSubmit = async (event) => {
       event.preventDefault();
+      const chatPartnerId = user.id === id1 ? id2 : id1;
       const typedMessage = inputRef.current.value;
       if (typedMessage.length === 0) {
          console.log("empty message");
@@ -162,6 +163,7 @@ function ChatRoomPage() {
          id_from: user.id,
          message: typedMessage,
          chatRoomId: chatId,
+         members: [user.id, chatPartnerId],
       });
 
       // await addDoc(messagesRef, {

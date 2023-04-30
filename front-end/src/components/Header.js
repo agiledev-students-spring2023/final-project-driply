@@ -74,7 +74,7 @@ function Header(props) {
   useEffect(() => {
     const getUser = JSON.parse(localStorage.getItem("user"));
     if (getUser) {
-      socket.current.on("updateChatHistory", (data) => {
+      socket.current.on(`updateChatHistory-${getUser.id}`, (data) => {
         if (getUser.id !== data.newMessage.id_from) {
           const message = data.newMessage.message;
           const newMsgObj = { message };
@@ -116,22 +116,40 @@ function Header(props) {
             itemClassName={`${ifDarkMode && "menu-item-dark"}`}
             menuClassName={`${ifDarkMode && "menu-dark"}`}
           >
-            <Link to="/" onClick={handleMenuClose}>
+            <Link
+              to="/"
+              onClick={handleMenuClose}
+            >
               Home
             </Link>
-            <Link to="/chats" onClick={handleMenuClose}>
+            <Link
+              to="/chats"
+              onClick={handleMenuClose}
+            >
               Messages
             </Link>
-            <Link to="/trending" onClick={handleMenuClose}>
+            <Link
+              to="/trending"
+              onClick={handleMenuClose}
+            >
               Trending
             </Link>
-            <Link to="/bookmarks" onClick={handleMenuClose}>
+            <Link
+              to="/bookmarks"
+              onClick={handleMenuClose}
+            >
               Bookmarks
             </Link>
-            <Link to="/settings" onClick={handleMenuClose}>
+            <Link
+              to="/settings"
+              onClick={handleMenuClose}
+            >
               Settings
             </Link>
-            <Link to="/" onClick={logOut}>
+            <Link
+              to="/"
+              onClick={logOut}
+            >
               Log Out
             </Link>
           </Menu>
@@ -145,7 +163,10 @@ function Header(props) {
         </div>
       ) : (
         <div className="header">
-          <div className="logo" onClick={handleLogoClick}>
+          <div
+            className="logo"
+            onClick={handleLogoClick}
+          >
             Logo
           </div>
           <Menu
@@ -158,10 +179,16 @@ function Header(props) {
             burgerBarClassName={`${ifDarkMode && "bm-burger-bars-dark"}`}
             itemListClassName={`${ifDarkMode && "menu-item-dark"}`}
           >
-            <Link to="/login" onClick={handleMenuClose}>
+            <Link
+              to="/login"
+              onClick={handleMenuClose}
+            >
               Login
             </Link>
-            <Link to="/register" onClick={handleMenuClose}>
+            <Link
+              to="/register"
+              onClick={handleMenuClose}
+            >
               Register
             </Link>
           </Menu>

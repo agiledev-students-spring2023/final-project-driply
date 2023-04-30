@@ -62,9 +62,8 @@ io.on("connection", async (socket) => {
    }
 
    socket.on("sendMessage", async (data) => {
-      console.log(data);
       const messages = chatRoom.messages;
-      const { id_from, message, chatRoomId } = data;
+      const { id_from, message, chatRoomId, members } = data;
       const newMsg = { id_from, message };
       const room = await Chat.findOneAndUpdate(
          { chatId: chatId },
@@ -73,7 +72,12 @@ io.on("connection", async (socket) => {
       );
       messages.push(data);
       io.emit(`sendMessage-${chatRoomId}`, { messages: room.messages });
-      // io.emit('updateChatHistory', { newMessage: { chatId: room.chatId, id_from, message } });
+      io.emit(`updateChatHistory-${members[0]}`, {
+         newMessage: { chatId: room.chatId, id_from, message },
+      });
+      io.emit(`updateChatHistory-${members[1]}`, {
+         newMessage: { chatId: room.chatId, id_from, message },
+      });
    });
 });
 
