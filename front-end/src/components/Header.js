@@ -137,28 +137,33 @@ function Header(props) {
             setUnseenMessages((prev) => [...prev, newMsgObj]);
           }
         }
-        const unseen = JSON.parse(
-          localStorage.getItem(`chatRoomId-${data.newMessage.chatId}`)
-        );
-        let incr;
-        console.log(unseen);
-        if (unseen) {
-          incr = parseInt(unseen) + 1;
-        } else {
-          incr = 1;
+        if (
+          getUser.id !== data.newMessage.id_from &&
+          location.pathname !== `/chatroom/${data.newMessage.chatId}`
+        ) {
+          const unseen = JSON.parse(
+            localStorage.getItem(`chatRoomId-${data.newMessage.chatId}`)
+          );
+          let incr;
+          if (unseen) {
+            incr = parseInt(unseen) + 1;
+          } else {
+            incr = 1;
+          }
+          localStorage.setItem(
+            `chatRoomId-${data.newMessage.chatId}`,
+            JSON.stringify(incr)
+          );
         }
-        localStorage.setItem(
-          `chatRoomId-${data.newMessage.chatId}`,
-          JSON.stringify(incr)
-        );
       });
     }
 
     return () => {
       socket.current.off(`updateChatHistory-${getUser.id}`);
     };
-  }, [toastCount]);
+  }, [toastCount, location.pathname, navigate]);
   useEffect(() => {
+    console.log(location.pathname);
     if (location.pathname === "/chats") {
       setUnseenMessages([]);
     }
