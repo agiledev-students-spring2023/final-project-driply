@@ -19,8 +19,10 @@ function ChatRoomPage() {
   const inputRef = useRef();
   const socket = useRef();
   const chatListRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     socket.current = io(`http://localhost:4000?chatId=${chatId}`);
     socket.current.on("createdRoom", (data) => {
       const copyMessages = data.messages;
@@ -29,6 +31,7 @@ function ChatRoomPage() {
       });
       setMessages(copyMessages);
       console.log(data);
+      setIsLoading(false);
     });
   }, [chatId]);
   useEffect(() => {
@@ -195,25 +198,29 @@ function ChatRoomPage() {
 
       {/* body - display messages */}
       <div className="displayMessages">
-        {messages.map((message, idx) => {
-          if (message.id_from === sender.id) {
-            return (
-              <SenderMessage
-                key={idx}
-                message={message}
-                idx={idx}
-              />
-            );
-          } else {
-            return (
-              <ReceiverMessage
-                key={idx}
-                message={message}
-                idx={idx}
-              />
-            );
-          }
-        })}
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          messages.map((message, idx) => {
+            if (message.id_from === sender.id) {
+              return (
+                <SenderMessage
+                  key={idx}
+                  message={message}
+                  idx={idx}
+                />
+              );
+            } else {
+              return (
+                <ReceiverMessage
+                  key={idx}
+                  message={message}
+                  idx={idx}
+                />
+              );
+            }
+          })
+        )}
         <div ref={chatListRef} />
       </div>
       <div
