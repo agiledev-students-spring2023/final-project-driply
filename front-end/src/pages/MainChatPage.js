@@ -66,7 +66,7 @@ function MainChatPage() {
 
   function Chat({ chat }) {
     const getUser = JSON.parse(localStorage.getItem("user"));
-    const [unseenMessages, setUnseenMessages] = useState([]);
+    const [unseenMessages, setUnseenMessages] = useState(0);
     const [lastMessage, setLastMessage] = useState("");
     const [formattedTime, setFormattedTime] = useState("");
     const [userId1, userId2] = chat.chatId.split("--");
@@ -80,7 +80,7 @@ function MainChatPage() {
           const id_from = data.newMessage.id_from;
           const message = data.newMessage.message;
           const newMsgObj = { id_from, message };
-          setUnseenMessages((prev) => [...prev, newMsgObj]);
+          setUnseenMessages((prev) => prev + 1);
           setLastMessage(message);
         }
       });
@@ -94,6 +94,14 @@ function MainChatPage() {
     useEffect(() => {
       function displayChat() {
         if (chat.messages.length !== 0) {
+          const initialUnseen = JSON.parse(
+            localStorage.getItem(`chatRoomId-${chat.chatId}`)
+          );
+          if (initialUnseen) {
+            setUnseenMessages(parseInt(initialUnseen));
+          } else {
+            setUnseenMessages(0);
+          }
           const copyMessages = [...chat.messages];
           copyMessages.sort((a, b) => {
             return new Date(a.createdAt) - new Date(b.createdAt);
@@ -149,7 +157,7 @@ function MainChatPage() {
           <div className="topChatDetails">
             <h4>{receiver.name}</h4>
 
-            {unseenMessages.length !== 0 ? (
+            {unseenMessages !== 0 ? (
               <p className="gray">{formattedTime}</p>
             ) : (
               <p>{formattedTime}</p>
@@ -168,9 +176,7 @@ function MainChatPage() {
                 Text: {lastMessage.substring(0, 24)}...
               </p>
             )}
-            {unseenMessages.length === 0 ? null : (
-              <p>{unseenMessages.length}</p>
-            )}
+            {unseenMessages === 0 ? null : <p>{unseenMessages}</p>}
           </div>
         </div>
       </div>

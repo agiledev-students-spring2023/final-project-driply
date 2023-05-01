@@ -137,6 +137,20 @@ function Header(props) {
             setUnseenMessages((prev) => [...prev, newMsgObj]);
           }
         }
+        const unseen = JSON.parse(
+          localStorage.getItem(`chatRoomId-${data.newMessage.chatId}`)
+        );
+        let incr;
+        console.log(unseen);
+        if (unseen) {
+          incr = parseInt(unseen) + 1;
+        } else {
+          incr = 1;
+        }
+        localStorage.setItem(
+          `chatRoomId-${data.newMessage.chatId}`,
+          JSON.stringify(incr)
+        );
       });
     }
 
