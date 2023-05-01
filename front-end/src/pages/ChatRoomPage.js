@@ -48,6 +48,7 @@ function ChatRoomPage() {
   }, [messages]);
   useEffect(() => {
     async function fetchProfileInfo() {
+      localStorage.removeItem(`chatRoomId-${chatId}`);
       const response1 = await fetch(`http://localhost:4000/profile`, {
         method: "POST",
         headers: {
