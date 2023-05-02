@@ -175,8 +175,6 @@ p {
   margin-right: 60px;
   margin-top: 1px;
   margin-bottom: 3px;
-  display: flex;
-  align-items: center;
   align-self: flex-start;
 }
 .receiverMessage-dark {
@@ -188,8 +186,6 @@ p {
   margin-right: 60px;
   margin-top: 1px;
   margin-bottom: 3px;
-  display: flex;
-  align-items: center;
   align-self: flex-start;
 }
 
@@ -209,8 +205,14 @@ p {
   margin-bottom: 1px;
   align-self: flex-end;
 }
-d .senderMessageContent {
+.senderMessageContent {
   display: flex;
+}
+
+.senderMessage p {
+  display: flex;
+  align-items: center;
+  justify-content: end;
 }
 
 .chatroomInput {

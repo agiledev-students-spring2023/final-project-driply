@@ -8,9 +8,6 @@ function FollowerPage() {
   const [followerList, setFollowerList] = useState([]);
   const [followersData, setFollowerData] = useState([]);
   const [followerError, setFollowerError] = useState(null);
-  const [followingList, setFollowingList] = useState([]);
-  const [followingData, setFollowingData] = useState([]);
-  const [followingError, setFollowingError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [followedChangedSuccess, setFollowedChangedSuccess] = useState(false);
   const { ifDarkMode } = useContext(DarkModeContext);
@@ -54,14 +51,9 @@ function FollowerPage() {
       );
       let json = await response.json();
       if (json.success) {
-        setFollowingList(json.following);
-        setFollowingData(json.followingData);
-        setFollowingError(null);
         setLoading(false);
-        console.log(json);
       } else {
         console.log(json.error);
-        setFollowingError({ error: json.error.message, message: json.message });
         setLoading(false);
       }
     }
@@ -73,7 +65,10 @@ function FollowerPage() {
   function LoadFollowerList() {
     return Array.from({ length: followerList.length }).map((_, idx) => {
       return (
-        <div key={idx} className="eachFollowerDisplay">
+        <div
+          key={idx}
+          className="eachFollowerDisplay"
+        >
           <div className="followerImgLoading"></div>
           <div className="followerDetailsLoading"></div>
         </div>
@@ -134,8 +129,6 @@ function FollowerPage() {
   }
 
   function DisplayFollowerList() {
-    const isFollowing = (followerId) => followingList.includes(followerId);
-
     // display logged in user on top
     const sortedFollowers = [...followersData].sort((a, b) => {
       if (a.id === user.id) return -1;
@@ -146,7 +139,10 @@ function FollowerPage() {
     return (
       <div className="followerContainer">
         {sortedFollowers.map((follower, index) => (
-          <Follower key={index} follower={follower} />
+          <Follower
+            key={index}
+            follower={follower}
+          />
         ))}
       </div>
     );

@@ -77,16 +77,28 @@ function Bookmarks() {
 
   function LoadingBookmarkList() {
     return Array.from({ length: 4 }).map((_, idx) => {
-      return <div key={idx} className="bookmarkItem bookmarkBgColor"></div>;
+      return (
+        <div
+          key={idx}
+          className="bookmarkItem bookmarkBgColor"
+        ></div>
+      );
     });
   }
 
   function BookmarkItem({ bookmark }) {
     const [bookmarked, setBookmarked] = useState(bookmark.bookmarked);
     const handlePostClick = () => navigate(`/post/${bookmark._id}`);
+    let text = bookmark?.description;
+    if (text.length > 15) {
+      text = text.substring(0, 15) + "...";
+    }
 
     return (
-      <div onClick={handlePostClick} className="bookmarkItem">
+      <div
+        onClick={handlePostClick}
+        className="bookmarkItem"
+      >
         {/* commented out until api route and db working */}
         <BookMarkItem
           post={bookmark}
@@ -95,8 +107,12 @@ function Bookmarks() {
           setRemovedBookmark={setRemovedBookmark}
         />
         <div className="bookmarkImg">
-          <img src={bookmark?.image} alt="bookmark img" />
+          <img
+            src={bookmark?.image}
+            alt="bookmark img"
+          />
         </div>
+        <p>{text}</p>
       </div>
     );
   }
@@ -105,7 +121,10 @@ function Bookmarks() {
     return (
       <>
         {bookmarkList?.map((item) => (
-          <BookmarkItem key={item.id} bookmark={item} />
+          <BookmarkItem
+            key={item.id}
+            bookmark={item}
+          />
         ))}
       </>
     );

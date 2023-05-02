@@ -5,6 +5,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { io } from "socket.io-client";
 import { useAuthContext } from "../hooks/useAuthContext";
+import moment from "moment";
 
 function ChatRoomPage() {
   const { user } = useAuthContext();
@@ -30,7 +31,6 @@ function ChatRoomPage() {
         return new Date(a.createdAt) - new Date(b.createdAt);
       });
       setMessages(copyMessages);
-      console.log(data);
       setIsLoading(false);
     });
   }, [chatId]);
@@ -94,7 +94,7 @@ function ChatRoomPage() {
       }
     }
     fetchProfileInfo();
-  }, [id1, id2]);
+  }, [id1, id2, chatId]);
 
   async function fetchPfp(id) {
     const response = await fetch(`http://localhost:4000/getUserPfp`, {
@@ -117,17 +117,25 @@ function ChatRoomPage() {
   const onInput = () => inputRef.current.value;
 
   function SenderMessage({ message, idx }) {
-    const animation = idx === messages.length - 1 ? "" : "";
+    const createdAt = moment(message.createdAt);
+    const format = "h:mm A";
+    const formattedTime = createdAt.format(format);
+    const animation = idx === messages.length - 1 ? "newMessage" : "no-animate";
     return (
       <div className={`senderMessage ${animation}`}>
         <div className="white">{message.message}</div>
+        <p style={{ fontSize: "10px" }}>{formattedTime}</p>
       </div>
     );
   }
 
   function ReceiverMessage({ message, idx }) {
+    const createdAt = moment(message.createdAt);
+    const format = "h:mm A";
+    const formattedTime = createdAt.format(format);
+    const animation = idx === messages.length - 1 ? "newMessage" : "no-animate";
     return (
-      <div className="receiverMessageBubble">
+      <div className={`receiverMessageBubble ${animation}`}>
         <img
           className="receiverImg"
           src={receiver?.profilepic}
@@ -139,6 +147,7 @@ function ChatRoomPage() {
           className={ifDarkMode ? "receiverMessage-dark" : "receiverMessage"}
         >
           {message.message}
+          <p style={{ fontSize: "10px" }}>{formattedTime}</p>
         </div>
       </div>
     );
