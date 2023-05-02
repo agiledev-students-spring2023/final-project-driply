@@ -74,12 +74,8 @@ function MainChatPage() {
 
     useEffect(() => {
       socket.current.on(`updateChatHistory-${userId}`, (data) => {
-        console.log("new message!");
-        console.log(data.newMessage);
         if (data.newMessage.chatId === chat.chatId) {
-          const id_from = data.newMessage.id_from;
           const message = data.newMessage.message;
-          const newMsgObj = { id_from, message };
           setUnseenMessages((prev) => prev + 1);
           setLastMessage(message);
         }

@@ -163,7 +163,6 @@ function Header(props) {
     };
   }, [toastCount, location.pathname, navigate]);
   useEffect(() => {
-    console.log(location.pathname);
     if (location.pathname === "/chats") {
       setUnseenMessages([]);
     }
