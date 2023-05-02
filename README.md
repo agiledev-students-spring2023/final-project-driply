@@ -1,5 +1,7 @@
 # Driply
 
+![web-app](https://github.com/agiledev-students-spring-2023/final-project-driply/tree/master/.github/workflows/cd.yaml/badge.svg)
+
 ## Description and Product Vision Statement
 
 **To connect fashion enthusiast and promote greater accessibility of fashion trends and outfits.**
