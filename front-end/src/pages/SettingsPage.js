@@ -24,7 +24,6 @@ function SettingsPage() {
     let notification = JSON.parse(localStorage.getItem("notifications"));
     if (notification) {
       notification = notification === "on" ? "off" : "on";
-      console.log(notification);
       localStorage.setItem("notifications", JSON.stringify(notification));
       setNoti(notification);
     } else {
@@ -41,7 +40,6 @@ function SettingsPage() {
 
   useEffect(() => {
     async function fetchPfp() {
-      console.log(user.id);
       if (user.id) {
         const response = await fetch(`http://localhost:4000/getUserPfp`, {
           method: "POST",

@@ -136,6 +136,10 @@ function Header(props) {
             const newMsgObj = { message };
             setUnseenMessages((prev) => [...prev, newMsgObj]);
           }
+        } else {
+          const message = data.newMessage.message;
+          const newMsgObj = { message };
+          setUnseenMessages((prev) => [...prev, newMsgObj]);
         }
         if (
           getUser.id !== data.newMessage.id_from &&

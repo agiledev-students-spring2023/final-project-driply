@@ -5,6 +5,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { io } from "socket.io-client";
 import { useAuthContext } from "../hooks/useAuthContext";
+import moment from "moment";
 
 function ChatRoomPage() {
   const { user } = useAuthContext();
@@ -116,15 +117,22 @@ function ChatRoomPage() {
   const onInput = () => inputRef.current.value;
 
   function SenderMessage({ message, idx }) {
+    const createdAt = moment(message.createdAt);
+    const format = "h:mm A";
+    const formattedTime = createdAt.format(format);
     const animation = idx === messages.length - 1 ? "newMessage" : "no-animate";
     return (
       <div className={`senderMessage ${animation}`}>
         <div className="white">{message.message}</div>
+        <p style={{ fontSize: "10px" }}>{formattedTime}</p>
       </div>
     );
   }
 
   function ReceiverMessage({ message, idx }) {
+    const createdAt = moment(message.createdAt);
+    const format = "h:mm A";
+    const formattedTime = createdAt.format(format);
     const animation = idx === messages.length - 1 ? "newMessage" : "no-animate";
     return (
       <div className={`receiverMessageBubble ${animation}`}>
@@ -139,6 +147,7 @@ function ChatRoomPage() {
           className={ifDarkMode ? "receiverMessage-dark" : "receiverMessage"}
         >
           {message.message}
+          <p style={{ fontSize: "10px" }}>{formattedTime}</p>
         </div>
       </div>
     );
