@@ -1,39 +1,43 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Comment(prop) {
   const { commentList, setCommentList } = prop;
   const { newComment, setNewComment } = prop;
-  const { user } = useAuthContext();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchComment() {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/fetchComment`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          postId: prop.postId,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/fetchComment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postId: prop.postId,
+          }),
+        }
+      );
       let json = await response.json();
       if (response.status === 200) {
         async function setCommentImages(commentList) {
           console.log(commentList);
           for (let c of commentList) {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                filename: c.user.profilepic,
-              }),
-            });
+            const response = await fetch(
+              `${process.env.REACT_APP_BACKEND_URL}/image`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  filename: c.user.profilepic,
+                }),
+              }
+            );
 
             if (response.status === 200) {
               const imageBlob = await response.blob();
@@ -52,8 +56,7 @@ function Comment(prop) {
       fetchComment();
       setNewComment(false);
     }
-  }, [newComment]);
-
+  }, [newComment, setNewComment, setCommentList, prop.postId]);
 
   return (
     <div>

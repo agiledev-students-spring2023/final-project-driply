@@ -10,15 +10,18 @@ function Like(prop) {
 
   useEffect(() => {
     async function fetchLikes() {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getPost`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          postId: prop.postId,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/getPost`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postId: prop.postId,
+          }),
+        }
+      );
       let json = await response.json();
       if (response.status === 200) {
         let arr = [...json.likes];
@@ -29,7 +32,7 @@ function Like(prop) {
 
     fetchLikes();
     setLikeChanged(false);
-  }, [likeChanged]);
+  }, [likeChanged, prop.postId]);
 
   const handleLike = () => {
     async function like() {

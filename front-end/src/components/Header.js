@@ -84,7 +84,7 @@ function Header(props) {
         `${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`
       );
     }
-  }, []);
+  }, [location.pathname, toastCount]);
   useEffect(() => {
     const getUser = JSON.parse(localStorage.getItem("user"));
     if (getUser) {
@@ -173,13 +173,10 @@ function Header(props) {
         }
       });
       return () => {
-        document.removeEventListener("click", handleClickOutside);
+        //document.removeEventListener("click", handleClickOutside);
         socket.current.off(`updateChatHistory-${getUser.id}`);
       };
     }
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
   }, [toastCount, location.pathname, navigate, menuRef]);
 
   return (
@@ -193,9 +190,9 @@ function Header(props) {
           } ${ifDarkMode && "header-Dark"}`}
         >
           {shouldShowBackButton && (
-            <div className="back-button" onClick={() => window.history.back()}>
-              <i className="fas fa-arrow-left"></i>
-            </div>
+            <p className="back-button" onClick={() => window.history.back()}>
+              &#706;
+            </p>
           )}
           <img
             className="dlogo"
