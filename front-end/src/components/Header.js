@@ -69,10 +69,10 @@ function Header(props) {
     if (getUser) {
       socket.current = io(`${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`);
       socket.current.on(`updateChatHistory-${getUser.id}`, (data) => {
-        const notification = JSON.parse(localStorage.getItem("notifications"));
+        const notis = JSON.parse(localStorage.getItem("notifications"));
         if (
           location.pathname !== `/chatroom/${data.newMessage.chatId}` &&
-          notification === "on"
+          notis === "on"
         ) {
           if (getUser.id !== data.newMessage.id_from) {
             if (toastCount > 0) {
@@ -140,15 +140,15 @@ function Header(props) {
           const unseen = JSON.parse(
             localStorage.getItem(`chatRoomId-${data.newMessage.chatId}`)
           );
-          let incr;
+          let increment;
           if (unseen) {
-            incr = parseInt(unseen) + 1;
+            increment = parseInt(unseen) + 1;
           } else {
-            incr = 1;
+            increment = 1;
           }
           localStorage.setItem(
             `chatRoomId-${data.newMessage.chatId}`,
-            JSON.stringify(incr)
+            JSON.stringify(increment)
           );
         }
       });
@@ -189,40 +189,22 @@ function Header(props) {
             itemClassName={`${ifDarkMode && "menu-item-dark"}`}
             menuClassName={`${ifDarkMode && "menu-dark"}`}
           >
-            <Link
-              to="/"
-              onClick={handleMenuClose}
-            >
+            <Link to="/" onClick={handleMenuClose}>
               Home
             </Link>
-            <Link
-              to="/chats"
-              onClick={handleMenuClose}
-            >
+            <Link to="/chats" onClick={handleMenuClose}>
               Messages
             </Link>
-            <Link
-              to="/trending"
-              onClick={handleMenuClose}
-            >
+            <Link to="/trending" onClick={handleMenuClose}>
               Trending
             </Link>
-            <Link
-              to="/bookmarks"
-              onClick={handleMenuClose}
-            >
+            <Link to="/bookmarks" onClick={handleMenuClose}>
               Bookmarks
             </Link>
-            <Link
-              to="/settings"
-              onClick={handleMenuClose}
-            >
+            <Link to="/settings" onClick={handleMenuClose}>
               Settings
             </Link>
-            <Link
-              to="/"
-              onClick={logOut}
-            >
+            <Link to="/" onClick={logOut}>
               Log Out
             </Link>
           </Menu>
@@ -236,10 +218,7 @@ function Header(props) {
         </div>
       ) : (
         <div className="header">
-          <div
-            className="logo"
-            onClick={handleLogoClick}
-          >
+          <div className="logo" onClick={handleLogoClick}>
             Logo
           </div>
           <Menu
@@ -252,16 +231,10 @@ function Header(props) {
             burgerBarClassName={`${ifDarkMode && "bm-burger-bars-dark"}`}
             itemListClassName={`${ifDarkMode && "menu-item-dark"}`}
           >
-            <Link
-              to="/login"
-              onClick={handleMenuClose}
-            >
+            <Link to="/login" onClick={handleMenuClose}>
               Login
             </Link>
-            <Link
-              to="/register"
-              onClick={handleMenuClose}
-            >
+            <Link to="/register" onClick={handleMenuClose}>
               Register
             </Link>
           </Menu>

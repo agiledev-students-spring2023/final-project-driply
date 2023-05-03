@@ -10,7 +10,7 @@ function TrendingPage() {
   const [postListError, setPostListError] = useState(null);
   const [formData, setFormData] = useState({
     query: "",
-    select: "content"
+    select: "content",
   });
   const formRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,9 @@ function TrendingPage() {
 
   useEffect(() => {
     async function fetchPostList() {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getTrendingPosts`);
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/getTrendingPosts`
+      );
       let json = await response.json();
       if (response.status === 200) {
         //console.log(json);
@@ -32,7 +34,7 @@ function TrendingPage() {
     }
 
     fetchPostList();
-  }, []);
+  }, [postList]);
 
   function handleInputChange(e) {
     formData.query = e.target.value;
@@ -45,9 +47,11 @@ function TrendingPage() {
   function handleSubmit(e) {
     e.preventDefault();
     console.log("called");
-    if (formData.query === ""){
+    if (formData.query === "") {
       async function fetchPostList() {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getTrendingPosts`);
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/getTrendingPosts`
+        );
         let json = await response.json();
         if (response.status === 200) {
           //console.log(json);
@@ -59,24 +63,26 @@ function TrendingPage() {
         }
         setLoading(false);
       }
-  
+
       fetchPostList();
       return;
     }
 
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/search/${formData.query}/${formData.select}`, {
-      method: "GET"
-    })
-    .then((response) => response.json())
-    .then((result) => {
-      setPostList(() => [...result.data]);
-      console.log(result.data);
-      formData.query = "";
-      formData.select = "content";
-      formRef.current.reset();
-    });
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/search/${formData.query}/${formData.select}`,
+      {
+        method: "GET",
+      }
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setPostList(() => [...result.data]);
+        console.log(result.data);
+        formData.query = "";
+        formData.select = "content";
+        formRef.current.reset();
+      });
   }
-
 
   function quickSort(arr) {
     if (arr.length <= 1) {
@@ -128,17 +134,31 @@ function TrendingPage() {
       ) : (
         <div>
           <div className="row align-items-center mx-auto">
-            <form ref={formRef} onSubmit={handleSubmit} className="form-inline col-12 d-flex align-items-center px-0 mx-0">
-                <input className="form-control" onChange={handleInputChange}/>
-                <div className="col-3">
-                  <select className="form-select" onChange={handleSelectChange} aria-label="Default select example">
-                    <option value="content">Content</option>
-                    <option value="user">User</option>
-                  </select>
-                </div>
-                <div className="input-group-append">
-                  <button className="btn btn-primary" type="submit" id="searchBtn">Search</button>
-                </div>
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className="form-inline col-12 d-flex align-items-center px-0 mx-0"
+            >
+              <input className="form-control" onChange={handleInputChange} />
+              <div className="col-3">
+                <select
+                  className="form-select"
+                  onChange={handleSelectChange}
+                  aria-label="Default select example"
+                >
+                  <option value="content">Content</option>
+                  <option value="user">User</option>
+                </select>
+              </div>
+              <div className="input-group-append">
+                <button
+                  className="btn btn-primary"
+                  type="submit"
+                  id="searchBtn"
+                >
+                  Search
+                </button>
+              </div>
             </form>
           </div>
           <DisplayPostLists />
