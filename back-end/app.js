@@ -1,6 +1,5 @@
 require("dotenv").config({ silent: true });
 const express = require("express");
-const axios = require("axios");
 const morgan = require("morgan");
 const cors = require("cors");
 const multer = require("multer");
@@ -102,11 +101,9 @@ app.post(
   }
 );
 
-app.post(
-  "/changePfp",
-  upload.single("image"),
-  [body("userId").notEmpty().withMessage("User is required")],
-  (req, res) => {
+app.post("/changePfp", upload.single("image"), [
+    body("userId").notEmpty().withMessage("User is required")
+  ], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -131,7 +128,7 @@ app.post(
 );
 
 app.post("/profile", async (req, res, next) => {
-  console.log("fetching profile of user with id " + req.body.userId);
+  //console.log("fetching profile of user with id " + req.body.userId);
   // find user in db
   try {
     const user = await User.findOne({ _id: req.body.userId }).exec();
@@ -201,13 +198,14 @@ app.post("/getPost", (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
+      return res.status(400).json({
+        success: false,
+        message: "Post was not found in db",
+      });
     });
 });
 
-app.post(
-  "/like/:postId",
-  [body("userId").notEmpty().withMessage("UserID is required")],
-  (req, res) => {
+app.post("/like/:postId", [body("userId").notEmpty().withMessage("UserID is required")], (req, res) => {
     const id = req.params.postId;
     const errors = validationResult(req);
     if (!errors.isEmpty() || id === null) {
@@ -230,14 +228,15 @@ app.post(
       })
       .catch((err) => {
         console.log(err);
+        return res.status(400).json({
+          success: false,
+          message: "Post was not found in db",
+        });
       });
   }
 );
 
-app.post(
-  "/unlike/:postId",
-  [body("userId").notEmpty().withMessage("UserID is required")],
-  (req, res) => {
+app.post("/unlike/:postId", [body("userId").notEmpty().withMessage("UserID is required")], (req, res) => {
     const id = req.params.postId;
     const errors = validationResult(req);
     if (!errors.isEmpty() || id === null) {
@@ -260,6 +259,10 @@ app.post(
       })
       .catch((err) => {
         console.log(err);
+        return res.status(400).json({
+          success: false,
+          message: "Post was not found in db",
+        });
       });
   }
 );
@@ -276,17 +279,18 @@ app.post("/fetchComment", (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
+      return res.status(400).json({
+        success: false,
+        message: "Post was not found in db",
+      });
     });
 });
 
-app.post(
-  "/createComment",
-  [
+app.post("/createComment",[
     body("postId").notEmpty().withMessage("PostId is required"),
     body("userId").notEmpty().withMessage("UserId is required"),
     body("comment").notEmpty().withMessage("Comment is required"),
-  ],
-  (req, res) => {
+  ], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -315,6 +319,10 @@ app.post(
           })
           .catch((err) => {
             console.log(err);
+            return res.status(400).json({
+              success: false,
+              message: "User was not found in db",
+            });
           });
       })
       .catch((err) => {
@@ -341,7 +349,7 @@ app.get("/bookmarks/:id", async (req, res) => {
       bookmarks: bookmark,
     });
   } catch (error) {
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
       message: "Error looking up user in database.",
       error: error,
@@ -349,13 +357,10 @@ app.get("/bookmarks/:id", async (req, res) => {
   }
 });
 
-app.post(
-  "/bookmark",
-  [
+app.post("/bookmark",[
     body("postID").notEmpty().withMessage("PostId is required"),
     body("userID").notEmpty().withMessage("UserId is required"),
-  ],
-  async (req, res) => {
+  ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -405,13 +410,10 @@ app.post(
   }
 );
 
-app.post(
-  "/unbookmark",
-  [
+app.post("/unbookmark", [
     body("postID").notEmpty().withMessage("PostId is required"),
     body("userID").notEmpty().withMessage("UserId is required"),
-  ],
-  async (req, res) => {
+  ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -525,6 +527,7 @@ app.get("/chats/:chatId", async (req, res) => {
     });
   }
 });
+
 app.post("/chatRoom", async (req, res) => {
   try {
     const chatRoom = await Chat.findOne({ chatId: req.body.chatId });
@@ -554,6 +557,7 @@ app.post("/chatRoom", async (req, res) => {
     });
   }
 });
+
 app.get("/follower/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -635,13 +639,10 @@ app.get("/following/:id", async (req, res) => {
   }
 });
 
-app.post(
-  "/follow",
-  [
+app.post("/follow", [
     body("userID").notEmpty().withMessage("userID is required"),
     body("followedID").notEmpty().withMessage("followedID is required"),
-  ],
-  async (req, res) => {
+  ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -686,13 +687,10 @@ app.post(
   }
 );
 
-app.post(
-  "/unfollow",
-  [
+app.post("/unfollow",[
     body("userID").notEmpty().withMessage("userID is required"),
     body("followedID").notEmpty().withMessage("followedID is required"),
-  ],
-  async (req, res) => {
+  ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -759,6 +757,10 @@ app.get("/search/:query/:type", (req, res) => {
       })
       .catch((err) => {
         console.log(err);
+        return res.status(400).json({
+          success: false,
+          message: "User was not found in db",
+        });
       });
   }
   if (type === "content") {
@@ -768,6 +770,10 @@ app.get("/search/:query/:type", (req, res) => {
       })
       .catch((err) => {
         console.log(err);
+        return res.status(400).json({
+          success: false,
+          message: "Post was not found in db",
+        });
       });
   }
 });
@@ -792,6 +798,10 @@ app.get("/getTrendingPosts", async (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to get timestamp",
+      });
     });
 });
 
@@ -799,10 +809,7 @@ app.post("/image", async (req, res) => {
   res.sendFile(__dirname + "/public/uploads/" + req.body.filename);
 });
 
-app.post(
-  "/editProfile",
-  [body("userId").notEmpty().withMessage("userId is required")],
-  async (req, res) => {
+app.post("/editProfile", [body("userId").notEmpty().withMessage("userId is required")], async (req, res) => {
     // api route is receiving a username and password to save but doesn't have to update both.
     // User can just save username or password only
 
@@ -836,10 +843,9 @@ app.post(
         profilePic: user.profilepic,
       });
     } catch (error) {
-      res.json({
+      return res.status(500).json({
         success: false,
-        status: 500,
-        message: "Err trying to update your info",
+        message: "Error updating",
       });
     }
   }
@@ -852,6 +858,10 @@ app.post("/getUserPfp", (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+      return res.status(400).json({
+        success: false,
+        message: "User was not found in db",
+      });
     });
 });
 
@@ -862,6 +872,10 @@ app.post("/getUsername", (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+      return res.status(400).json({
+        success: false,
+        message: "Post was not found in db",
+      });
     });
 });
 
