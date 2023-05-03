@@ -7,7 +7,7 @@ const TrendingCard = ({post}) => {
     useEffect(() => {
         async function fetchImage() {
             const response = await fetch(
-            `http://localhost:4000/image`,{
+            `${process.env.REACT_APP_BACKEND_URL}/image`,{
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'

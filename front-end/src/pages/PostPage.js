@@ -29,7 +29,7 @@ const PostPage = () => {
 
   useEffect(() => {
     async function fetchPostInfo() {
-      const response = await fetch(`http://localhost:4000/getPost`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getPost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const PostPage = () => {
         setUserID(json.user);
         setPostError(null);
         setLoading(false);
-        const response = await fetch(`http://localhost:4000/image`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -63,7 +63,7 @@ const PostPage = () => {
           const imageObjectURL = URL.createObjectURL(imageBlob);
           setImg(imageObjectURL);
         }
-        const response2 = await fetch(`http://localhost:4000/getUserPfp`, {
+        const response2 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const PostPage = () => {
     }
 
     async function fetchLoggedInUserPfP() {
-      const response = await fetch(`http://localhost:4000/getUserPfp`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,7 +115,7 @@ const PostPage = () => {
   const handleComment = (e) => {
     e.preventDefault();
     async function addComment() {
-      const response = await fetch(`http://localhost:4000/createComment`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/createComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

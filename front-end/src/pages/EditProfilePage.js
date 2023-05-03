@@ -21,7 +21,7 @@ function EditProfilePage() {
 
   useEffect(() => {
     async function fetchPfp() {
-      const response = await fetch(`http://localhost:4000/getUserPfp`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +43,7 @@ function EditProfilePage() {
   const saveChanges = async (username, password) => {
     console.log(username, password);
     const user = JSON.parse(localStorage.getItem("user"));
-    const response = await fetch("http://localhost:4000/editProfile", {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/editProfile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +84,7 @@ function EditProfilePage() {
       const formData = new FormData();
       formData.append("image", e.target.files[0]);
       formData.append("userId", user.id);
-      const response = await fetch(`http://localhost:4000/changePfp`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/changePfp`, {
         method: "POST",
         body: formData,
       });

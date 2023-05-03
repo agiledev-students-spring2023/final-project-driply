@@ -14,7 +14,7 @@ function Follow(props) {
   useEffect(() => {
     async function fetchFollowingList() {
       const response = await fetch(
-        `http://localhost:4000/following/${user.id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/following/${user.id}`,
         {
           method: "GET",
           headers: {
@@ -41,7 +41,7 @@ function Follow(props) {
       e.stopPropagation();
 
       async function follow() {
-        const response = await fetch(`http://localhost:4000/follow`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/follow`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function Follow(props) {
       }
 
       async function unfollow() {
-        const response = await fetch(`http://localhost:4000/unfollow`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/unfollow`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

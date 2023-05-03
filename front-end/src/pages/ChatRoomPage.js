@@ -24,7 +24,7 @@ function ChatRoomPage() {
 
   useEffect(() => {
     setIsLoading(true);
-    socket.current = io(`http://localhost:4000?chatId=${chatId}`);
+    socket.current = io(`${process.env.REACT_APP_BACKEND_URL}?chatId=${chatId}`);
     socket.current.on("createdRoom", (data) => {
       const copyMessages = data.messages;
       copyMessages.sort((a, b) => {
@@ -52,7 +52,7 @@ function ChatRoomPage() {
   useEffect(() => {
     async function fetchProfileInfo() {
       localStorage.removeItem(`chatRoomId-${chatId}`);
-      const response1 = await fetch(`http://localhost:4000/profile`, {
+      const response1 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,7 @@ function ChatRoomPage() {
           userId: id1,
         }),
       });
-      const response2 = await fetch(`http://localhost:4000/profile`, {
+      const response2 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -97,7 +97,7 @@ function ChatRoomPage() {
   }, [id1, id2, chatId]);
 
   async function fetchPfp(id) {
-    const response = await fetch(`http://localhost:4000/getUserPfp`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

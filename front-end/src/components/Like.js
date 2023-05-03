@@ -10,7 +10,7 @@ function Like(prop) {
 
   useEffect(() => {
     async function fetchLikes() {
-      const response = await fetch(`http://localhost:4000/getPost`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getPost`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,7 +34,7 @@ function Like(prop) {
   const handleLike = () => {
     async function like() {
       const response = await fetch(
-        `http://localhost:4000/like/${prop.postId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/like/${prop.postId}`,
         {
           method: "POST",
           headers: {
@@ -58,7 +58,7 @@ function Like(prop) {
     }
     async function unlike() {
       const response = await fetch(
-        `http://localhost:4000/unlike/${prop.postId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/unlike/${prop.postId}`,
         {
           method: "POST",
           headers: {
