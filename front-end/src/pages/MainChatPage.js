@@ -52,13 +52,31 @@ function MainChatPage() {
         );
         const data = await response.json();
         if (data.success) {
+          const dontShow = [];
           for (let i = 0; i < data.chatList.length; i++) {
             const currentChat = data.chatList[i];
-            for (let j = 0; j < currentChat.members.length; j++) {
-              const url = await fetchPfp(data.chatList[i].members[j]._id);
-              data.chatList[i].members[j].profilepic = url;
+            if (currentChat.messages.length >= 1) {
+              const size = data.chatList[i].messages.length - 1;
+              const lastMessage = data.chatList[i].messages[size];
+              data.chatList[i].lastMessage = lastMessage;
+              for (let j = 0; j < currentChat.members.length; j++) {
+                const url = await fetchPfp(data.chatList[i].members[j]._id);
+                data.chatList[i].members[j].profilepic = url;
+              }
+            } else {
+              dontShow.push(i);
             }
           }
+          for (let i = 0; i < dontShow.length; i++) {
+            data.chatList.splice(dontShow[i], 1);
+          }
+          data.chatList.sort((a, b) => {
+            return (
+              new Date(b.lastMessage.createdAt) -
+              new Date(a.lastMessage.createdAt)
+            );
+          });
+          console.log(data.chatList);
           setChatLists(data.chatList);
         } else {
           console.log(data);
@@ -85,7 +103,7 @@ function MainChatPage() {
     });
   }
 
-  function Chat({ chat }) {
+  function Chat({ chat, idx }) {
     const getUser = JSON.parse(localStorage.getItem("user"));
     const [unseenMessages, setUnseenMessages] = useState(0);
     const [lastMessage, setLastMessage] = useState("");
@@ -99,12 +117,18 @@ function MainChatPage() {
           const message = data.newMessage.message;
           setUnseenMessages((prev) => prev + 1);
           setLastMessage(message);
+          const copy = [...chatsList];
+          copy[idx].messages.push(data.newMessage);
+          // const remove = copy.splice(idx, 1);
+          // copy.unshift(remove);
+          // console.log(remove);
+          setChatLists(copy);
         }
       });
       return () => {
         socket.off(`updateChatHistory-${userId}`);
       };
-    }, [chat.chatId, userId]);
+    }, [chat.chatId, userId, idx]);
 
     let receiver =
       getUser.username !== chat.members[0].name
@@ -211,6 +235,7 @@ function MainChatPage() {
           <Chat
             key={idx}
             chat={chat}
+            idx={idx}
           />
         ))}
       </>
