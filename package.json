@@ -1,0 +1,26 @@
+{
+  "name": "final-project-driply",
+  "version": "1.0.0",
+  "description": "**To connect fashion enthusiast and promote greater accessibility of fashion trends and outfits.**",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "back-end": "npm start --prefix back-end",
+    "front-end": "npm start --prefix front-end",
+    "dev": "concurrently \"npm run back-end\" \"npm run front-end\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agiledev-students-spring-2023/final-project-driply.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/agiledev-students-spring-2023/final-project-driply/issues"
+  },
+  "homepage": "https://github.com/agiledev-students-spring-2023/final-project-driply#readme",
+  "dependencies": {
+    "concurrently": "^8.0.1",
+    "pm2": "^5.3.0"
+  }
+}
