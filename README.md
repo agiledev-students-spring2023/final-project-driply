@@ -36,7 +36,7 @@ Driply is a fashion social networking app where users can share their outfits as
 ### Acquire the source code
 
 1. Clone the repository into your local machine
-2. Navigate into the local directory
+2. Run ```cd final_project_driply``` to navigate into the local directory
 
 ### Build and launch the back end
 
