@@ -21,7 +21,7 @@ const listener = server.listen(port, function () {
 
 const io = socket(listener, {
   cors: {
-    origin: process.env.PORT,
+    origin: process.env.ORIGIN,
     credentials: true,
   },
 });
