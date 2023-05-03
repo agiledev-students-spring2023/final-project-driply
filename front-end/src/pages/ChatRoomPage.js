@@ -6,7 +6,7 @@ import { DarkModeContext } from "../context/DarkModeContext";
 import { io } from "socket.io-client";
 import { useAuthContext } from "../hooks/useAuthContext";
 import moment from "moment";
-const socket = io("http://localhost:4000");
+const socket = io(`${process.env.REACT_APP_BACKEND_URL}`);
 
 function ChatRoomPage() {
   const { user } = useAuthContext();
