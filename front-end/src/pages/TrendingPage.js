@@ -34,7 +34,7 @@ function TrendingPage() {
     }
 
     fetchPostList();
-  }, []);
+  }, [postList]);
 
   function handleInputChange(e) {
     formData.query = e.target.value;
