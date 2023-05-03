@@ -8,7 +8,7 @@ import { useScrollDirection } from "../hooks/useScrollDirection";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
-const socket = io("http://localhost:4000");
+const socket = io(`${process.env.REACT_APP_BACKEND_URL}`);
 
 function Header(props) {
   const [unseenMessages, setUnseenMessages] = useState([]);
