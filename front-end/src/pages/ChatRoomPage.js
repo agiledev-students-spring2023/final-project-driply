@@ -6,6 +6,7 @@ import { DarkModeContext } from "../context/DarkModeContext";
 import { io } from "socket.io-client";
 import { useAuthContext } from "../hooks/useAuthContext";
 import moment from "moment";
+const socket = io("http://localhost:4000");
 
 function ChatRoomPage() {
   const { user } = useAuthContext();
@@ -18,31 +19,19 @@ function ChatRoomPage() {
   const [receiver, setReceiver] = useState("");
   const [messages, setMessages] = useState([]);
   const inputRef = useRef();
-  const socket = useRef();
   const chatListRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [fetchRoomErr, setFetchRoomErr] = useState(null);
 
   useEffect(() => {
-    setIsLoading(true);
-    socket.current = io(`${process.env.REACT_APP_BACKEND_URL}?chatId=${chatId}`);
-    socket.current.on("createdRoom", (data) => {
+    socket.on(`sendMessage-${chatId}`, (data) => {
       const copyMessages = data.messages;
       copyMessages.sort((a, b) => {
         return new Date(a.createdAt) - new Date(b.createdAt);
       });
       setMessages(copyMessages);
-      setIsLoading(false);
     });
   }, [chatId]);
-  useEffect(() => {
-    socket.current.on(`sendMessage-${chatId}`, (data) => {
-      const copyMessages = data.messages;
-      copyMessages.sort((a, b) => {
-        return new Date(a.createdAt) - new Date(b.createdAt);
-      });
-      setMessages(copyMessages);
-    });
-  });
 
   useEffect(() => {
     if (messages.length !== 0) {
@@ -52,24 +41,30 @@ function ChatRoomPage() {
   useEffect(() => {
     async function fetchProfileInfo() {
       localStorage.removeItem(`chatRoomId-${chatId}`);
-      const response1 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: id1,
-        }),
-      });
-      const response2 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: id2,
-        }),
-      });
+      const response1 = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/profile`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: id1,
+          }),
+        }
+      );
+      const response2 = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/profile`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: id2,
+          }),
+        }
+      );
       let json = await response1.json();
       let json2 = await response2.json();
       const getUser = JSON.parse(localStorage.getItem("user"));
@@ -93,19 +88,45 @@ function ChatRoomPage() {
         console.log(json.message);
       }
     }
+    const fetchChatRoom = async () => {
+      setIsLoading(true);
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/chatRoom`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chatId: chatId,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        setMessages(data.messages);
+      } else {
+        setFetchRoomErr(data.message);
+      }
+      setIsLoading(false);
+    };
+    fetchChatRoom();
     fetchProfileInfo();
   }, [id1, id2, chatId]);
 
   async function fetchPfp(id) {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: id,
-      }),
-    });
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/getUserPfp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: id,
+        }),
+      }
+    );
 
     if (response.status === 200) {
       const imageBlob = await response.blob();
@@ -162,7 +183,7 @@ function ChatRoomPage() {
       return;
     }
 
-    socket.current.emit("sendMessage", {
+    socket.emit("sendMessage", {
       id_from: user.id,
       message: typedMessage,
       chatRoomId: chatId,
@@ -207,6 +228,7 @@ function ChatRoomPage() {
 
       {/* body - display messages */}
       <div className="displayMessages">
+        {fetchRoomErr && <p className="error">{fetchRoomErr}</p>}
         {isLoading ? (
           <div>Loading...</div>
         ) : (

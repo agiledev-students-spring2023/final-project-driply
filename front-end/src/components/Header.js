@@ -8,9 +8,9 @@ import { useScrollDirection } from "../hooks/useScrollDirection";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
+const socket = io("http://localhost:4000");
 
 function Header(props) {
-  const socket = useRef();
   const [unseenMessages, setUnseenMessages] = useState([]);
   const [toastCount, setToastCount] = useState(0);
   const { ifDarkMode } = useContext(DarkModeContext);
@@ -67,8 +67,7 @@ function Header(props) {
       setUnseenMessages([]);
     }
     if (getUser) {
-      socket.current = io(`${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`);
-      socket.current.on(`updateChatHistory-${getUser.id}`, (data) => {
+      socket.on(`updateChatHistory-${getUser.id}`, (data) => {
         const notis = JSON.parse(localStorage.getItem("notifications"));
         if (
           location.pathname !== `/chatroom/${data.newMessage.chatId}` &&
@@ -154,7 +153,7 @@ function Header(props) {
       });
       return () => {
         document.removeEventListener("click", handleClickOutside);
-        socket.current.off(`updateChatHistory-${getUser.id}`);
+        socket.off(`updateChatHistory-${getUser.id}`);
       };
     }
     return () => {
@@ -189,22 +188,40 @@ function Header(props) {
             itemClassName={`${ifDarkMode && "menu-item-dark"}`}
             menuClassName={`${ifDarkMode && "menu-dark"}`}
           >
-            <Link to="/" onClick={handleMenuClose}>
+            <Link
+              to="/"
+              onClick={handleMenuClose}
+            >
               Home
             </Link>
-            <Link to="/chats" onClick={handleMenuClose}>
+            <Link
+              to="/chats"
+              onClick={handleMenuClose}
+            >
               Messages
             </Link>
-            <Link to="/trending" onClick={handleMenuClose}>
+            <Link
+              to="/trending"
+              onClick={handleMenuClose}
+            >
               Trending
             </Link>
-            <Link to="/bookmarks" onClick={handleMenuClose}>
+            <Link
+              to="/bookmarks"
+              onClick={handleMenuClose}
+            >
               Bookmarks
             </Link>
-            <Link to="/settings" onClick={handleMenuClose}>
+            <Link
+              to="/settings"
+              onClick={handleMenuClose}
+            >
               Settings
             </Link>
-            <Link to="/" onClick={logOut}>
+            <Link
+              to="/"
+              onClick={logOut}
+            >
               Log Out
             </Link>
           </Menu>
@@ -218,7 +235,10 @@ function Header(props) {
         </div>
       ) : (
         <div className="header">
-          <div className="logo" onClick={handleLogoClick}>
+          <div
+            className="logo"
+            onClick={handleLogoClick}
+          >
             Logo
           </div>
           <Menu
@@ -231,10 +251,16 @@ function Header(props) {
             burgerBarClassName={`${ifDarkMode && "bm-burger-bars-dark"}`}
             itemListClassName={`${ifDarkMode && "menu-item-dark"}`}
           >
-            <Link to="/login" onClick={handleMenuClose}>
+            <Link
+              to="/login"
+              onClick={handleMenuClose}
+            >
               Login
             </Link>
-            <Link to="/register" onClick={handleMenuClose}>
+            <Link
+              to="/register"
+              onClick={handleMenuClose}
+            >
               Register
             </Link>
           </Menu>

@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { io } from "socket.io-client";
 import moment from "moment";
+const socket = io("http://localhost:4000");
 
 function MainChatPage() {
   let navigate = useNavigate();
@@ -12,18 +13,20 @@ function MainChatPage() {
   const [loading, setLoading] = useState(false);
   const { user } = useAuthContext();
   const { ifDarkMode } = useContext(DarkModeContext);
-  const socket = useRef();
 
   async function fetchPfp(id) {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: id,
-      }),
-    });
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/getUserPfp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: id,
+        }),
+      }
+    );
 
     if (response.status === 200) {
       const imageBlob = await response.blob();
@@ -33,21 +36,39 @@ function MainChatPage() {
   }
 
   useEffect(() => {
-    setLoading(true);
-    const getUser = JSON.parse(localStorage.getItem("user"));
-    socket.current = io(`${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`);
-    socket.current.on("chatHistory", async (data) => {
-      for (let i = 0; i < data.chatList.length; i++) {
-        const currentChat = data.chatList[i];
-        for (let j = 0; j < currentChat.members.length; j++) {
-          const url = await fetchPfp(data.chatList[i].members[j]._id);
-          data.chatList[i].members[j].profilepic = url;
+    const fetchChatHistory = async () => {
+      setLoading(true);
+      const getUser = JSON.parse(localStorage.getItem("user"));
+      if (getUser) {
+        const userId = getUser.id;
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/chats/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        if (data.success) {
+          for (let i = 0; i < data.chatList.length; i++) {
+            const currentChat = data.chatList[i];
+            for (let j = 0; j < currentChat.members.length; j++) {
+              const url = await fetchPfp(data.chatList[i].members[j]._id);
+              data.chatList[i].members[j].profilepic = url;
+            }
+          }
+          setChatLists(data.chatList);
+        } else {
+          console.log(data);
         }
+      } else {
+        setChatLists([]);
       }
-      // console.log(data.chatList);
-      setChatLists(data.chatList);
       setLoading(false);
-    });
+    };
+    fetchChatHistory();
   }, []);
 
   function LoadingChat() {
@@ -73,7 +94,7 @@ function MainChatPage() {
     const userId = userId1 === getUser.id ? userId1 : userId2;
 
     useEffect(() => {
-      socket.current.on(`updateChatHistory-${userId}`, (data) => {
+      socket.on(`updateChatHistory-${userId}`, (data) => {
         if (data.newMessage.chatId === chat.chatId) {
           const message = data.newMessage.message;
           setUnseenMessages((prev) => prev + 1);
@@ -216,7 +237,7 @@ function MainChatPage() {
           <NotLoggedInDisplay />
         ) : loading ? (
           <LoadingChat />
-        ) : chatsList.length === 0 ? (
+        ) : chatsList?.length === 0 ? (
           <h3>No chats</h3>
         ) : (
           <DisplayChats />
