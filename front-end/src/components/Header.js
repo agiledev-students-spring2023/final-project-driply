@@ -256,12 +256,12 @@ function Header(props) {
         </div>
       ) : (
         <div className="header">
-          <div
-            className="logo"
+          <img
+            className="dlogo"
+            alt="logo"
+            src={ifDarkMode ? "/Driply-2.png" : "/Driply-1.png"}
             onClick={handleLogoClick}
-          >
-            Logo
-          </div>
+          />
           <Menu
             noOverlay
             right={true}
