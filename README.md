@@ -1,5 +1,9 @@
 # Driply
 
+## Deployed App
+
+[App](http://157.245.250.208:3000/)
+
 ## Description and Product Vision Statement
 
 **To connect fashion enthusiast and promote greater accessibility of fashion trends and outfits.**
