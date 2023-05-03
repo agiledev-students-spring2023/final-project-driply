@@ -70,7 +70,7 @@ function Header(props) {
   useEffect(() => {
     const getUser = JSON.parse(localStorage.getItem("user"));
     if (getUser) {
-      socket.current = io(`http://localhost:4000?userId=${getUser.id}`);
+      socket.current = io(`${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`);
     }
   }, []);
   useEffect(() => {

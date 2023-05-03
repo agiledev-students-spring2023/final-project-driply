@@ -18,7 +18,7 @@ function BookMarkItem({
     if (user) {
       // only bookmark post if logged in
       e.stopPropagation();
-      const response = await fetch(`http://localhost:4000/bookmark`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/bookmark`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +43,7 @@ function BookMarkItem({
   const removeBookmark = async (e) => {
     if (user) {
       e.stopPropagation();
-      const response = await fetch(`http://localhost:4000/unbookmark`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/unbookmark`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

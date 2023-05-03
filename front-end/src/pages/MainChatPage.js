@@ -15,7 +15,7 @@ function MainChatPage() {
   const socket = useRef();
 
   async function fetchPfp(id) {
-    const response = await fetch(`http://localhost:4000/getUserPfp`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ function MainChatPage() {
   useEffect(() => {
     setLoading(true);
     const getUser = JSON.parse(localStorage.getItem("user"));
-    socket.current = io(`http://localhost:4000?userId=${getUser.id}`);
+    socket.current = io(`${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`);
     socket.current.on("chatHistory", async (data) => {
       for (let i = 0; i < data.chatList.length; i++) {
         const currentChat = data.chatList[i];

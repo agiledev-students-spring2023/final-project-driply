@@ -18,7 +18,7 @@ function Post({ post }) {
 
   useEffect(() => {
     async function getDetails() {
-      const response = await fetch(`http://localhost:4000/getUsername`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUsername`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,7 +31,7 @@ function Post({ post }) {
       if (response.status === 200) {
         setPostUsername(json.username);
 
-        const response2 = await fetch(`http://localhost:4000/getUserPfp`, {
+        const response2 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -45,7 +45,7 @@ function Post({ post }) {
           const imageBlob = await response2.blob();
           const imageObjectURL = URL.createObjectURL(imageBlob);
           setPfp(imageObjectURL);
-          const response3 = await fetch(`http://localhost:4000/image`, {
+          const response3 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -79,7 +79,7 @@ function Post({ post }) {
       e.stopPropagation();
 
       async function addBookmark() {
-        const response = await fetch(`http://localhost:4000/bookmark`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/bookmark`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -101,7 +101,7 @@ function Post({ post }) {
         }
       }
       async function removeBookmark() {
-        const response = await fetch(`http://localhost:4000/unbookmark`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/unbookmark`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -140,8 +140,8 @@ function Post({ post }) {
     }
 
     const postId = post._id;
-    const likeUrl = `http://localhost:4000/like/${postId}`;
-    const unlikeUrl = `http://localhost:4000/unlike/${postId}`;
+    const likeUrl = `${process.env.REACT_APP_BACKEND_URL}/like/${postId}`;
+    const unlikeUrl = `${process.env.REACT_APP_BACKEND_URL}/unlike/${postId}`;
 
     if (ifLiked) {
       fetch(unlikeUrl, {

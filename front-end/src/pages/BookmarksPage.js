@@ -15,7 +15,7 @@ function Bookmarks() {
   const { user } = useAuthContext();
 
   async function fetchPostImage(file) {
-    const response = await fetch(`http://localhost:4000/image`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +37,7 @@ function Bookmarks() {
       const getUser = JSON.parse(localStorage.getItem("user"));
       if (getUser) {
         const response = await fetch(
-          `http://localhost:4000/bookmarks/${getUser.id}`,
+          `${process.env.REACT_APP_BACKEND_URL}/bookmarks/${getUser.id}`,
           {
             method: "GET",
             headers: {

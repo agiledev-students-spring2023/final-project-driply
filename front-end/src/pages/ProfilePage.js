@@ -28,7 +28,7 @@ function ProfilePage() {
     async function fetchProfileInfo() {
       setPostList([]);
       setLoading(true);
-      const response = await fetch(`http://localhost:4000/profile`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ function ProfilePage() {
     async function fetchPfp() {
       if (userData.profilepic) {
         console.log(userData.profilepic);
-        const response = await fetch(`http://localhost:4000/image`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -85,7 +85,7 @@ function ProfilePage() {
     async function getPictureUrls() {
       if (userData?.allPosts?.length !== 0) {
         for (let i = 0; i < userData?.allPosts?.length; i++) {
-          const response = await fetch(`http://localhost:4000/image`, {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

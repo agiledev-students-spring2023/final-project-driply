@@ -17,7 +17,7 @@ function Home() {
     }
 
     async function fetchPostList() {
-      const response = await fetch(`http://localhost:4000/getHomePosts`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getHomePosts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -17,7 +17,7 @@ function FollowingPage() {
   useEffect(() => {
     async function fetchFollowingList() {
       const response = await fetch(
-        `http://localhost:4000/following/${userId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/following/${userId}`,
         {
           method: "GET",
           headers: {
@@ -69,7 +69,7 @@ function FollowingPage() {
 
     useEffect(() => {
       async function fetchProfilePic() {
-        const response = await fetch(`http://localhost:4000/getUserPfp`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +89,7 @@ function FollowingPage() {
       if (userId) {
         e.stopPropagation();
 
-        const response = await fetch(`http://localhost:4000/unfollow`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/unfollow`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

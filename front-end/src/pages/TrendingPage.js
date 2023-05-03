@@ -18,7 +18,7 @@ function TrendingPage() {
 
   useEffect(() => {
     async function fetchPostList() {
-      const response = await fetch(`http://localhost:4000/getTrendingPosts`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getTrendingPosts`);
       let json = await response.json();
       if (response.status === 200) {
         //console.log(json);
@@ -47,7 +47,7 @@ function TrendingPage() {
     console.log("called");
     if (formData.query === ""){
       async function fetchPostList() {
-        const response = await fetch(`http://localhost:4000/getTrendingPosts`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getTrendingPosts`);
         let json = await response.json();
         if (response.status === 200) {
           //console.log(json);
@@ -64,7 +64,7 @@ function TrendingPage() {
       return;
     }
 
-    fetch(`http://localhost:4000/search/${formData.query}/${formData.select}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/search/${formData.query}/${formData.select}`, {
       method: "GET"
     })
     .then((response) => response.json())

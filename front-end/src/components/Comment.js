@@ -11,7 +11,7 @@ function Comment(prop) {
 
   useEffect(() => {
     async function fetchComment() {
-      const response = await fetch(`http://localhost:4000/fetchComment`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/fetchComment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,7 @@ function Comment(prop) {
         async function setCommentImages(commentList) {
           console.log(commentList);
           for (let c of commentList) {
-            const response = await fetch(`http://localhost:4000/image`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

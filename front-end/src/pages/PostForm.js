@@ -27,7 +27,7 @@ function PostForm() {
     formData.append("price", price);
     formData.append("description", description);
 
-    const response = await fetch(`http://localhost:4000/post-form`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/post-form`, {
       method: "POST",
       body: formData,
     });

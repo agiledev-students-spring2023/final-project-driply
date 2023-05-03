@@ -19,7 +19,7 @@ function FollowerPage() {
 
   useEffect(() => {
     async function fetchFollowerList() {
-      const response = await fetch(`http://localhost:4000/follower/${userId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/follower/${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +41,7 @@ function FollowerPage() {
 
     async function fetchFollowingList() {
       const response = await fetch(
-        `http://localhost:4000/following/${userId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/following/${userId}`,
         {
           method: "GET",
           headers: {
@@ -84,7 +84,7 @@ function FollowerPage() {
 
     useEffect(() => {
       async function fetchProfilePic() {
-        const response = await fetch(`http://localhost:4000/getUserPfp`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
