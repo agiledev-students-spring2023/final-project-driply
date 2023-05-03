@@ -10,7 +10,6 @@
 
 Driply is a fashion social networking app where users can share their outfits as well as find inspirations and new stores. This application and the community will be dedicated entirely to budget fashion and making fashion and trends as accessible as apossible for everyone. Users can share and view outfits with accompanying information like price range and source. Liking, commenting, and chatting will be some functionalities to increase interactivity between users. Users also can personalize their feed by following other users as well as bookmarking particularly interesting posts.
 
-
 ## The Team
 
 [Brandon Chen](https://github.com/b-chen00)
@@ -46,13 +45,40 @@ Driply is a fashion social networking app where users can share their outfits as
 
 1. Run ```cd back-end``` to navigate into the back-end directory
 2. Run ```npm install``` to install all dependencies listed in the package.json file.
-3. Run ```npm start``` to launch the back-end server
+3. Create a .env file in the back-end directory and add the following content:
+
+```
+  PORT={BACKEND_PORT}
+
+  FRONT_END_URI=localhost:{FRONTEND_PORT}
+  ORIGIN="http://localhost:{FRONTEND_PORT}"
+
+  MONGO_USERNAME={Your MongoDB username}
+  MONGO_PASSWORD={Your MongoDB password}
+  FRONT_END_DOMAIN="*"
+  JWT_SECRET={Your JWT secret}
+  JWT_EXP_DAYS={Your JWT expiration days}
+  MONGODB_URI={Your MongoDB URI}
+  ```
+
+4. Run ```npm start``` to launch the back-end server
 
 ### Build and launch the front end
 
 1. Run ```cd front-end``` to navigate into the front-end directory
 2. Run ```npm install``` to install all dependencies listed in the package.json file.
-3. Run ```npm start``` to launch the React.js server
+3. Create a .env file in the front-end directory and add the following content:
+
+    ```REACT_APP_BACKEND_URL=http://localhost:{FRONTEND_PORT}```
+
+4. Run ```npm start``` to launch the React.js server
+
+### ALTERNATIVE: Build and launch the app with Docker
+
+1. Run ```cd final_project_driply``` to navigate into the local directory
+2. Run ```docker-compose up``` to build and launch the app
+3. Access the app at ```http://localhost:3000/```
+4. To stop the app, run ```docker-compose down```
 
 ## Additional Documents
 
