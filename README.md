@@ -73,6 +73,13 @@ Driply is a fashion social networking app where users can share their outfits as
 
 4. Run ```npm start``` to launch the React.js server
 
+### ALTERNATIVE: Build and launch the app with Docker
+
+1. Run ```cd final_project_driply``` to navigate into the local directory
+2. Run ```docker-compose up``` to build and launch the app
+3. Access the app at ```http://localhost:3000/```
+4. To stop the app, run ```docker-compose down```
+
 ## Additional Documents
 
 [Figma Site Map](https://www.figma.com/file/GDSuo2aF4WtsP4yC0udytx/Driply-Site-Map?node-id=0%3A1&t=xS0gTKp5Jl3fxWuG-1)
