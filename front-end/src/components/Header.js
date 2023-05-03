@@ -53,6 +53,7 @@ function Header(props) {
   };
 
   useEffect(() => {
+    const getUser = JSON.parse(localStorage.getItem("user"));
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsMenuOpen(false);
@@ -62,20 +63,11 @@ function Header(props) {
     };
     document.body.style.overflow = "hidden";
     document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [menuRef]);
-
-  useEffect(() => {
-    const getUser = JSON.parse(localStorage.getItem("user"));
+    if (location.pathname === "/chats") {
+      setUnseenMessages([]);
+    }
     if (getUser) {
       socket.current = io(`${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`);
-    }
-  }, []);
-  useEffect(() => {
-    const getUser = JSON.parse(localStorage.getItem("user"));
-    if (getUser) {
       socket.current.on(`updateChatHistory-${getUser.id}`, (data) => {
         const notification = JSON.parse(localStorage.getItem("notifications"));
         if (
@@ -160,17 +152,15 @@ function Header(props) {
           );
         }
       });
+      return () => {
+        document.removeEventListener("click", handleClickOutside);
+        socket.current.off(`updateChatHistory-${getUser.id}`);
+      };
     }
-
     return () => {
-      socket.current.off(`updateChatHistory-${getUser.id}`);
+      document.removeEventListener("click", handleClickOutside);
     };
-  }, [toastCount, location.pathname, navigate]);
-  useEffect(() => {
-    if (location.pathname === "/chats") {
-      setUnseenMessages([]);
-    }
-  }, [location.pathname]);
+  }, [toastCount, location.pathname, navigate, menuRef]);
 
   return (
     <>
