@@ -1,9 +1,47 @@
-import React from 'react'
+import React, { useState } from "react";
 
-function SearchBar() {
+const searchBar = () => {
+  const [searchInput, setSearchInput] = useState("");
+
+  const users = [];
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setSearchInput(e.target.value);
+  };
+
+  if (searchInput.length > 0) {
+    countries.filter((users) => {
+      return users.name.match(searchInput);
+    });
+  }
+
   return (
-    <div>SearchBar</div>
-  )
-}
+    <div>
+      <input
+        type="search"
+        placeholder="Search here"
+        onChange={handleChange}
+        value={searchInput}
+      />
 
-export default SearchBar
+      <table>
+        <tr>
+          <th>User</th>
+          <th>Contentt</th>
+        </tr>
+
+        {countries.map((country, index) => {
+          <div>
+            <tr>
+              <td>{country.name}</td>
+              <td>{country.continent}</td>
+            </tr>
+          </div>;
+        })}
+      </table>
+    </div>
+  );
+};
+
+export default searchBar;
