@@ -52,6 +52,19 @@ function Header(props) {
     navigate("/");
   };
 
+  const previousPage = useRef("");
+
+  useEffect(() => {
+    previousPage.current = location.pathname;
+  }, [location.pathname]);
+
+  const isHomePage = location.pathname === "/";
+  const isTrendingPage = location.pathname === "/trending";
+  const isPostFormPage = location.pathname === "/postform";
+  //const isProfilePage = location.pathname.includes(`/profile/${user.id}`);
+  const shouldShowBackButton =
+    !isHomePage && !isTrendingPage && !isPostFormPage;
+
   useEffect(() => {
     const getUser = JSON.parse(localStorage.getItem("user"));
     const handleClickOutside = (event) => {
@@ -67,7 +80,14 @@ function Header(props) {
       setUnseenMessages([]);
     }
     if (getUser) {
-      socket.current = io(`${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`);
+      socket.current = io(
+        `${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`
+      );
+    }
+  }, []);
+  useEffect(() => {
+    const getUser = JSON.parse(localStorage.getItem("user"));
+    if (getUser) {
       socket.current.on(`updateChatHistory-${getUser.id}`, (data) => {
         const notis = JSON.parse(localStorage.getItem("notifications"));
         if (
@@ -172,6 +192,11 @@ function Header(props) {
             direction === "down" ? "header-hide" : "header-show"
           } ${ifDarkMode && "header-Dark"}`}
         >
+          {shouldShowBackButton && (
+            <div className="back-button" onClick={() => window.history.back()}>
+              <i className="fas fa-arrow-left"></i>
+            </div>
+          )}
           <img
             className="dlogo"
             alt="logo"
