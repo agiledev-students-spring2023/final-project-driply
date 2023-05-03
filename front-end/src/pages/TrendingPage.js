@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import TrendingCard from "../components/TrendingCard";
-import searchBar from "../components/SearchBar";
 import { DarkModeContext } from "../context/DarkModeContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -134,7 +133,6 @@ function TrendingPage() {
         />
       ) : (
         <div>
-          <searchBar />
           <div className="row align-items-center mx-auto">
             <form
               ref={formRef}
