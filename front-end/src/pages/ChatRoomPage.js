@@ -31,6 +31,9 @@ function ChatRoomPage() {
       });
       setMessages(copyMessages);
     });
+    return () => {
+      socket.off(`sendMessage-${chatId}`);
+    };
   }, [chatId]);
 
   useEffect(() => {

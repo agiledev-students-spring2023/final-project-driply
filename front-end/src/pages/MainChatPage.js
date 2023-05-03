@@ -101,6 +101,9 @@ function MainChatPage() {
           setLastMessage(message);
         }
       });
+      return () => {
+        socket.off(`updateChatHistory-${userId}`);
+      };
     }, [chat.chatId, userId]);
 
     let receiver =
