@@ -20,7 +20,7 @@ const PostPage = () => {
   const [img, setImg] = useState();
   const [pfp, setPfp] = useState();
   const [loggedInPfp, setLoggedInPfp] = useState();
-  const [postError, setPostError] = useState(null);
+  const [setPostError] = useState(null);
   const { postId } = useParams();
   const [userID, setUserID] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -29,15 +29,18 @@ const PostPage = () => {
 
   useEffect(() => {
     async function fetchPostInfo() {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getPost`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          postId: postId,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/getPost`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postId: postId,
+          }),
+        }
+      );
       let json = await response.json();
       if (response.status === 200) {
         console.log(json);
@@ -49,29 +52,35 @@ const PostPage = () => {
         setUserID(json.user);
         setPostError(null);
         setLoading(false);
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/image`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            filename: json.image,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/image`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              filename: json.image,
+            }),
+          }
+        );
         if (response.status === 200) {
           const imageBlob = await response.blob();
           const imageObjectURL = URL.createObjectURL(imageBlob);
           setImg(imageObjectURL);
         }
-        const response2 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: json.user,
-          }),
-        });
+        const response2 = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/getUserPfp`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: json.user,
+            }),
+          }
+        );
         if (response2.status === 200) {
           const imageBlob = await response2.blob();
           const imageObjectURL = URL.createObjectURL(imageBlob);
@@ -84,15 +93,18 @@ const PostPage = () => {
     }
 
     async function fetchLoggedInUserPfP() {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getUserPfp`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user.id,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/getUserPfp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+          }),
+        }
+      );
       if (response.status === 200) {
         const imageBlob = await response.blob();
         const imageObjectURL = URL.createObjectURL(imageBlob);
@@ -102,7 +114,7 @@ const PostPage = () => {
     console.log(user);
     fetchPostInfo();
     if (user) fetchLoggedInUserPfP();
-  }, [user, postId]);
+  }, [user, postId, setPostError]);
 
   function navigateProfile() {
     navigate(`/profile/${userID}`);
@@ -115,17 +127,20 @@ const PostPage = () => {
   const handleComment = (e) => {
     e.preventDefault();
     async function addComment() {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/createComment`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          postId: postId,
-          comment: comment,
-          userId: user.id,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/createComment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            postId: postId,
+            comment: comment,
+            userId: user.id,
+          }),
+        }
+      );
       let json = await response.json();
       if (response.status === 200) {
         if (json.message === "success") {

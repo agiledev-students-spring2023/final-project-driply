@@ -17,15 +17,18 @@ function Home() {
     }
 
     async function fetchPostList() {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getHomePosts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: u,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/getHomePosts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: u,
+          }),
+        }
+      );
       let json = await response.json();
       if (response.status === 200) {
         setPostList(json.data);
@@ -40,7 +43,7 @@ function Home() {
       u = user.id;
     }
     fetchPostList();
-  }, []);
+  }, [user, ifDarkMode]);
 
   function DisplayPostLists() {
     return (

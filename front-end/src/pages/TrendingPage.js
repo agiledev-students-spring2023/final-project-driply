@@ -1,14 +1,12 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import TrendingCard from "../components/TrendingCard";
 import { DarkModeContext } from "../context/DarkModeContext";
-import { useAuthContext } from "../hooks/useAuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function TrendingPage() {
-  const { user } = useAuthContext();
   const [postList, setPostList] = useState([]);
   const [postListError, setPostListError] = useState(null);
-  const [formData, setFormData] = useState({
+  const [formData] = useState({
     query: "",
     select: "content",
   });
@@ -34,7 +32,7 @@ function TrendingPage() {
     }
 
     fetchPostList();
-  }, [postList]);
+  }, []);
 
   function handleInputChange(e) {
     formData.query = e.target.value;

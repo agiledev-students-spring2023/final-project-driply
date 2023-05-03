@@ -52,6 +52,19 @@ function Header(props) {
     navigate("/");
   };
 
+  const previousPage = useRef("");
+
+  useEffect(() => {
+    previousPage.current = location.pathname;
+  }, [location.pathname]);
+
+  const isHomePage = location.pathname === "/";
+  const isTrendingPage = location.pathname === "/trending";
+  const isPostFormPage = location.pathname === "/postform";
+  //const isProfilePage = location.pathname.includes(`/profile/${user.id}`);
+  const shouldShowBackButton =
+    !isHomePage && !isTrendingPage && !isPostFormPage;
+
   useEffect(() => {
     const getUser = JSON.parse(localStorage.getItem("user"));
     const handleClickOutside = (event) => {
@@ -67,7 +80,10 @@ function Header(props) {
       setUnseenMessages([]);
     }
     if (getUser) {
-      socket.on(`updateChatHistory-${getUser.id}`, (data) => {
+      socket.current = io(
+        `${process.env.REACT_APP_BACKEND_URL}?userId=${getUser.id}`
+      );
+      socket.current.on(`updateChatHistory-${getUser.id}`, (data) => {
         const notis = JSON.parse(localStorage.getItem("notifications"));
         if (
           location.pathname !== `/chatroom/${data.newMessage.chatId}` &&
@@ -153,12 +169,9 @@ function Header(props) {
       });
       return () => {
         document.removeEventListener("click", handleClickOutside);
-        socket.off(`updateChatHistory-${getUser.id}`);
+        socket.current.off(`updateChatHistory-${getUser.id}`);
       };
     }
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
   }, [toastCount, location.pathname, navigate, menuRef]);
 
   return (
@@ -171,6 +184,14 @@ function Header(props) {
             direction === "down" ? "header-hide" : "header-show"
           } ${ifDarkMode && "header-Dark"}`}
         >
+          {shouldShowBackButton && (
+            <p
+              className="back-button"
+              onClick={() => window.history.back()}
+            >
+              &#706;
+            </p>
+          )}
           <img
             className="dlogo"
             alt="logo"
