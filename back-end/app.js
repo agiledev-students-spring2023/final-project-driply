@@ -10,6 +10,7 @@ const path = require("path");
 const Post = require("./models/Post.js");
 const User = require("./models/User.js");
 const Comment = require("./models/Comment.js");
+const Chat = require("./models/Chat.js");
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
 
@@ -498,18 +499,61 @@ app.post("/getHomePosts", async (req, res) => {
   }
 });
 
-app.get("/chats", async (req, res) => {
-  axios
-    .get("https://my.api.mockaroo.com/users_chats.json?key=90e03700")
-    .then((apiResponse) => {
-      const { data, status } = apiResponse;
-      res.json({ data, status });
-    })
-    .catch((err) => {
-      res.json({ error: err.message, status: err.response.status });
+app.get("/chats/:chatId", async (req, res) => {
+  try {
+    const { chatId } = req.params;
+    const chat = await Chat.find({ members: chatId })
+      .populate("members", "name profilepic")
+      .exec();
+    if (!chat) {
+      return res.status(401).json({
+        success: false,
+        message: "Error fetching chat history",
+      });
+    } else {
+      res.json({
+        success: true,
+        chatList: chat,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error looking up user in database.",
+      error: error,
     });
+  }
 });
-
+app.post("/chatRoom", async (req, res) => {
+  try {
+    const chatRoom = await Chat.findOne({ chatId: req.body.chatId });
+    if (!chatRoom) {
+      const { chatId } = req.body;
+      const members = chatId.split("--");
+      const room = await Chat.createroom(chatId, members);
+      return res.json({
+        success: true,
+        room: room,
+        newChat: true,
+        messages: [],
+      });
+    } else {
+      return res.json({
+        success: true,
+        room: chatRoom,
+        newChat: false,
+        messages: chatRoom.messages,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error looking up user in database.",
+      error: error,
+    });
+  }
+});
 app.get("/follower/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -698,33 +742,35 @@ app.get("/search/:query/:type", (req, res) => {
   const type = req.params.type;
   //console.log(query);
   //console.log(type);
-  if (type !== "user" && type !== "content"){
+  if (type !== "user" && type !== "content") {
     res.status(400).json({ error: "invalid query type" });
   }
-  if (type === "user"){
+  if (type === "user") {
     Post.find()
-    .populate('user')
-    .exec()
-    .then(posts => {
-      //console.log(posts);
-      const filteredPosts = posts.filter(post => post.user.name.toLowerCase() === query.toLowerCase());
-      //console.log(filteredPosts)
-      res.json({data : filteredPosts});
-    })
-    .catch(err => {
-      console.log(err);
-    })
+      .populate("user")
+      .exec()
+      .then((posts) => {
+        //console.log(posts);
+        const filteredPosts = posts.filter(
+          (post) => post.user.name.toLowerCase() === query.toLowerCase()
+        );
+        //console.log(filteredPosts)
+        res.json({ data: filteredPosts });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
-  if (type === "content"){
-    Post.find({ description: { $regex: query, $options: 'i' }})
-    .then(posts => {
-      res.json({data : posts});
-    })
-    .catch(err => {
-      console.log(err);
-    })
+  if (type === "content") {
+    Post.find({ description: { $regex: query, $options: "i" } })
+      .then((posts) => {
+        res.json({ data: posts });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
-})
+});
 
 app.get("/getTrendingPosts", async (req, res) => {
   function objectIdWithTimestamp() {

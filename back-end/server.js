@@ -27,63 +27,30 @@ const io = socket(listener, {
 });
 
 io.on("connection", async (socket) => {
-  // console.log("a user has connected");
-  const chatId = socket.handshake.query.chatId;
-  const userId = socket.handshake.query.userId;
-  let chatRoom;
-
-  if (chatId) {
-    const members = chatId.split("--");
-    chatRoom = await Chat.findOne({ chatId });
-    if (!chatRoom) {
-      const room = await Chat.createroom(chatId, members);
-      socket.emit("createdRoom", {
-        room: room,
-        newChat: true,
-        messages: [],
-      });
-    } else {
-      socket.emit("createdRoom", {
-        room: chatRoom,
-        newChat: false,
-        messages: chatRoom.messages,
-      });
-    }
-  }
-
-  if (userId !== "undefined") {
-    const chat = await Chat.find({ members: userId })
-      .populate("members", "name profilepic")
-      .exec();
-    if (!chat) {
-      socket.emit("chatHistory", { chatList: [] });
-    } else {
-      socket.emit("chatHistory", { chatList: chat });
-    }
-  }
-
   socket.on("sendMessage", async (data) => {
-    const messages = chatRoom.messages;
     const { id_from, message, chatRoomId, members } = data;
     const newMsg = { id_from, message };
-    const room = await Chat.findOneAndUpdate(
-      { chatId: chatId },
-      { $push: { messages: newMsg } },
-      { new: true }
-    );
-    let userFrom = await User.findOne({ _id: id_from }).select("name");
-    let userFromName = "";
-    if (userFrom) {
-      userFromName = userFrom.name;
+    try {
+      const room = await Chat.findOneAndUpdate(
+        { chatId: chatRoomId },
+        { $push: { messages: newMsg } },
+        { new: true }
+      );
+      let userFrom = await User.findOne({ _id: id_from }).select("name");
+      let userFromName = "";
+      if (userFrom) {
+        userFromName = userFrom.name;
+      }
+      io.emit(`sendMessage-${chatRoomId}`, { messages: room.messages });
+      io.emit(`updateChatHistory-${members[0]}`, {
+        newMessage: { chatId: room.chatId, id_from, message, userFromName },
+      });
+      io.emit(`updateChatHistory-${members[1]}`, {
+        newMessage: { chatId: room.chatId, id_from, message, userFromName },
+      });
+    } catch (error) {
+      console.log(error);
     }
-    messages.push(data);
-    io.emit(`sendMessage-${chatRoomId}`, { messages: room.messages });
-    io.emit(`updateChatHistory-${members[0]}`, {
-      newMessage: { chatId: room.chatId, id_from, message, userFromName },
-    });
-    io.emit(`updateChatHistory-${members[1]}`, {
-      newMessage: { chatId: room.chatId, id_from, message, userFromName },
-    });
   });
 });
 
