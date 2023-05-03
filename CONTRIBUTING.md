@@ -28,7 +28,6 @@
 ### Coding Standards
 - Visual Studio Code as IDE
 - Make small commits and stick to the workflow below 
-- (linter and comment standards may be added in future as needed)
 
 ---
 ## The Git Workflow
@@ -41,7 +40,7 @@
     example: <br>
 	`git checkout -b user-story/13/task/9/implement-user-login`
 
-3. Update task board TASK to “In Process” 
+3. Update task board TASK to “In Progress” 
 
 4. Add and commit <br>
 	`git add .` <br>
@@ -79,7 +78,7 @@
 ### Prerequisites
 - [Node.js](https://nodejs.org/) and npm installed on your local machine
 - [Git](https://git-scm.com/) installed on your local machine
-- Visual Studio Code
+- [Visual Studio Code](https://code.visualstudio.com/) as code editor
 
 ### Installation
 1. Clone the project repository to your local machine using Git.
@@ -110,5 +109,13 @@ cd final_project_driply
 
 ___
 ## Testing the Project
-(Update once complete)
+Before contributing any changes, it's essential to make sure that the project runs without any issues. The project should pass all the unit and integration tests before merging the changes into the main branch.
+
+To run the tests, follow the steps below:
+1. Navigate into the back-end directory
+2. Run ```npm test``` to execute the test cases
+
+It's crucial to ensure that all tests pass before submitting any changes. If there are any test failures, fix the issues before submitting the changes.
+
+Additionally, you can test the project manually by running it on your local machine and verifying that all the features and functionalities work as expected.
 
