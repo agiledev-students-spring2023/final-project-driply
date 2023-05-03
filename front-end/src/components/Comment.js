@@ -24,7 +24,6 @@ function Comment(prop) {
       let json = await response.json();
       if (response.status === 200) {
         async function setCommentImages(commentList) {
-          console.log(commentList);
           for (let c of commentList) {
             const response = await fetch(
               `${process.env.REACT_APP_BACKEND_URL}/image`,

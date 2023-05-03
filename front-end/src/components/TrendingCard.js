@@ -18,7 +18,7 @@ const TrendingCard = ({ post }) => {
           }),
         }
       );
-      //let json = await response.json();
+
       if (response.status === 200) {
         const imageBlob = await response.blob();
         const imageObjectURL = URL.createObjectURL(imageBlob);
@@ -39,8 +39,6 @@ const TrendingCard = ({ post }) => {
     picSize = "large";
   }
 
-  //lines 19 thru 31 is temp
-  //until backend is working
   let height;
 
   if (picSize === "small") {

@@ -27,7 +27,6 @@ function Follow(props) {
         if (json.following.includes(props.profileID)) {
           setFollowed(true);
         }
-        console.log(json);
       } else {
         console.log(json.error);
       }
@@ -53,7 +52,6 @@ function Follow(props) {
         });
         let json = await response.json();
         if (response.status === 200) {
-          console.log(json);
           if (json.message === "success") {
             setFollowed(true);
             setFollowedChanged(true);
