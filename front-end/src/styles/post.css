@@ -1,0 +1,68 @@
+.row.align-items-center.mx-auto {
+    padding: 10px;
+}
+
+.postpfp {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.postpfp img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.right {
+    text-align: right;
+}
+
+.description-block {
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.row.align-items-center {
+    padding: 10px;
+    padding-right: 0;
+    border-bottom: 1px gray solid;
+}
+
+.name-in-des {
+    font-weight: bold;
+}
+
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.likeIconPostpage {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    margin-left: 5px;
+}
+
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.likeIconPostpage {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    margin-left: 5px;
+}
+
+.username.username-each-comment {
+    font-weight: bold;
+}
+
+#root {
+    overflow-y: auto;
+    height: 100%;
+    max-height: calc(100vh - 0px);
+}
+
+.btn.btn-success.btn-block {
+    background-color: #cba2e2;
+    border: 0;
+}

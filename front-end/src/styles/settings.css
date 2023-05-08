@@ -1,0 +1,162 @@
+.settingsPage {
+    /* border: 1px solid red; */
+    flex: 1 1 0%;
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+}
+
+.settingsPage-Dark {
+    /* background-color: #000000; */
+    background-color:#121212;
+    color: white;
+}
+
+.showProfileBtn {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid gray;
+    display: flex;
+    align-items: center;
+    padding-bottom: 15px;
+}
+.showProfileBtn img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+.showProfileName {
+    /* border: 1px solid red; */
+    margin-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex: 1 1 0%;
+}
+.showProfileName p {
+    margin: 0;
+    padding: 0;
+}
+.showProfileName p:nth-child(1) {
+    font-size: 18px;
+    font-weight: 500;
+}
+.showProfileName p:nth-child(2) {
+    color: gray;
+    font-weight: 500;
+}
+
+.accountSettingBtns {
+    margin-bottom: 25px;
+}
+
+.accountSettingBtns div {
+    margin-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    width: 100%;
+    height: 50px;
+    align-items: center;
+    border-bottom: 1px solid gray;
+}
+
+.accountSettingBtns p {
+    flex: 1 1 0%;
+    margin-left: 10px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.iconSize {
+    font-size: large;
+}
+
+.supportBtns div {
+    margin-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    width: 100%;
+    height: 50px;
+    align-items: center;
+    border-bottom: 1px solid gray;
+}
+.supportBtns p {
+    flex: 1 1 0%;
+    margin-left: 10px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+#logoutBtn {
+    margin-top: 30px;
+    color: #3C4048;
+    font-size: large;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.aboutUsPage {
+    flex: 1 1 0%;
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+}
+
+.abtUsGoBack {
+    position: absolute;
+    top: 25%;
+    left: 5px;
+}
+
+.aboutUsHeader {
+    padding-left: 15px;
+    padding-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid gray;
+    width: 100%;
+    height: 70px;
+    position: relative;
+}
+.aboutUsHeader p:nth-child(2) {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.aboutUsBody {
+    margin-top: 10px;
+    padding: 5px;
+    border-bottom: 1px solid gray;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.aboutUsBody h4 {
+    font-weight: 400;
+}
+
+.meetTheTeam {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 90px;
+}
+
+.eachDev {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.eachDev img {
+    width: 80px;
+    height: 80px;
+    border: 1px solid gray;
+    border-radius: 50%;
+}
+
+.devHandler {
+    font-weight: 500;
+}

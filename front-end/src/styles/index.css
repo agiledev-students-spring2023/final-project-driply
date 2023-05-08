@@ -1,0 +1,149 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  height: 100vh;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.success {
+  color: green;
+}
+.error {
+  color: red;
+}
+.postContainer {
+  padding-bottom: 100px;
+}
+
+.darkTheme {
+  background-color:#121212;
+  color: white;
+}
+
+.post {
+  padding-top: 5px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+.postHeader {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  align-items: center;
+}
+
+.postHeaderDetails {
+  height: 100%;
+  flex: 1 1 0%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 6px;
+}
+.postHeaderDetails img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.postHeaderDetails p {
+  font-weight: 500;
+}
+.postCost {
+  font-weight: 500;
+  padding-right: 6px;
+}
+
+.postBody {
+  margin-top: 5px;
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+.postBody img {
+  width: 100%;
+  max-height: 450px;
+}
+.postBookmarkIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.postBookmarkIconBMpage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+}
+
+.postDetails {
+  display: flex;
+  width: auto;
+  background-color: rgba(0,0,0,0.5);
+  bottom: 5px;
+  height: 70px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.postDetails div{
+  display: flex;
+  gap: 1rem;
+  color: white;
+  font-size: large;
+}
+
+.loadingUserImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #bdc3c7;
+}
+
+.loadingPostBody {
+  margin-top: 5px;
+  width: 100%;
+  height: 350px;
+  background-color: #bdc3c7;
+}
+
+
+.loadingSpinner {
+  /* border: 16px solid #f3f3f3; 
+  border-top: 16px solid #3498db; 
+  border-radius: 50%; */
+  width: 120px;
+  height: 120px;
+  /* animation: spin 2s linear infinite; */
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

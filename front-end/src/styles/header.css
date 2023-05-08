@@ -1,0 +1,61 @@
+.header {
+  width: 100%;
+  height: 60px;
+  border-bottom: 1px solid gray;
+  position: sticky;
+  top: 0px;
+  background-color: white;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
+  background-color: #cba2e2;
+}
+
+.dlogo {
+  width: 60px;
+  height: 60px;
+}
+
+.header-Dark {
+  /* background-color: #000000; */
+  background-color: #121212;
+  color: white;
+}
+
+.header-show {
+  top: 0px;
+}
+
+.header-hide {
+  top: -6rem;
+}
+
+.logo {
+  margin-left: 10px;
+  width: 60px;
+  height: 50px;
+  border: 1px solid black;
+}
+
+.menuNotifications {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  z-index: 1002;
+  color: red;
+}
+
+.back-button {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  font-size: 90px;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+}
