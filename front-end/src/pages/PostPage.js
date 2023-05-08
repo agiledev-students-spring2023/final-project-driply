@@ -20,7 +20,6 @@ const PostPage = () => {
   const [img, setImg] = useState();
   const [pfp, setPfp] = useState();
   const [loggedInPfp, setLoggedInPfp] = useState();
-  const [setPostError] = useState(null);
   const { postId } = useParams();
   const [userID, setUserID] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -50,7 +49,6 @@ const PostPage = () => {
         setDescription(json.description);
         setPrice(json.price);
         setUserID(json.user);
-        setPostError(null);
         setLoading(false);
         const response = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/image`,
@@ -87,7 +85,7 @@ const PostPage = () => {
           setPfp(imageObjectURL);
         }
       } else {
-        setPostError(response.status);
+        //setPostError(response.status);
         setLoading(false);
       }
     }
@@ -114,7 +112,7 @@ const PostPage = () => {
     console.log(user);
     fetchPostInfo();
     if (user) fetchLoggedInUserPfP();
-  }, [user, postId, setPostError]);
+  }, [user, postId]);
 
   function navigateProfile() {
     navigate(`/profile/${userID}`);
@@ -149,7 +147,7 @@ const PostPage = () => {
           setNewComment(true);
         }
       } else {
-        setPostError(response.status);
+        //setPostError(response.status);
         setLoading(false);
       }
     }
